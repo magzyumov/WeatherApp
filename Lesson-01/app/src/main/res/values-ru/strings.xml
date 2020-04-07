@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello_geekbrains">Привет GeekBrains!</string>
+    <string name="app_name">Погода</string>
+    <string name="currentCityName">УФА</string>
+    <string name="currentTemperature">18</string>
+    <string name="currentDate">АПР 02</string>
+    <string name="currentTime">12:30</string>
+    <string name="currentDay">ПОНЕДЕЛЬНИК</string>
+    <string name="hintSearchCity">Город</string>
 </resources>
