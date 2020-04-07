@@ -1,5 +1,4 @@
 package ru.magzyumov.helloactivity;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Bundle;
