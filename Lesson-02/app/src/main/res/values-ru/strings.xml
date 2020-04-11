@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="currentCityName">УФА</string>
+    <string name="currentTemperature">18</string>
+    <string name="currentDate">АПР 02</string>
+    <string name="currentTime">12:30</string>
+    <string name="currentDay">ПОНЕДЕЛЬНИК</string>
+    <string name="hintSearchCity">Город</string>
+
+    <string name="menu_select_city">Выбор города</string>
+    <string name="menu_help">Помощь</string>
+    <string name="menu_home">Главная</string>
+    <string name="menu_location">Местоположение</string>
+    <string name="menu_settings">Настройки</string>
+
+    <string name="settings_NightMode">Night Mode</string>
+</resources>
