@@ -2,15 +2,11 @@ package ru.magzyumov.helloactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-
 import static androidx.appcompat.app.AppCompatDelegate.getDefaultNightMode;
 
 
@@ -48,30 +44,5 @@ public class SettingsActivity extends AppCompatActivity {
         //Показываем кнопку назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.menu_home) {
-            intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.menu_location) {
-            intent = new Intent(this, LocationActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
