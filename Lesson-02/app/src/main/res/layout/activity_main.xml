@@ -130,6 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -139,18 +140,19 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/imageView2"
+                                android:id="@+id/imageViewWindSpeedNow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                app:srcCompat="@drawable/fog" />
+                                app:srcCompat="@mipmap/wind_speed" />
 
                             <TextView
                                 android:id="@+id/textViewWindSpeedNow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="4 м/c, ЮВ" />
+                                android:text="4 м/c, ЮВ"
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -165,14 +167,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                app:srcCompat="@drawable/day_rain" />
+                                app:srcCompat="@mipmap/air_pressure" />
 
                             <TextView
                                 android:id="@+id/textViewPressureNow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="743 мм рт.ст." />
+                                android:text="743 мм рт.ст."
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -186,14 +189,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                app:srcCompat="@drawable/angry_clouds" />
+                                app:srcCompat="@mipmap/humidity" />
 
                             <TextView
                                 android:id="@+id/textViewHumidity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="39%" />
+                                android:text="39%"
+                                android:textSize="18sp" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -211,6 +215,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="@string/now" />
 
                         <ImageView
@@ -218,6 +223,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/cloudy" />
 
                         <TextView
@@ -225,6 +231,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+12 \u2103" />
                     </LinearLayout>
 
@@ -241,6 +248,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="14:00" />
 
                         <ImageView
@@ -248,6 +256,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_partial_cloud" />
 
                         <TextView
@@ -255,6 +264,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+13 \u2103" />
                     </LinearLayout>
 
@@ -271,6 +281,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="15:00" />
 
                         <ImageView
@@ -278,6 +289,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -285,6 +297,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+14 \u2103" />
                     </LinearLayout>
 
@@ -301,6 +314,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="16:00" />
 
                         <ImageView
@@ -308,6 +322,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -315,6 +330,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+16 \u2103" />
                     </LinearLayout>
 
@@ -331,6 +347,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="17:00" />
 
                         <ImageView
@@ -338,6 +355,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -345,6 +363,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+17 \u2103" />
                     </LinearLayout>
 
@@ -361,6 +380,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="18:00" />
 
                         <ImageView
@@ -368,6 +388,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -375,6 +396,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+18 \u2103" />
                     </LinearLayout>
 
@@ -391,6 +413,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="19:00" />
 
                         <ImageView
@@ -398,6 +421,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -405,6 +429,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -421,6 +446,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="20:00" />
 
                         <ImageView
@@ -428,6 +454,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -435,6 +462,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+20 \u2103" />
                     </LinearLayout>
 
@@ -451,6 +479,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="21:00" />
 
                         <ImageView
@@ -458,6 +487,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -465,6 +495,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+21 \u2103" />
                     </LinearLayout>
 
@@ -481,6 +512,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="22:00" />
 
                         <ImageView
@@ -488,6 +520,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -495,6 +528,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+20 \u2103" />
                     </LinearLayout>
 
@@ -511,6 +545,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="23:00" />
 
                         <ImageView
@@ -518,6 +553,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -525,6 +561,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -541,6 +578,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="00:00" />
 
                         <ImageView
@@ -548,6 +586,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -555,6 +594,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+15 \u2103" />
                     </LinearLayout>
 
@@ -571,6 +611,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="01:00" />
 
                         <ImageView
@@ -578,6 +619,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -585,6 +627,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+15 \u2103" />
                     </LinearLayout>
 
@@ -601,6 +644,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="02:00" />
 
                         <ImageView
@@ -608,6 +652,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -615,6 +660,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+16 \u2103" />
                     </LinearLayout>
 
@@ -631,6 +677,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="03:00" />
 
                         <ImageView
@@ -638,6 +685,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -645,6 +693,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+17 \u2103" />
                     </LinearLayout>
 
@@ -661,6 +710,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="04:00" />
 
                         <ImageView
@@ -668,6 +718,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -675,6 +726,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+18 \u2103" />
                     </LinearLayout>
 
@@ -691,6 +743,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="05:00" />
 
                         <ImageView
@@ -698,6 +751,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -705,6 +759,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -721,6 +776,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="06:00" />
 
                         <ImageView
@@ -728,6 +784,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -735,6 +792,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+20 \u2103" />
                     </LinearLayout>
 
@@ -751,6 +809,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="07:00" />
 
                         <ImageView
@@ -758,6 +817,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -765,6 +825,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+21 \u2103" />
                     </LinearLayout>
 
@@ -781,6 +842,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="08:00" />
 
                         <ImageView
@@ -788,6 +850,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -795,6 +858,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+20 \u2103" />
                     </LinearLayout>
 
@@ -811,6 +875,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="09:00" />
 
                         <ImageView
@@ -818,6 +883,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -825,6 +891,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -841,6 +908,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="10:00" />
 
                         <ImageView
@@ -848,6 +916,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -855,6 +924,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -871,6 +941,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="11:00" />
 
                         <ImageView
@@ -878,6 +949,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -885,6 +957,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -901,6 +974,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="12:00" />
 
                         <ImageView
@@ -908,6 +982,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -915,6 +990,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
 
@@ -931,6 +1007,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="13:00" />
 
                         <ImageView
@@ -938,6 +1015,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             app:srcCompat="@drawable/day_snow" />
 
                         <TextView
@@ -945,6 +1023,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.33333"
+                            android:gravity="center_vertical"
                             android:text="+19 \u2103" />
                     </LinearLayout>
                 </LinearLayout>
