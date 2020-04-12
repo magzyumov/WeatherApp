@@ -15,5 +15,15 @@
     <string name="menu_location">Местоположение</string>
     <string name="menu_settings">Настройки</string>
 
-    <string name="settings_NightMode">Night Mode</string>
+    <string name="settings_NightMode">Ночной режим</string>
+
+    <string name="settings_NoticeText">Это могут быть сообщения о резких переменах в погоде или предупреждения МЧС</string>
+    <string name="settings_EUText">"Еденицы измерения"</string>
+    <string name="settings_Notice">Уведомления</string>
+    <string name="settings_TempEU">Температура</string>
+    <string name="settings_WindEU">Сила ветра</string>
+    <string name="settings_PressureEU">Давление</string>
+
+    <string name="now">сейчас</string>
+    <string name="feeling">Ошущается как:</string>
 </resources>

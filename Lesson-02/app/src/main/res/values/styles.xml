@@ -11,6 +11,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Style for settings activity -->
+    <style name="SettingsMainLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">#D8D8D8</item>
+    </style>
+
+    <!-- Style for ToolBar -->
     <style name="ToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>

@@ -19,5 +19,14 @@
     <string name="menu_settings">Settings</string>
 
     <string name="settings_NightMode">Night Mode</string>
+    <string name="settings_Notice">Notifications</string>
+    <string name="settings_TempEU">Temperature</string>
+    <string name="settings_WindEU">Wind power</string>
+    <string name="settings_PressureEU">Pressure</string>
+    <string name="settings_EUText">"Units of measurement"</string>
+    <string name="settings_NoticeText">"These can be reports of sudden changes in the weather or warnings of the Ministry of Emergencies"</string>
+
+    <string name="now">now</string>
+    <string name="feeling">Feels like:</string>
 
 </resources>

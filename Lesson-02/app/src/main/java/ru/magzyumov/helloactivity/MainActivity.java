@@ -4,17 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -25,14 +23,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Устанавливаем Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Забирем иненты
         intent = getIntent();
 
-        makeDateTime();
-        getCurrTemperature();
-        getCurrCity(intent.getStringExtra("newCity"));
+        makeHeaderTable();
     }
 
 
@@ -59,18 +57,31 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getCurrCity(String city){
-        String cityStr = (city==null)?(getResources().getString(R.string.currentCityName)):city;
-        TextView currCity = findViewById(R.id.currentCityName);
-        currCity.setText(cityStr);
+    private void makeHeaderTable(){
+        getCurrCity(intent.getStringExtra("newCity"));
+
+        TextView textViewCurrent = findViewById(R.id.textViewCurrent);
+        textViewCurrent.setText(getCurrTemperature());
+
+        TextView textViewCurrentEU = findViewById(R.id.textViewCurrentEU);
+        textViewCurrentEU.setText(getResources().getString(R.string.celsius));
+
+        ImageView imageViewCurrent = findViewById(R.id.imageViewCurrent);
+        imageViewCurrent.setImageResource(R.drawable.day_snow);
+
+
     }
 
-    private void getCurrTemperature(){
+    private String getCurrTemperature(){
         Random random = new Random();
         Integer currentTemperature = random.nextInt(50);
-        TextView currTempTextView = findViewById(R.id.currentTemperature);
-        String str = currentTemperature.toString() + " " + getResources().getString(R.string.celsius);
-        currTempTextView.setText(str);
+        return currentTemperature.toString();
+    }
+
+    private void getCurrCity(String city){
+        String cityStr = (city==null)?(getResources().getString(R.string.currentCityName)):city;
+        TextView currCity = findViewById(R.id.textViewCurrentCity);
+        currCity.setText(cityStr);
     }
 
     private void makeDateTime(){
@@ -84,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
         String dateText = dateFormat.format(currentDate);
         String timeText = timeFormat.format(currentDate);
 
-        TextView currentDayTextView = findViewById(R.id.currentDayTextView);
-        TextView currentDateTextView = findViewById(R.id.currentDateTextView);
-        TextView currentTimeTextView = findViewById(R.id.currentTimeTextView);
+        //TextView currentDayTextView = findViewById(R.id.currentDayTextView);
+        //TextView currentDateTextView = findViewById(R.id.currentDateTextView);
+        //TextView currentTimeTextView = findViewById(R.id.currentTimeTextView);
 
-        currentDayTextView.setText(dayText);
-        currentDateTextView.setText(dateText);
-        currentTimeTextView.setText(timeText);
+        //currentDayTextView.setText(dayText);
+        //currentDateTextView.setText(dateText);
+        //currentTimeTextView.setText(timeText);
     }
 }

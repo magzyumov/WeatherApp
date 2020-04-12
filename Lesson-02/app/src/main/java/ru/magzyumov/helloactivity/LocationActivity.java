@@ -51,6 +51,11 @@ public class LocationActivity extends AppCompatActivity implements SearchView.On
             startActivity(intent);
             return true;
         }
+        if (id == R.id.menu_settings) {
+            intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
