@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
 
         makeHeaderTable();
+        makeDateTime();
     }
 
 
@@ -88,19 +89,19 @@ public class MainActivity extends AppCompatActivity {
         Date currentDate = new Date();
 
         DateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-        DateFormat dateFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
         DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
         String dayText = dayFormat.format(currentDate);
         String dateText = dateFormat.format(currentDate);
         String timeText = timeFormat.format(currentDate);
 
-        //TextView currentDayTextView = findViewById(R.id.currentDayTextView);
-        //TextView currentDateTextView = findViewById(R.id.currentDateTextView);
-        //TextView currentTimeTextView = findViewById(R.id.currentTimeTextView);
+        TextView currentDayTextView = findViewById(R.id.textViewTextToday);
+        TextView currentDateTextView = findViewById(R.id.textViewDateToday);
+        TextView currentTimeTextView = findViewById(R.id.textView1H);
 
-        //currentDayTextView.setText(dayText);
-        //currentDateTextView.setText(dateText);
-        //currentTimeTextView.setText(timeText);
+        currentDayTextView.setText(dayText);
+        currentDateTextView.setText(dateText);
+        currentTimeTextView.setText(timeText);
     }
 }
