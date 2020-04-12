@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
@@ -17,6 +19,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Intent intent;
+    private final int REQUEST_CODE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +30,22 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Забирем иненты
-        intent = getIntent();
-
         makeHeaderTable();
         makeDateTime();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_LOCATION:
+                    getCurrCity(data.getStringExtra("newCity"));
+                    break;
+            }
+        } else {
+            Toast.makeText(this, "Wrong result", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -47,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.menu_location) {
             intent = new Intent(this, LocationActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_LOCATION);
             return true;
         }
         if (id == R.id.menu_settings) {
@@ -58,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void makeHeaderTable(){
-        getCurrCity(intent.getStringExtra("newCity"));
 
+
+    private void makeHeaderTable(){
         TextView textViewCurrent = findViewById(R.id.textViewCurrent);
         textViewCurrent.setText(getCurrTemperature());
 
@@ -69,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView imageViewCurrent = findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.day_snow);
-
-
     }
 
     private String getCurrTemperature(){

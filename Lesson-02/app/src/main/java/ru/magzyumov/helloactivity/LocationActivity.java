@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 public class LocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     //Объявляем переменные
@@ -37,40 +34,16 @@ public class LocationActivity extends AppCompatActivity implements SearchView.On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.menu_home) {
-            intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.menu_settings) {
-            intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
-        intent = new Intent(this, MainActivity.class);
+        intent = new Intent();
         intent.putExtra("newCity", query);
-        startActivity(intent);
-        //Toast.makeText(LocationActivity.this, query, Toast.LENGTH_LONG).show();
+        setResult(RESULT_OK, intent);
+        finish();
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        //Toast.makeText(LocationActivity.this, newText, Toast.LENGTH_LONG).show();
         return false;
     }
 }
