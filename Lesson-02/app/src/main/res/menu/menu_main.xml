@@ -5,13 +5,6 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/menu_home"
-        android:icon="@android:drawable/edit_text"
-        android:orderInCategory="300"
-        android:title="@string/menu_home"
-        app:showAsAction="collapseActionView" />
-
-    <item
         android:id="@+id/menu_location"
         android:icon="@android:drawable/ic_menu_mylocation"
         android:orderInCategory="300"
