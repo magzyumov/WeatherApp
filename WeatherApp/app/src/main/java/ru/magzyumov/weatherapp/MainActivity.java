@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -20,11 +21,24 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
+    private final String TAG = "WeatherApp";
+    private Bundle bundle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState == null){
+            makeToast("Первый запуск!");
+        } else {
+            makeToast("Повторный запуск!");
+        }
+
+        //Устанавливаем Toolbar
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //Устанавливаем Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -33,6 +47,64 @@ public class MainActivity extends AppCompatActivity {
         makeHeaderTable();
         makeDateTime();
     }
+
+    //Begin Методы для проверки жизненного цикла
+    @Override
+    protected void onStart() {
+        super.onStart();
+        makeToast("onStart()");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle saveInstanceState){
+        super.onRestoreInstanceState(saveInstanceState);
+        makeToast("Повторный запуск!! - onRestoreInstanceState()");
+        saveInstanceState.getBundle(String.valueOf(bundle));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeToast("onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        makeToast("onPause()");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle saveInstanceState){
+        super.onSaveInstanceState(saveInstanceState);
+        makeToast("onSaveInstanceState()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        makeToast("onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        makeToast("onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        makeToast("onDestroy()");
+    }
+
+    private void makeToast (String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, message);
+    }
+    //End Методы для проверки жизненного цикла
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
