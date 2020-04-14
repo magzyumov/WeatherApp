@@ -9,10 +9,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import static androidx.appcompat.app.AppCompatDelegate.getDefaultNightMode;
 
-
 public class SettingsActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    private Intent intent;
     private Switch switchNightMode;
 
     @Override
