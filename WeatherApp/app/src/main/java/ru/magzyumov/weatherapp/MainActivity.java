@@ -15,14 +15,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
     private final String TAG = "WeatherApp";
-    private Bundle bundle;
+    final MainPresenter presenter = MainPresenter.getInstance();
 
 
     @Override
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle saveInstanceState){
         super.onRestoreInstanceState(saveInstanceState);
         makeToast("Повторный запуск!! - onRestoreInstanceState()");
-        saveInstanceState.getBundle(String.valueOf(bundle));
     }
 
     @Override
@@ -105,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     //End Методы для проверки жизненного цикла
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,22 +142,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void makeHeaderTable(){
         TextView textViewCurrent = findViewById(R.id.textViewCurrent);
-        textViewCurrent.setText(getCurrTemperature());
+        textViewCurrent.setText(((Integer)presenter.getCurrentTemp()).toString());
 
         TextView textViewCurrentEU = findViewById(R.id.textViewCurrentEU);
         textViewCurrentEU.setText(getResources().getString(R.string.celsius));
 
         ImageView imageViewCurrent = findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.day_snow);
-    }
-
-    private String getCurrTemperature(){
-        Random random = new Random();
-        Integer currentTemperature = random.nextInt(50);
-        return currentTemperature.toString();
     }
 
     private void getCurrCity(String city){
