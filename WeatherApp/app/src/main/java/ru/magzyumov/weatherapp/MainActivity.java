@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         } else {
-            Toast.makeText(this, "Wrong result", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Wrong result", Toast.LENGTH_SHORT).show();
         }
     }
 
