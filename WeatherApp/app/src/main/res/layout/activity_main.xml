@@ -1665,7 +1665,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="@string/provider" />
+                android:text="@string/provider"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 
