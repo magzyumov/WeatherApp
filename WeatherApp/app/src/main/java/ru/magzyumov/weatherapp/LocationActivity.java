@@ -8,9 +8,9 @@ import android.widget.SearchView;
 
 public class LocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     //Объявляем переменные
-    private Toolbar toolbar;
     private SearchView searchView;
     private Intent intent;
+    final MainPresenter presenter = MainPresenter.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,7 @@ public class LocationActivity extends AppCompatActivity implements SearchView.On
         setContentView(R.layout.activity_location);
 
         //Устанавливаем Toolbar
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 
         //Инициализируем строку поиска
         searchView = findViewById(R.id.searchViewCity);
@@ -36,6 +35,7 @@ public class LocationActivity extends AppCompatActivity implements SearchView.On
     @Override
     public boolean onQueryTextSubmit(String query) {
         intent = new Intent();
+        presenter.setCurrentCity(query);
         intent.putExtra("newCity", query);
         setResult(RESULT_OK, intent);
         finish();

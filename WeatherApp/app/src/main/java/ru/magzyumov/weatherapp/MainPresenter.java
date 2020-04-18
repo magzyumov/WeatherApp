@@ -22,6 +22,7 @@ public final class MainPresenter {
 
     //Поля для хранения
     private int currentTemp;           // Поле для хранения температуры
+    private String currentCity;        // Поле для хранение текущего города
     private boolean settingNightMode;  //Поле для хранения темного режима
     private boolean settingTempEu;     //Поле для хранения единиц измерения температуры
     private boolean settingWindEU;     //Поле для хранения единиц измерения силы ветра
@@ -45,6 +46,8 @@ public final class MainPresenter {
     }
 
     public int getCurrentTemp(){ return currentTemp; }
+    public String getCurrentCity() {return currentCity; }
+    public void setCurrentCity(String currentCity) {this.currentCity = currentCity; }
 
     public void setSwitch(boolean switchPosition, Field field){
         switch (field) {
