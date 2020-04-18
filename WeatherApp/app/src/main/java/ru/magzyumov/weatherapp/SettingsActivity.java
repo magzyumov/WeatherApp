@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity {
-    private Toolbar toolbar;
     final MainPresenter presenter = MainPresenter.getInstance();
 
     @Override
@@ -16,8 +15,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         //Устанавливаем Toolbar
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 
         //Инициализируем переключатели
         initSwitch((Switch) findViewById(R.id.switchNightMode), MainPresenter.Field.SETTING_NIGHT_MODE);

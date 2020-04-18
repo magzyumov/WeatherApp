@@ -4,28 +4,25 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements Constants {
-    private Toolbar toolbar;
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
-    private final String TAG = "WeatherApp";
     final MainPresenter presenter = MainPresenter.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +30,14 @@ public class MainActivity extends AppCompatActivity implements Constants {
         setContentView(R.layout.activity_main);
 
         //Устанавливаем Toolbar
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        //Устанавливаем Toolbar
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 
         //Иницилизируем кнопку-ссылку
         initBottomLink();
+
+        //Ставим background картинку
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutPic);
+        linearLayout.setBackgroundResource(getResources().getIdentifier(getBackgroundPic(),"drawable", getApplicationContext().getPackageName()));
 
         makeHeaderTable();
         makeDateTime();
@@ -99,12 +95,55 @@ public class MainActivity extends AppCompatActivity implements Constants {
 
         ImageView imageViewCurrent = findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.day_snow);
+
+        getCurrCity(presenter.getCurrentCity());
     }
 
     private void getCurrCity(String city){
         String cityStr = (city==null)?(getResources().getString(R.string.currentCityName)):city;
         TextView currCity = findViewById(R.id.textViewCurrentCity);
         currCity.setText(cityStr);
+    }
+
+    private String getBackgroundPic(){
+        boolean dayClear = false;
+        StringBuilder picName = new StringBuilder();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        int month = calendar.get(Calendar.MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        switch (month) {
+            case Calendar.DECEMBER:
+            case Calendar.JANUARY:
+            case Calendar.FEBRUARY:
+                picName.append("winter_city_");
+                break;
+            case Calendar.MARCH:
+            case Calendar.APRIL:
+            case Calendar.MAY:
+                picName.append("spring_city_");
+                break;
+            case Calendar.JUNE:
+            case Calendar.JULY:
+            case Calendar.AUGUST:
+                picName.append("summer_city_");
+                break;
+            case Calendar.SEPTEMBER:
+            case Calendar.OCTOBER:
+            case Calendar.NOVEMBER:
+            default:
+                picName.append("autumn_city_");
+                break;
+        }
+
+        if(((hour >= 6) & (hour <= 8)) || ((hour >= 19) & (hour <= 20))) picName.append("dawn_");
+        if((hour >= 9) & (hour <= 18)) picName.append("day_");
+        if((hour >= 21) || (hour <= 5)) picName.append("night_");
+
+        picName.append(dayClear ? ("clear") : ("overcast"));
+
+        return picName.toString();
     }
 
     private void makeDateTime(){
