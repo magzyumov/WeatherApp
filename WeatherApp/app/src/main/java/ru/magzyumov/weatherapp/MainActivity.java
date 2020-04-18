@@ -3,6 +3,10 @@ package ru.magzyumov.weatherapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +41,15 @@ public class MainActivity extends AppCompatActivity implements Constants {
         setSupportActionBar(toolbar);
 
         //Иницилизируем кнопку-ссылку
+        initBottomLink();
+
+        makeHeaderTable();
+        makeDateTime();
+    }
+
+    private void initBottomLink(){
         TextView textView = findViewById(R.id.textViewProvider);
+        textView.setText(Html.fromHtml("<a href=" + PROVIDER_URL + "><font color=#AAA>" + getString(R.string.provider) + "</font></a>"));
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements Constants {
                 startActivity(browser);
             }
         });
-
-        makeHeaderTable();
-        makeDateTime();
     }
 
     @Override
