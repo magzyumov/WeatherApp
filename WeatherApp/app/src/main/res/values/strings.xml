@@ -28,5 +28,6 @@
 
     <string name="now">now</string>
     <string name="feeling">Feels like:</string>
+    <string name="provider">Data provided by Y.Weather</string>
 
 </resources>
