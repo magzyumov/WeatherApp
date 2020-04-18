@@ -6,7 +6,6 @@ import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
 public class SettingsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     final MainPresenter presenter = MainPresenter.getInstance();
@@ -45,6 +44,4 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

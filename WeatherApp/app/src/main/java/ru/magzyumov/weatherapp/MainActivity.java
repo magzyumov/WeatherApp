@@ -1,14 +1,13 @@
 package ru.magzyumov.weatherapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
@@ -16,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Constants {
     private Toolbar toolbar;
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
@@ -29,12 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState == null){
-            makeToast("Первый запуск!");
-        } else {
-            makeToast("Повторный запуск!");
-        }
-
         //Устанавливаем Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,81 +35,28 @@ public class MainActivity extends AppCompatActivity {
         //Устанавливаем Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Иницилизируем кнопку-ссылку
+        TextView textView = findViewById(R.id.textViewProvider);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(PROVIDER_URL));
+                startActivity(browser);
+            }
+        });
 
         makeHeaderTable();
         makeDateTime();
     }
 
-    //Begin Методы для проверки жизненного цикла
-    @Override
-    protected void onStart() {
-        super.onStart();
-        makeToast("onStart()");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle saveInstanceState){
-        super.onRestoreInstanceState(saveInstanceState);
-        makeToast("Повторный запуск!! - onRestoreInstanceState()");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        makeToast("onResume()");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        makeToast("onPause()");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle saveInstanceState){
-        super.onSaveInstanceState(saveInstanceState);
-        makeToast("onSaveInstanceState()");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        makeToast("onStop()");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        makeToast("onRestart()");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        makeToast("onDestroy()");
-    }
-
-    private void makeToast (String message){
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, message);
-    }
-    //End Методы для проверки жизненного цикла
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE_LOCATION:
-                    getCurrCity(data.getStringExtra("newCity"));
-                    break;
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Wrong result", Toast.LENGTH_SHORT).show();
+        if ((requestCode == REQUEST_CODE_LOCATION) & (resultCode == RESULT_OK)) {
+            getCurrCity(data.getStringExtra("newCity"));
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void makeHeaderTable(){
         TextView textViewCurrent = findViewById(R.id.textViewCurrent);

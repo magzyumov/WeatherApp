@@ -26,4 +26,5 @@
 
     <string name="now">сейчас</string>
     <string name="feeling">Ошущается как:</string>
+    <string name="provider">Данные предоставлены Я.Погода</string>
 </resources>
