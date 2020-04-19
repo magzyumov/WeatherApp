@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SettingsMainLinearLayout"
-    tools:context=".LocationActivity">
+    tools:context=".SettingsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -51,7 +51,11 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:text="@string/settings_TempEU"
-            android:textSize="18sp" />
+            android:showText="true"
+            android:textOff="@string/fahrenheit"
+            android:textOn="@string/celsius"
+            android:textSize="18sp"
+            tools:checked="false" />
 
         <Switch
             android:id="@+id/switchWindEU"
@@ -62,6 +66,9 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:text="@string/settings_WindEU"
+            android:showText="true"
+            android:textOff="@string/windEUOne"
+            android:textOn="@string/windEUTwo"
             android:textSize="18sp" />
 
         <Switch
@@ -73,6 +80,9 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:text="@string/settings_PressureEU"
+            android:showText="true"
+            android:textOff="@string/pressEUOne"
+            android:textOn="@string/pressEUTwo"
             android:textSize="18sp" />
     </LinearLayout>
 

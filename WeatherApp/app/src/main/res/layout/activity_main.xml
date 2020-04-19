@@ -233,7 +233,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.33333"
                                 android:gravity="center_vertical"
-                                app:srcCompat="@drawable/cloudy" />
+                                app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
 
                             <TextView
                                 android:id="@+id/textViewTempNow"
@@ -1138,7 +1138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.1"
-                        app:srcCompat="@drawable/day_snow_thunder" />
+                        app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
 
                     <TextView
                         android:id="@+id/textViewTempDayToday"
