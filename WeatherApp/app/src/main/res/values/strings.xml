@@ -7,10 +7,15 @@
     <string name="currentDate">AUG 30</string>
     <string name="currentTime">12:30</string>
     <string name="hintSearchCity">City</string>
+
+    <!-- EU Strings -->
     <string name="celsius" translatable="false">\u2103</string>
     <string name="fahrenheit" translatable="false">\u2109</string>
-    <string name="open" translatable="false">Open</string>
-    <string name="close" translatable="false">Close</string>
+    <string name="windEUOne">m/s</string>
+    <string name="windEUTwo">km/h</string>
+    <string name="pressEUOne">mmHg</string>
+    <string name="pressEUTwo">Pa</string>
+
 
     <string name="menu_select_city">Select city</string>
     <string name="menu_help">Help</string>

@@ -12,17 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity implements Constants {
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
     final MainPresenter presenter = MainPresenter.getInstance();
+    final PicLogic picLogic = PicLogic.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +35,12 @@ public class MainActivity extends AppCompatActivity implements Constants {
 
         //Ставим background картинку
         LinearLayout linearLayout = findViewById(R.id.linearLayoutPic);
-        linearLayout.setBackgroundResource(getResources().getIdentifier(getBackgroundPic(),"drawable", getApplicationContext().getPackageName()));
+        linearLayout.setBackgroundResource(getResources().getIdentifier(picLogic.getBackgroundPicName(),"drawable", getApplicationContext().getPackageName()));
 
+        //Обновляем данные
+        picLogic.refreshData();
         makeHeaderTable();
-        makeDateTime();
+        makeLine();
     }
 
     private void initBottomLink(){
@@ -105,64 +105,24 @@ public class MainActivity extends AppCompatActivity implements Constants {
         currCity.setText(cityStr);
     }
 
-    private String getBackgroundPic(){
-        boolean dayClear = false;
-        StringBuilder picName = new StringBuilder();
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
-        int month = calendar.get(Calendar.MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+    private void makeLine(){
+        String string = "textView1H";
+        String image = "imageView1H";
 
-        switch (month) {
-            case Calendar.DECEMBER:
-            case Calendar.JANUARY:
-            case Calendar.FEBRUARY:
-                picName.append("winter_city_");
-                break;
-            case Calendar.MARCH:
-            case Calendar.APRIL:
-            case Calendar.MAY:
-                picName.append("spring_city_");
-                break;
-            case Calendar.JUNE:
-            case Calendar.JULY:
-            case Calendar.AUGUST:
-                picName.append("summer_city_");
-                break;
-            case Calendar.SEPTEMBER:
-            case Calendar.OCTOBER:
-            case Calendar.NOVEMBER:
-            default:
-                picName.append("autumn_city_");
-                break;
+        ImageView imageView;
+        TextView textView;
+
+        imageView = findViewById(R.id.imageViewNow);
+        imageView.setImageResource(getResources().getIdentifier(picLogic.getLinePic(PicLogic.Field.values()[0]),"drawable", getApplicationContext().getPackageName()));
+
+        int cnt = 0;
+        for (int i = 1; i <= 24 ; i++) {
+            if((picLogic.getCurrentHour() + i) == 23) cnt = i;
+            textView = findViewById(getResources().getIdentifier(string.replace("1", String.valueOf(i)),"id", getApplicationContext().getPackageName()));
+            textView.setText(String.format("%02d:00", (((picLogic.getCurrentHour()+i) >= 24) ? (i-cnt-1) : (picLogic.getCurrentHour()+i))));
+
+            imageView = findViewById(getResources().getIdentifier(image.replace("1", String.valueOf(i)),"id", getApplicationContext().getPackageName()));
+            imageView.setImageResource(getResources().getIdentifier(picLogic.getLinePic(PicLogic.Field.values()[i]),"drawable", getApplicationContext().getPackageName()));
         }
-
-        if(((hour >= 6) & (hour <= 8)) || ((hour >= 19) & (hour <= 20))) picName.append("dawn_");
-        if((hour >= 9) & (hour <= 18)) picName.append("day_");
-        if((hour >= 21) || (hour <= 5)) picName.append("night_");
-
-        picName.append(dayClear ? ("clear") : ("overcast"));
-
-        return picName.toString();
-    }
-
-    private void makeDateTime(){
-        Date currentDate = new Date();
-
-        DateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        String dayText = dayFormat.format(currentDate);
-        String dateText = dateFormat.format(currentDate);
-        String timeText = timeFormat.format(currentDate);
-
-        TextView currentDayTextView = findViewById(R.id.textViewTextToday);
-        TextView currentDateTextView = findViewById(R.id.textViewDateToday);
-        TextView currentTimeTextView = findViewById(R.id.textView1H);
-
-        currentDayTextView.setText(dayText);
-        currentDateTextView.setText(dateText);
-        currentTimeTextView.setText(timeText);
     }
 }
