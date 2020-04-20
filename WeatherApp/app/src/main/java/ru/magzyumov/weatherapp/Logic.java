@@ -1,35 +1,28 @@
 package ru.magzyumov.weatherapp;
 
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.google.android.gms.common.util.WorkSourceUtil.getNames;
-
-public final class PicLogic extends AppCompatActivity {
+public final class Logic extends AppCompatActivity {
     //Внутреннее поле, будет хранить единственный экземпляр
-    private static PicLogic instance = null;
+    private static Logic instance = null;
 
     // Поле для синхронизации
     private static final Object syncObj = new Object();
 
     // Метод, который возвращает экземпляр объекта.
     // Если объекта нет, то создаем его.
-    public static PicLogic getInstance(){
+    public static Logic getInstance(){
         // Здесь реализована «ленивая» инициализация объекта,
         // то есть, пока объект не нужен, не создаем его.
         synchronized (syncObj) {
             if (instance == null) {
-                instance = new PicLogic();
+                instance = new Logic();
             }
             return instance;
         }
@@ -77,7 +70,7 @@ public final class PicLogic extends AppCompatActivity {
     private String imageView9DPic;          //Поле для хранения картинки погоды через 9 дней
 
     // Конструктор (вызывать извне его нельзя, поэтому он приватный)
-    private PicLogic(){
+    private Logic(){
         backgroundPicName = "winter_city_night_overcast";
     }
 
