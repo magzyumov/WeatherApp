@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity implements Constants {
         //Иницилизируем кнопку-ссылку
         initBottomLink();
 
-        //Ставим background картинку
-        LinearLayout linearLayout = findViewById(R.id.linearLayoutPic);
-        linearLayout.setBackgroundResource(getResources().getIdentifier(picLogic.getBackgroundPicName(),"drawable", getApplicationContext().getPackageName()));
-
         //Обновляем данные
         picLogic.refreshData();
         makeHeaderTable();
@@ -87,16 +83,22 @@ public class MainActivity extends AppCompatActivity implements Constants {
     }
 
     private void makeHeaderTable(){
+        String tempEU;
         TextView textViewCurrent = findViewById(R.id.textViewCurrent);
         textViewCurrent.setText(((Integer)presenter.getCurrentTemp()).toString());
 
+        tempEU = (presenter.getSwitch(MainPresenter.Field.SETTING_TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit));
         TextView textViewCurrentEU = findViewById(R.id.textViewCurrentEU);
-        textViewCurrentEU.setText(getResources().getString(R.string.celsius));
+        textViewCurrentEU.setText(tempEU);
 
         ImageView imageViewCurrent = findViewById(R.id.imageViewCurrent);
-        imageViewCurrent.setImageResource(R.drawable.day_snow);
+        imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
 
         getCurrCity(presenter.getCurrentCity());
+
+        //Ставим background картинку
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutPic);
+        linearLayout.setBackgroundResource(getResources().getIdentifier(picLogic.getBackgroundPicName(),"drawable", getApplicationContext().getPackageName()));
     }
 
     private void getCurrCity(String city){
