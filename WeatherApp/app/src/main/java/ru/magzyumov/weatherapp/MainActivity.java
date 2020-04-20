@@ -13,14 +13,11 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 public class MainActivity extends AppCompatActivity implements Constants {
     private Intent intent;
     private final int REQUEST_CODE_LOCATION = 1;
     final MainPresenter presenter = MainPresenter.getInstance();
-    final PicLogic picLogic = PicLogic.getInstance();
+    final Logic logic = Logic.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
         initBottomLink();
 
         //Обновляем данные
-        picLogic.refreshData();
+        logic.refreshData();
         makeHeaderTable();
         makeLine();
     }
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
 
         //Ставим background картинку
         LinearLayout linearLayout = findViewById(R.id.linearLayoutPic);
-        linearLayout.setBackgroundResource(getResources().getIdentifier(picLogic.getBackgroundPicName(),"drawable", getApplicationContext().getPackageName()));
+        linearLayout.setBackgroundResource(getResources().getIdentifier(logic.getBackgroundPicName(),"drawable", getApplicationContext().getPackageName()));
     }
 
     private void getCurrCity(String city){
@@ -115,16 +112,16 @@ public class MainActivity extends AppCompatActivity implements Constants {
         TextView textView;
 
         imageView = findViewById(R.id.imageViewNow);
-        imageView.setImageResource(getResources().getIdentifier(picLogic.getLinePic(PicLogic.Field.values()[0]),"drawable", getApplicationContext().getPackageName()));
+        imageView.setImageResource(getResources().getIdentifier(logic.getLinePic(Logic.Field.values()[0]),"drawable", getApplicationContext().getPackageName()));
 
         int cnt = 0;
         for (int i = 1; i <= 24 ; i++) {
-            if((picLogic.getCurrentHour() + i) == 23) cnt = i;
+            if((logic.getCurrentHour() + i) == 23) cnt = i;
             textView = findViewById(getResources().getIdentifier(string.replace("1", String.valueOf(i)),"id", getApplicationContext().getPackageName()));
-            textView.setText(String.format("%02d:00", (((picLogic.getCurrentHour()+i) >= 24) ? (i-cnt-1) : (picLogic.getCurrentHour()+i))));
+            textView.setText(String.format("%02d:00", (((logic.getCurrentHour()+i) >= 24) ? (i-cnt-1) : (logic.getCurrentHour()+i))));
 
             imageView = findViewById(getResources().getIdentifier(image.replace("1", String.valueOf(i)),"id", getApplicationContext().getPackageName()));
-            imageView.setImageResource(getResources().getIdentifier(picLogic.getLinePic(PicLogic.Field.values()[i]),"drawable", getApplicationContext().getPackageName()));
+            imageView.setImageResource(getResources().getIdentifier(logic.getLinePic(Logic.Field.values()[i]),"drawable", getApplicationContext().getPackageName()));
         }
     }
 }
