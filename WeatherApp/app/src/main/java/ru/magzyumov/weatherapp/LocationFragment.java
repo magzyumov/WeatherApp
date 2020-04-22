@@ -42,7 +42,6 @@ public class LocationFragment extends Fragment implements SearchView.OnQueryText
 
         //Показываем кнопку назад
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

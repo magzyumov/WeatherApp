@@ -28,11 +28,6 @@ public class MainFragment extends Fragment implements Constants{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        //Меняем текст в шапке
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.app_name);
-
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
         //Иницилизируем кнопку-ссылку
@@ -43,6 +38,18 @@ public class MainFragment extends Fragment implements Constants{
         makeLine();
         makeHeaderTable();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        //Меняем текст в шапке
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.app_name);
+
+        //Скрываем кнопку назад
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void makeHeaderTable(){

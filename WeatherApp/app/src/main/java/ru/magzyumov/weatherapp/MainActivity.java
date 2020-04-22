@@ -3,9 +3,9 @@ package ru.magzyumov.weatherapp;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +20,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Устанавливаем Toolbar
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 
 
