@@ -1,0 +1,1729 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:tag="mainFragment"
+    tools:context=".MainFragment">
+
+    <ScrollView
+        android:id="@+id/scrollViewMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutPic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spring_city_dawn_overcast"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewCurrentCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="@string/currentCityName"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="36sp" />
+
+                    <TextView
+                        android:id="@+id/textViewDistrict"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Октябрьский район"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewCurrent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="22"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="28sp" />
+
+                        <TextView
+                            android:id="@+id/textViewCurrentEU"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/celsius"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="28sp" />
+
+                        <ImageView
+                            android:id="@+id/imageViewCurrent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            app:srcCompat="@drawable/day_clear" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewWeather"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Пасмурно"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewFeelingText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/feeling"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/textViewFeelingValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="+15 \u2103"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="30dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewWindSpeedNow"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    app:srcCompat="@drawable/ic_wind_white" />
+
+                                <TextView
+                                    android:id="@+id/textViewWindSpeedNow"
+                                    style="@style/HorizontalScrollStyle_CommonBlock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="4 м/c, ЮВ" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    app:srcCompat="@drawable/ic_pressure_white" />
+
+                                <TextView
+                                    android:id="@+id/textViewPressureNow"
+                                    style="@style/HorizontalScrollStyle_CommonBlock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="743 мм рт.ст." />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    app:srcCompat="@drawable/ic_humidity_white" />
+
+                                <TextView
+                                    android:id="@+id/textViewHumidity"
+                                    style="@style/HorizontalScrollStyle_CommonBlock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="39%" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textViewNow"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="@string/now" />
+
+                            <ImageView
+                                android:id="@+id/imageViewNow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
+
+                            <TextView
+                                android:id="@+id/textViewTempNow"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+12 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView1H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="14:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView1H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_partial_cloud" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp1H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+13 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView2H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="15:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView2H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp2H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+14 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView3H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="16:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView3H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp3H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+16 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView4H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="17:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView4H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp4H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+17 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView5H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="18:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView5H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp5H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+18 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView6H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="19:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView6H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp6H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView7H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="20:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView7H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp7H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+20 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView8H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="21:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView8H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp8H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+21 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView9H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="22:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView9H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp9H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+20 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView10H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="23:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView10H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp10H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView11H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="00:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView11H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp11H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+15 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView12H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="01:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView12H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp12H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+15 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView13H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="02:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView13H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp13H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+16 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView14H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="03:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView14H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp14H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+17 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView15H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="04:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView15H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp15H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+18 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView16H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="05:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView16H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp16H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView17H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="06:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView17H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp17H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+20 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView18H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="07:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView18H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp18H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+21 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView19H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="08:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView19H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp19H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+20 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView20H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="09:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView20H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp20H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView21H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="10:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView21H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp21H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView22H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="11:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView22H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp22H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView23H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="12:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView23H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp23H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView24H"
+                                style="@style/HorizontalScrollStyle_DataBlock_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="13:00" />
+
+                            <ImageView
+                                android:id="@+id/imageView24H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                app:srcCompat="@drawable/day_snow" />
+
+                            <TextView
+                                android:id="@+id/textViewTemp24H"
+                                style="@style/HorizontalScrollStyle_DataBlock_Low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.33333"
+                                android:gravity="center_vertical"
+                                android:text="+19 \u2103" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDateToday"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="12 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewTextToday"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Сегодня"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDayToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNightToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate1D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="13 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText1D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Завтра"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView1D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay1D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight1D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate2D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="14 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText2D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Вторник"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView2D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay2D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight2D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate3D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="15 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText3D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Среда"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView3D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay3D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight3D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate4D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="16 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText4D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Четверг"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView4D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay4D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight4D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate5D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="17 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText5D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Пятница"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView5D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay5D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight5D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate6D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="18 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText6D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Суббота"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView6D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay6D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight6D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate7D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="19 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText7D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Воскресенье"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView7D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay7D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight7D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate8D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="20 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText8D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Понедельник"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView8D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay8D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight8D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDate9D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="21 апреля"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewText9D"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Вторник"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView9D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        app:srcCompat="@drawable/day_snow_thunder" />
+
+                    <TextView
+                        android:id="@+id/textViewTempDay9D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+20 \u2103"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTempNight9D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:text="+15 \u2103"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewProvider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/provider"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
