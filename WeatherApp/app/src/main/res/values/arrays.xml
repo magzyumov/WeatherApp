@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cloudiness">
+        <item>Ясно</item>
+        <item>Малооблачно</item>
+        <item>Облачно</item>
+        <item>Пасмурно</item>
+        <item>Переменная облачность</item>
+    </string-array>
+
+    <integer-array name="weather_imgs">
+        <item>@drawable/bkn_d_line_light</item>
+        <item>@drawable/bkn_d_line_dark</item>
+        <item>@drawable/bkn_minus_ra_d_line_light</item>
+        <item>@drawable/bkn_minus_ra_d_line_dark</item>
+        <item>@drawable/bkn_minus_ra_n_line_light</item>
+        <item>@drawable/bkn_minus_ra_n_line_dark</item>
+        <item>@drawable/bkn_minus_sn_d_line_light</item>
+        <item>@drawable/bkn_minus_sn_d_line_dark</item>
+        <item>@drawable/bkn_minus_sn_n_line_light</item>
+        <item>@drawable/bkn_minus_sn_n_line_dark</item>
+        <item>@drawable/bkn_n_line_light</item>
+        <item>@drawable/bkn_n_line_dark</item>
+        <item>@drawable/bkn_plus_ra_d_line_light</item>
+        <item>@drawable/bkn_plus_ra_d_line_dark</item>
+        <item>@drawable/bkn_plus_ra_n_line_light</item>
+        <item>@drawable/bkn_plus_ra_n_line_dark</item>
+        <item>@drawable/bkn_plus_sn_d_line_light</item>
+        <item>@drawable/bkn_plus_sn_d_line_dark</item>
+        <item>@drawable/bkn_plus_sn_n_line_light</item>
+        <item>@drawable/bkn_plus_sn_n_line_dark</item>
+        <item>@drawable/bkn_ra_d_line_light</item>
+        <item>@drawable/bkn_ra_d_line_dark</item>
+        <item>@drawable/bkn_ra_n_line_light</item>
+        <item>@drawable/bkn_ra_n_line_dark</item>
+        <item>@drawable/bkn_sn_d_line_light</item>
+        <item>@drawable/bkn_sn_d_line_dark</item>
+        <item>@drawable/bkn_sn_n_line_light</item>
+        <item>@drawable/bkn_sn_n_line_dark</item>
+    </integer-array>
+
+    <integer-array name="weather_background">
+        <item>@drawable/spring_city_dawn_clear</item>
+        <item>@drawable/spring_city_dawn_overcast</item>
+        <item>@drawable/spring_city_day_clear</item>
+        <item>@drawable/spring_city_day_overcast</item>
+        <item>@drawable/spring_city_night_clear</item>
+        <item>@drawable/spring_city_night_overcast</item>
+        <item>@drawable/summer_city_dawn_clear</item>
+        <item>@drawable/summer_city_dawn_overcast</item>
+        <item>@drawable/summer_city_day_clear</item>
+        <item>@drawable/summer_city_day_overcast</item>
+        <item>@drawable/summer_city_night_clear</item>
+        <item>@drawable/summer_city_night_overcast</item>
+        <item>@drawable/autumn_city_dawn_clear</item>
+        <item>@drawable/autumn_city_dawn_overcast</item>
+        <item>@drawable/autumn_city_day_clear</item>
+        <item>@drawable/autumn_city_day_overcast</item>
+        <item>@drawable/autumn_city_night_clear</item>
+        <item>@drawable/autumn_city_night_overcast</item>
+        <item>@drawable/winter_city_dawn_clear</item>
+        <item>@drawable/winter_city_dawn_overcast</item>
+        <item>@drawable/winter_city_day_clear</item>
+        <item>@drawable/winter_city_day_overcast</item>
+        <item>@drawable/winter_city_night_clear</item>
+        <item>@drawable/winter_city_night_overcast</item>
+    </integer-array>
+</resources>
