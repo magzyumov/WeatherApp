@@ -2,12 +2,16 @@ package ru.magzyumov.weatherapp.Forecast.Daily;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
 import ru.magzyumov.weatherapp.R;
+
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class DailyForecastSource implements DailyForecastDataSource {
     private int length;             //Длина прогноза
@@ -41,6 +45,7 @@ public class DailyForecastSource implements DailyForecastDataSource {
             calendar.add(Calendar.DATE, (i==0)?(0):(1));
             date = dateFormat.format(calendar.getTime());
             dayName = dayFormat.format(calendar.getTime());
+            dayName = capitalize(dayName);
 
             image = (true) ? (pictures[(i*2)+1]) : (pictures[(i*2)+2]);
 
