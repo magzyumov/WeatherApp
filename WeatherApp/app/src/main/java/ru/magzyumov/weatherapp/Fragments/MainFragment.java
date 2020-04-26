@@ -1,8 +1,11 @@
 package ru.magzyumov.weatherapp.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -36,11 +39,24 @@ import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastAdapter;
  */
 public class MainFragment extends Fragment implements Constants {
     private View view;
+    private FragmentChanger fragmentChanger;
     final MainPresenter presenter = MainPresenter.getInstance();
     final Logic logic = Logic.getInstance();
 
     public MainFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentChanger = null;
     }
 
     @Override
