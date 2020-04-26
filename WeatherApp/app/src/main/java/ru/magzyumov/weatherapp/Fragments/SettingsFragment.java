@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp;
+package ru.magzyumov.weatherapp.Fragments;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+
+import ru.magzyumov.weatherapp.MainPresenter;
+import ru.magzyumov.weatherapp.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -8,7 +8,7 @@
         <item>Переменная облачность</item>
     </string-array>
 
-    <integer-array name="weather_imgs">
+    <array name="weather_images_hourly">
         <item>@drawable/bkn_d_line_light</item>
         <item>@drawable/bkn_d_line_dark</item>
         <item>@drawable/bkn_minus_ra_d_line_light</item>
@@ -37,7 +37,38 @@
         <item>@drawable/bkn_sn_d_line_dark</item>
         <item>@drawable/bkn_sn_n_line_light</item>
         <item>@drawable/bkn_sn_n_line_dark</item>
-    </integer-array>
+    </array>
+
+    <array name="weather_images_daily">
+        <item>@drawable/bkn_d_light</item>
+        <item>@drawable/bkn_d_dark</item>
+        <item>@drawable/bkn_minus_ra_d_light</item>
+        <item>@drawable/bkn_minus_ra_d_dark</item>
+        <item>@drawable/bkn_minus_ra_n_light</item>
+        <item>@drawable/bkn_minus_ra_n_dark</item>
+        <item>@drawable/bkn_minus_sn_d_light</item>
+        <item>@drawable/bkn_minus_sn_d_dark</item>
+        <item>@drawable/bkn_minus_sn_n_light</item>
+        <item>@drawable/bkn_minus_sn_n_dark</item>
+        <item>@drawable/bkn_n_light</item>
+        <item>@drawable/bkn_n_dark</item>
+        <item>@drawable/bkn_plus_ra_d_light</item>
+        <item>@drawable/bkn_plus_ra_d_dark</item>
+        <item>@drawable/bkn_plus_ra_n_light</item>
+        <item>@drawable/bkn_plus_ra_n_dark</item>
+        <item>@drawable/bkn_plus_sn_d_light</item>
+        <item>@drawable/bkn_plus_sn_d_dark</item>
+        <item>@drawable/bkn_plus_sn_n_light</item>
+        <item>@drawable/bkn_plus_sn_n_dark</item>
+        <item>@drawable/bkn_ra_d_light</item>
+        <item>@drawable/bkn_ra_d_dark</item>
+        <item>@drawable/bkn_ra_n_light</item>
+        <item>@drawable/bkn_ra_n_dark</item>
+        <item>@drawable/bkn_sn_d_light</item>
+        <item>@drawable/bkn_sn_d_dark</item>
+        <item>@drawable/bkn_sn_n_light</item>
+        <item>@drawable/bkn_sn_n_dark</item>
+    </array>
 
     <integer-array name="weather_background">
         <item>@drawable/spring_city_dawn_clear</item>

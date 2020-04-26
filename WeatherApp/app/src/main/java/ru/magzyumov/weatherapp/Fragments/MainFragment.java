@@ -1,10 +1,13 @@
-package ru.magzyumov.weatherapp;
+package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +15,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastSource;
+import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastSource;
+import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Logic;
+import ru.magzyumov.weatherapp.MainPresenter;
+import ru.magzyumov.weatherapp.R;
+import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastAdapter;
+import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastAdapter;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements Constants{
+public class MainFragment extends Fragment implements Constants {
     private View view;
     final MainPresenter presenter = MainPresenter.getInstance();
     final Logic logic = Logic.getInstance();
@@ -33,9 +50,11 @@ public class MainFragment extends Fragment implements Constants{
         //Иницилизируем кнопку-ссылку
         initBottomLink();
 
+        initDailyForecast();
+        initHourlyForecast();
+
         //Обновляем данные
         logic.refreshData();
-        makeLine();
         makeHeaderTable();
         return view;
     }
@@ -50,6 +69,48 @@ public class MainFragment extends Fragment implements Constants{
 
         //Скрываем кнопку назад
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    private void initDailyForecast() {
+        // строим источник данных
+        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder().setResources(getResources()).build();
+
+        RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
+        dailyRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        dailyRecyclerView.setLayoutManager(layoutManager);
+
+        DailyForecastAdapter adapter = new DailyForecastAdapter(sourceData);
+        dailyRecyclerView.setAdapter(adapter);
+
+        // Добавим разделитель карточек
+        DividerItemDecoration itemDecoration = new DividerItemDecoration( getContext(), LinearLayoutManager.VERTICAL);
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
+        dailyRecyclerView.addItemDecoration(itemDecoration);
+
+        //Установка слушателя
+        adapter.SetOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(), String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void initHourlyForecast() {
+
+        // строим источник данных
+        HourlyForecastDataSource sourceData = new HourlyForecastSourceBuilder().setResources(getResources()).build();
+
+        RecyclerView hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
+        hourlyRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false);
+        hourlyRecyclerView.setLayoutManager(layoutManager);
+
+        HourlyForecastAdapter adapter = new HourlyForecastAdapter(sourceData);
+        hourlyRecyclerView.setAdapter(adapter);
     }
 
     private void makeHeaderTable(){
@@ -89,26 +150,5 @@ public class MainFragment extends Fragment implements Constants{
                 startActivity(browser);
             }
         });
-    }
-
-    private void makeLine(){
-        String string = "textView1H";
-        String image = "imageView1H";
-
-        ImageView imageView;
-        TextView textView;
-
-        imageView = view.findViewById(R.id.imageViewNow);
-        imageView.setImageResource(getResources().getIdentifier(logic.getLinePic(Logic.Field.values()[0]),"drawable", getActivity().getApplicationContext().getPackageName()));
-
-        int cnt = 0;
-        for (int i = 1; i <= 24 ; i++) {
-            if((logic.getCurrentHour() + i) == 23) cnt = i;
-            textView = view.findViewById(getResources().getIdentifier(string.replace("1", String.valueOf(i)),"id", getActivity().getApplicationContext().getPackageName()));
-            textView.setText(String.format("%02d:00", (((logic.getCurrentHour()+i) >= 24) ? (i-cnt-1) : (logic.getCurrentHour()+i))));
-
-            imageView = view.findViewById(getResources().getIdentifier(image.replace("1", String.valueOf(i)),"id", getActivity().getApplicationContext().getPackageName()));
-            imageView.setImageResource(getResources().getIdentifier(logic.getLinePic(Logic.Field.values()[i]),"drawable", getActivity().getApplicationContext().getPackageName()));
-        }
     }
 }
