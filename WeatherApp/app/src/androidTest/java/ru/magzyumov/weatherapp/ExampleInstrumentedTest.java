@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("ru.magzyumov.helloactivity", appContext.getPackageName());
+        assertEquals("ru.magzyumov.weatherapp", appContext.getPackageName());
     }
 }

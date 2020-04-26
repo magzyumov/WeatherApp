@@ -1,4 +1,4 @@
-package ru.magzyumov.helloactivity;
+package ru.magzyumov.weatherapp;
 
 import org.junit.Test;
 
