@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="cloudiness">
+    <string-array name="cloudiness_type">
         <item>Ясно</item>
         <item>Малооблачно</item>
         <item>Облачно</item>
         <item>Пасмурно</item>
         <item>Переменная облачность</item>
+    </string-array>
+
+    <string-array name="precipitation_type">
+        <item>Нет осадков</item>
+        <item>Дождь</item>
+        <item>Снег</item>
+        <item>Смешанные осадки</item>
+    </string-array>
+
+    <string-array name="precipitation_intensity">
+        <item>Нет осадков</item>
+        <item>Небольшой дождь / снег</item>
+        <item>Дождь / снег</item>
+        <item>Сильный дождь / снег</item>
+    </string-array>
+
+    <string-array name="gm">
+        <item>Нет заметных возмущений</item>
+        <item>Небольшие возмущения</item>
+        <item>Слабая геомагнитная буря</item>
+        <item>Малая геомагнитная буря</item>
+        <item>Умеренная геомагнитная буря</item>
+        <item>Сильная геомагнитная буря</item>
+        <item>Жесткий геомагнитный шторм</item>
+        <item>Экстремальный шторм</item>
+    </string-array>
+
+    <string-array name="wind_scale_8">
+        <item>Штиль</item>
+        <item>Северный</item>
+        <item>Северо-восточный</item>
+        <item>Восточный</item>
+        <item>Юго-восточный</item>
+        <item>Южный</item>
+        <item>Юго-западный</item>
+        <item>Западный</item>
+        <item>Северо-западный</item>
     </string-array>
 
     <array name="weather_images_hourly">
