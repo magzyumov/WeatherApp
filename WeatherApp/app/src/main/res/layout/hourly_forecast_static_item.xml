@@ -9,8 +9,8 @@
     android:layout_marginRight="10dp"
     android:layout_marginBottom="5dp"
     app:cardCornerRadius="15dp"
-    app:cardBackgroundColor="@color/colorBlack"
-    app:cardElevation="3dp">
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
 
 <LinearLayout
     android:layout_width="wrap_content"

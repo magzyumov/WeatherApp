@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
-    app:cardBackgroundColor="#4D9AF8"
+    app:cardBackgroundColor="@color/colorWhite"
     app:cardCornerRadius="15dp"
     app:contentPadding="10dp"
     app:cardElevation="3dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -23,7 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="0.7"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/textViewDate"
@@ -68,7 +70,8 @@
             android:layout_weight="0.1"
             android:gravity="center_horizontal"
             android:text="+15 \u2103"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
