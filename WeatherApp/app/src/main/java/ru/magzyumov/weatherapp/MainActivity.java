@@ -7,12 +7,17 @@ import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
+import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentChanger {
+    private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,5 +66,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void changeFragment(String tag, Bundle args, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = fragmentFinder.findFragment(tag);
+        transaction.replace(R.id.mainLayout, fragment,tag);
+        if(addToBackStack) transaction.addToBackStack("");
+        transaction.commitAllowingStateLoss();
     }
 }
