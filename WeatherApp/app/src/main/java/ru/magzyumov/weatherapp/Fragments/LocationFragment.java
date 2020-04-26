@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp;
+package ru.magzyumov.weatherapp.Fragments;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+
+import ru.magzyumov.weatherapp.MainPresenter;
+import ru.magzyumov.weatherapp.R;
 
 /**
  * A simple {@link Fragment} subclass.

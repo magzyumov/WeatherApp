@@ -4,8 +4,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import ru.magzyumov.weatherapp.Fragments.LocationFragment;
+import ru.magzyumov.weatherapp.Fragments.MainFragment;
+import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
