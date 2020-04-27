@@ -1,5 +1,6 @@
-package ru.magzyumov.weatherapp;
+package ru.magzyumov.weatherapp.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,14 +14,30 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import ru.magzyumov.weatherapp.MainPresenter;
+import ru.magzyumov.weatherapp.R;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment  {
+    private FragmentChanger fragmentChanger;
     final MainPresenter presenter = MainPresenter.getInstance();
 
     public SettingsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentChanger = null;
     }
 
     @Override

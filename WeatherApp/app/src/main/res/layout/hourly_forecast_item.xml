@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewTime"
+            style="@style/HorizontalScrollStyle_DataBlock_High"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33333"
+            android:gravity="center_vertical"
+            android:text="@string/now" />
+
+        <ImageView
+            android:id="@+id/imageViewWeather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33333"
+            android:gravity="center_vertical"
+            app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
+
+        <TextView
+            android:id="@+id/textViewTemp"
+            style="@style/HorizontalScrollStyle_DataBlock_Low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33333"
+            android:gravity="center_vertical"
+            android:text="+12 \u2103" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
