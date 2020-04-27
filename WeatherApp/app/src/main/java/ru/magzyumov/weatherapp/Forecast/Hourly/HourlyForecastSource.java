@@ -8,10 +8,10 @@ import java.util.List;
 import ru.magzyumov.weatherapp.R;
 
 public class HourlyForecastSource implements HourlyForecastDataSource {
-    private int length;             //Длина прогноза
-    private List<HourlyForecast> dataSource;   // строим этот источник данных
-    private Resources resources;    // ресурсы приложения
-    private Calendar calendar;      //Календарь
+    private int length;                         //Длина прогноза
+    private List<HourlyForecast> dataSource;    // Строим этот источник данных
+    private Resources resources;                // Ресурсы приложения
+    private Calendar calendar;                  //Календарь
 
     //Конструктор класса
     public HourlyForecastSource(Resources resources, int length) {
@@ -33,10 +33,7 @@ public class HourlyForecastSource implements HourlyForecastDataSource {
         int[] pictures = getImageArray();
 
         // заполнение источника данных
-        //Первый элемент статичный
-        dataSource.add(new HourlyForecast(7, 746, 30));
-
-        for (int i = 1; i < length-15; i++) {
+        for (int i = 0; i < length-15; i++) {
             if((calendar.get(Calendar.HOUR_OF_DAY) + i) == 23) cnt = i;
             time = String.format("%02d:00", (((calendar.get(Calendar.HOUR_OF_DAY)+i) >= 24) ? (i-cnt-1) : (calendar.get(Calendar.HOUR_OF_DAY)+i)));
             image = (true) ? (pictures[(i*2)+1]) : (pictures[(i*2)+2]);
