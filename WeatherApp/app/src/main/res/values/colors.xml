@@ -7,6 +7,8 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#ffffff</color>
 
+    <color name="colorGray">#D8D8D8</color>
+    <color name="colorDarkGray">#959595</color>
     <color name="backgroundDefaultColor">#FAFAFA</color>
     <color name="backgroundNightColor">#B3AFAF</color>
 </resources>
