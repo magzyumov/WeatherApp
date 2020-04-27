@@ -148,6 +148,14 @@ public class MainFragment extends Fragment implements Constants {
         linearLayout.setBackgroundResource(getResources().
                 getIdentifier(logic.getBackgroundPicName(),"drawable", getActivity().
                         getApplicationContext().getPackageName()));
+
+        TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
+        TextView textViewPressure = view.findViewById(R.id.textViewPressure);
+        TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
+
+        textViewWindSpeed.setText("7 м/с");
+        textViewPressure.setText("748 мм.рт.ст");
+        textViewHumidity.setText("10 %");
     }
 
     private void getCurrCity(String city){
