@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="0dp"
+    android:layout_marginTop="0dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="1dp"
+    app:contentPadding="10dp"
+    app:cardElevation="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.75"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewDate"
+                    style="@style/ForecastTextStyle"
+                    android:text="12 апреля" />
+
+                <TextView
+                    android:id="@+id/textViewDayName"
+                    style="@style/ForecastTextStyle"
+                    android:text="Сегодня"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:contentDescription="@string/weatherIcon"
+                    android:id="@+id/imageViewWeather"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    app:srcCompat="@drawable/bkn_minus_ra_n_dark" />
+
+                <TextView
+                    android:id="@+id/textViewTemp"
+                    style="@style/ForecastTextStyle"
+                    android:text="+20" />
+
+                <TextView
+                    android:id="@+id/textViewTempEU"
+                    style="@style/ForecastTextStyle"
+                    android:text="@string/celsius" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center|right"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:contentDescription="@string/weatherIcon"
+                    android:id="@+id/imageViewWindSpeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@drawable/ic_wind_dark"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/textViewWindSpeed"
+                    style="@style/ForecastTextStyle"
+                    android:text="4" />
+
+                <TextView
+                    android:id="@+id/textViewWindSpeedEU"
+                    style="@style/ForecastTextStyle"
+                    android:text="@string/windEUOne" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.31"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:contentDescription="@string/weatherIcon"
+                    android:id="@+id/imageViewPressure"
+                    style="@style/ForecastTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@drawable/ic_pressure_dark"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/textViewPressure"
+                    style="@style/ForecastTextStyle"
+                    android:text="743" />
+
+                <TextView
+                    android:id="@+id/textViewPressureEU"
+                    style="@style/ForecastTextStyle"
+                    android:text="@string/pressEUOne" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center|left"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:contentDescription="@string/weatherIcon"
+                    android:id="@+id/imageViewHumidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@drawable/ic_humidity_dark"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/textViewHumidity"
+                    style="@style/ForecastTextStyle"
+                    android:text="39" />
+
+                <TextView
+                    android:id="@+id/textViewHumidityEU"
+                    style="@style/ForecastTextStyle"
+                    android:text="@string/humidityEU" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

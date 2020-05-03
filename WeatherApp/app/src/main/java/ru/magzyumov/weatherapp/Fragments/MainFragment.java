@@ -11,37 +11,34 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastSource;
+import com.google.android.material.snackbar.Snackbar;
+
+import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
-import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastSourceBuilder;
-import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastDataSource;
-import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastDataSource;
-import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastSource;
-import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Forecast.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.DailyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Forecast.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Logic;
-import ru.magzyumov.weatherapp.MainPresenter;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Forecast.Daily.DailyForecastAdapter;
-import ru.magzyumov.weatherapp.Forecast.Hourly.HourlyForecastAdapter;
+import ru.magzyumov.weatherapp.Forecast.DailyForecastAdapter;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MainFragment extends Fragment implements Constants {
     private View view;
+    Logic logic;
+    private CurrentForecast currentForecast;
     private FragmentChanger fragmentChanger;
-    final MainPresenter presenter = MainPresenter.getInstance();
-    final Logic logic = Logic.getInstance();
+    private BaseActivity baseActivity;
 
     public MainFragment() {
         // Required empty public constructor
@@ -51,12 +48,15 @@ public class MainFragment extends Fragment implements Constants {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
+        if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
+        logic = Logic.getInstance(getResources());
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         fragmentChanger = null;
+        baseActivity = null;
     }
 
     @Override
@@ -66,8 +66,10 @@ public class MainFragment extends Fragment implements Constants {
         //Иницилизируем кнопку-ссылку
         initBottomLink();
 
+        //Забираем посылку с погодой
+        currentForecast = getArguments().getParcelable("currentForecast");
+
         initDailyForecast();
-        initHourlyForecast();
 
         //Обновляем данные
         logic.refreshData();
@@ -89,7 +91,7 @@ public class MainFragment extends Fragment implements Constants {
 
     private void initDailyForecast() {
         // строим источник данных
-        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder().setResources(getResources()).build();
+        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder().setResources(getResources()).setContext(baseActivity).build();
 
         RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
@@ -109,59 +111,65 @@ public class MainFragment extends Fragment implements Constants {
         adapter.SetOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Toast.LENGTH_LONG).show();
+                Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)
+                        .setAction( "OK" , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast. makeText (getContext(), "Кнопка в Snackbar нажата" ,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }).show();
             }
+
         });
     }
 
-    private void initHourlyForecast() {
-
-        // строим источник данных
-        HourlyForecastDataSource sourceData = new HourlyForecastSourceBuilder().setResources(getResources()).build();
-
-        RecyclerView hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
-        hourlyRecyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false);
-        hourlyRecyclerView.setLayoutManager(layoutManager);
-
-        HourlyForecastAdapter adapter = new HourlyForecastAdapter(sourceData);
-        hourlyRecyclerView.setAdapter(adapter);
-    }
-
     private void makeHeaderTable(){
-        String tempEU;
-        TextView textViewCurrent = view.findViewById(R.id.textViewCurrent);
-        textViewCurrent.setText(((Integer)presenter.getCurrentTemp()).toString());
+        TextView currentCity = view.findViewById(R.id.textViewCity);
+        currentCity.setText(currentForecast.getCity());
 
-        tempEU = (presenter.getSwitch(MainPresenter.Field.SETTING_TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit));
-        TextView textViewCurrentEU = view.findViewById(R.id.textViewCurrentEU);
-        textViewCurrentEU.setText(tempEU);
+        TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
+        currentDistrict.setText(currentForecast.getDistrict());
+
+        TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
+        textViewCurrent.setText(currentForecast.getTemp().toString());
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
 
-        getCurrCity(presenter.getCurrentCity());
+        TextView currWeather = view.findViewById(R.id.textViewCurrentWeather);
+        currWeather.setText(currentForecast.getWeather());
 
-        //Ставим background картинку
-        LinearLayout linearLayout = view.findViewById(R.id.linearLayoutPic);
-        linearLayout.setBackgroundResource(getResources().
-                getIdentifier(logic.getBackgroundPicName(),"drawable", getActivity().
-                        getApplicationContext().getPackageName()));
+        TextView currFeelingTemp = view.findViewById(R.id.textViewCurrentFeelingTemp);
+        currFeelingTemp.setText(currentForecast.getFeeling().toString());
+
+        TextView currFeelingTempEu = view.findViewById(R.id.textViewCurrentFeelingTempEu);
+        currFeelingTempEu.setText(currentForecast.getFeelingEu());
 
         TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
+        textViewWindSpeed.setText(currentForecast.getWindSpeed());
+        TextView textViewWindSpeedEU = view.findViewById(R.id.textViewWindSpeedEU);
+        textViewWindSpeedEU.setText(currentForecast.getWindSpeedEu());
+
         TextView textViewPressure = view.findViewById(R.id.textViewPressure);
+        textViewPressure.setText(currentForecast.getPressure());
+        TextView textViewPressureEU = view.findViewById(R.id.textViewPressureEU);
+        textViewPressureEU.setText(currentForecast.getPressureEu());
+
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
+        textViewHumidity.setText(currentForecast.getHumidity());
+        TextView textViewHumidityEU = view.findViewById(R.id.textViewHumidityEU);
+        textViewHumidityEU.setText(currentForecast.getHumidityEu());
 
-        textViewWindSpeed.setText("7 м/с");
-        textViewPressure.setText("748 мм.рт.ст");
-        textViewHumidity.setText("10 %");
-    }
+        //Ставим background картинку
+        FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
+        mainLayout.setBackgroundResource(logic.getMainLayerPic());
 
-    private void getCurrCity(String city){
-        String cityStr = (city==null)?(getResources().getString(R.string.currentCityName)):city;
-        TextView currCity = view.findViewById(R.id.textViewCurrentCity);
-        currCity.setText(cityStr);
+        FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
+        secondLayout.setBackgroundResource(logic.getSecondLayerPic());
+
+        TextView textViewCurrentEU = view.findViewById(R.id.textViewCurrentTempEU);
+        textViewCurrentEU.setText((baseActivity.getPreference(SETTING, TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit)));
     }
 
     private void initBottomLink(){

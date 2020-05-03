@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -8,6 +8,10 @@
         <item name="android:windowBackground">@color/colorGray</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppDarkTheme" parent="Theme.MaterialComponents.NoActionBar">
+
     </style>
 
     <!-- Style for settings activity -->
@@ -38,19 +42,38 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <!-- Style for Main Block -->
+    <style name="ForecastTextStyle_MainBlock">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
+    </style>
+
     <!-- Style for Main Horizontal Scroll Block -->
-    <style name="HorizontalScrollStyle_CommonBlock">
+    <style name="ForecastTextStyle_CommonBlock">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">19sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
     <style name="HorizontalScrollStyle_DataBlock_High">
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textSize">14sp</item>
     </style>
-    <style name="HorizontalScrollStyle_DataBlock_Low">
+
+
+    <!-- Style for Forecast List -->
+    <style name="ForecastTextStyle">
         <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>
