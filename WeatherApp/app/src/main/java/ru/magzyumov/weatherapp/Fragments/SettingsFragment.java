@@ -14,14 +14,19 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import ru.magzyumov.weatherapp.BaseActivity;
+import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.MainPresenter;
 import ru.magzyumov.weatherapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment  {
+public class SettingsFragment extends Fragment implements Constants {
     private FragmentChanger fragmentChanger;
+    private BaseActivity baseActivity;
     final MainPresenter presenter = MainPresenter.getInstance();
 
     public SettingsFragment() {
@@ -32,12 +37,14 @@ public class SettingsFragment extends Fragment  {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
+        if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         fragmentChanger = null;
+        baseActivity = null;
     }
 
     @Override
@@ -62,22 +69,22 @@ public class SettingsFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
 
         //Инициализируем переключатели
-        initSwitch(view.findViewById(R.id.switchNightMode), MainPresenter.Field.SETTING_NIGHT_MODE);
-        initSwitch(view.findViewById(R.id.switchTempEU), MainPresenter.Field.SETTING_TEMP_EU);
-        initSwitch(view.findViewById(R.id.switchWindEU), MainPresenter.Field.SETTING_WIND_EU);
-        initSwitch(view.findViewById(R.id.switchPressureEU), MainPresenter.Field.SETTING_PRESS_EU);
-        initSwitch(view.findViewById(R.id.switchNotice), MainPresenter.Field.SETTING_NOTICE);
+        initSwitch(view.findViewById(R.id.switchNightMode), SETTING, NIGHT_MODE);
+        initSwitch(view.findViewById(R.id.switchTempEU), SETTING, TEMP_EU);
+        initSwitch(view.findViewById(R.id.switchWindEU), SETTING, WIND_EU);
+        initSwitch(view.findViewById(R.id.switchPressureEU), SETTING, PRESS_EU);
+        initSwitch(view.findViewById(R.id.switchNotice), SETTING, NOTICE);
     }
 
-    private void initSwitch(Switch view, final MainPresenter.Field field)  {
-        Switch switchButton = view;
-        switchButton.setChecked(presenter.getSwitch(field));
-        switchButton.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+    private void initSwitch(SwitchMaterial view, String preference, String parameter)  {
+        SwitchMaterial switchButton = view;
+        switchButton.setChecked(baseActivity.getPreference(preference, parameter));
+        switchButton.setOnCheckedChangeListener(new SwitchMaterial.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                presenter.setSwitch(isChecked, field);
+                baseActivity.setPreference(preference, parameter, isChecked);
+                if(preference == SETTING & parameter == NIGHT_MODE) baseActivity.recreate();
             }
         });
     }
-
 }

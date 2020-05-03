@@ -4,16 +4,6 @@ import java.util.Random;
 
 public final class MainPresenter {
 
-    //Набор типов полей
-    public enum Field {
-        CURRENT_TEMP,
-        SETTING_NIGHT_MODE,
-        SETTING_TEMP_EU,
-        SETTING_WIND_EU,
-        SETTING_PRESS_EU,
-        SETTING_NOTICE
-    }
-
     //Внутреннее поле, будет хранить единственный экземпляр
     private static MainPresenter instance = null;
 
@@ -49,59 +39,6 @@ public final class MainPresenter {
     public String getCurrentCity() {return currentCity; }
     public void setCurrentCity(String currentCity) {this.currentCity = currentCity; }
 
-    public void setSwitch(boolean switchPosition, Field field){
-        switch (field) {
-            case SETTING_NIGHT_MODE:
-                setSettingNightMode(switchPosition);
-                break;
-            case SETTING_TEMP_EU:
-                setSettingTempEu(switchPosition);
-                break;
-            case SETTING_WIND_EU:
-                setSettingWindEU(switchPosition);
-                break;
-            case SETTING_PRESS_EU:
-                setSettingPressEU(switchPosition);
-                break;
-            case SETTING_NOTICE:
-                setSettingNotice(switchPosition);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public boolean getSwitch(Field field){
-        switch (field) {
-            case SETTING_NIGHT_MODE:
-                return getSettingNightMode();
-            case SETTING_TEMP_EU:
-                return getSettingTempEu();
-            case SETTING_WIND_EU:
-                return getSettingWindEU();
-            case SETTING_PRESS_EU:
-                return getSettingPressEU();
-            case SETTING_NOTICE:
-                return getSettingNotice();
-            default:
-                return false;
-        }
-    }
-
-    private boolean getSettingNightMode(){ return settingNightMode; }
-    private void setSettingNightMode(boolean settingNightMode){ this.settingNightMode = settingNightMode; }
-
-    private boolean getSettingTempEu(){ return settingTempEu; }
-    private void setSettingTempEu(boolean settingTempEu){ this.settingTempEu = settingTempEu; }
-
-    private boolean getSettingWindEU(){ return settingWindEU; }
-    private void setSettingWindEU(boolean settingWindEU){ this.settingWindEU = settingWindEU; }
-
-    private boolean getSettingPressEU(){ return settingPressEU; }
-    private void setSettingPressEU(boolean settingPressEU){ this.settingPressEU = settingPressEU; }
-
-    private boolean getSettingNotice(){ return settingNotice; }
-    private void setSettingNotice(boolean settingNotice){ this.settingNotice = settingNotice; }
 
     // Метод, который возвращает экземпляр объекта.
     // Если объекта нет, то создаем его.

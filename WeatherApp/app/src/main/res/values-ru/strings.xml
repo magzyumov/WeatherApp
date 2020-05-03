@@ -8,6 +8,7 @@
     <string name="currentTime">12:30</string>
     <string name="currentDay">ПОНЕДЕЛЬНИК</string>
     <string name="hintSearchCity">Город</string>
+    <string name="weatherIcon">Иконка погоды</string>
 
     <string name="menu_select_city">Выбор города</string>
     <string name="menu_help">Помощь</string>
