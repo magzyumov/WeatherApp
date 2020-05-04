@@ -11,17 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import ru.magzyumov.weatherapp.MainPresenter;
+import ru.magzyumov.weatherapp.BaseActivity;
+import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class LocationFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class LocationFragment extends Fragment implements Constants, SearchView.OnQueryTextListener {
     //Объявляем переменные
-    private FragmentChanger fragmentChanger;
     private SearchView searchView;
-    final MainPresenter presenter = MainPresenter.getInstance();
+    private BaseActivity baseActivity;
+    private FragmentChanger fragmentChanger;
 
     public LocationFragment() {
         // Required empty public constructor
@@ -31,14 +29,15 @@ public class LocationFragment extends Fragment implements SearchView.OnQueryText
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
+        if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         fragmentChanger = null;
+        baseActivity = null;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,11 +65,8 @@ public class LocationFragment extends Fragment implements SearchView.OnQueryText
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        presenter.setCurrentCity(query);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.mainLayout, new MainFragment(),"mainFragment")
-                .commit();
+        baseActivity.setStringPreference(LOCATION, CURRENT_CITY, query);
+        fragmentChanger.changeFragment("mainFragment", null, false);
         return false;
     }
 

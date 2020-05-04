@@ -4,30 +4,22 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
-import ru.magzyumov.weatherapp.MainPresenter;
 import ru.magzyumov.weatherapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends Fragment implements Constants {
-    private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
-    final MainPresenter presenter = MainPresenter.getInstance();
+    private FragmentChanger fragmentChanger;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -78,11 +70,11 @@ public class SettingsFragment extends Fragment implements Constants {
 
     private void initSwitch(SwitchMaterial view, String preference, String parameter)  {
         SwitchMaterial switchButton = view;
-        switchButton.setChecked(baseActivity.getPreference(preference, parameter));
+        switchButton.setChecked(baseActivity.getBooleanPreference(preference, parameter));
         switchButton.setOnCheckedChangeListener(new SwitchMaterial.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                baseActivity.setPreference(preference, parameter, isChecked);
+                baseActivity.setBooleanPreference(preference, parameter, isChecked);
                 if(preference == SETTING & parameter == NIGHT_MODE) baseActivity.recreate();
             }
         });

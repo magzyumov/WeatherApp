@@ -34,8 +34,8 @@ import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastAdapter;
 
 public class MainFragment extends Fragment implements Constants {
-    private View view;
     Logic logic;
+    private View view;
     private CurrentForecast currentForecast;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
@@ -120,7 +120,6 @@ public class MainFragment extends Fragment implements Constants {
                             }
                         }).show();
             }
-
         });
     }
 
@@ -169,7 +168,7 @@ public class MainFragment extends Fragment implements Constants {
         secondLayout.setBackgroundResource(logic.getSecondLayerPic());
 
         TextView textViewCurrentEU = view.findViewById(R.id.textViewCurrentTempEU);
-        textViewCurrentEU.setText((baseActivity.getPreference(SETTING, TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit)));
+        textViewCurrentEU.setText((baseActivity.getBooleanPreference(SETTING, TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit)));
     }
 
     private void initBottomLink(){

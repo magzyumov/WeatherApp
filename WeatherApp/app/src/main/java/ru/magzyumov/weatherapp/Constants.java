@@ -9,4 +9,7 @@ public interface Constants {
     String WIND_EU = "WIND_EU";
     String PRESS_EU = "PRESS_EU";
     String NOTICE = "NOTICE";
+
+    String LOCATION = "LOCATION";
+    String CURRENT_CITY = "CURRENT_CITY";
 }
