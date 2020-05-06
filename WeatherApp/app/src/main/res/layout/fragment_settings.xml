@@ -30,6 +30,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/settings_NightMode"
+                android:textColor="@color/colorBlack"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -46,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:textColor="@color/colorBlack"
                 android:text="@string/settings_EUText" />
 
 
@@ -59,6 +61,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="@string/settings_TempEU"
                 app:showText="true"
+                android:textColor="@color/colorBlack"
                 android:textOff="@string/fahrenheit"
                 android:textOn="@string/celsius"
                 android:textSize="18sp"
@@ -73,6 +76,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
                 app:showText="true"
+                android:textColor="@color/colorBlack"
                 android:text="@string/settings_WindEU"
                 android:textOff="@string/windEUOne"
                 android:textOn="@string/windEUTwo"
@@ -87,6 +91,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
                 app:showText="true"
+                android:textColor="@color/colorBlack"
                 android:text="@string/settings_PressureEU"
                 android:textOff="@string/pressEUOne"
                 android:textOn="@string/pressEUTwo"
@@ -108,6 +113,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
+                android:textColor="@color/colorBlack"
                 android:text="@string/settings_Notice"
                 android:textSize="18sp" />
 
@@ -118,6 +124,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
+                android:textColor="@color/colorBlack"
                 android:text="@string/settings_NoticeText" />
         </LinearLayout>
 
