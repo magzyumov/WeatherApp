@@ -107,30 +107,34 @@
         <item>@drawable/bkn_sn_n_dark</item>
     </array>
 
-    <integer-array name="weather_background">
-        <item>@drawable/spring_city_dawn_clear</item>
-        <item>@drawable/spring_city_dawn_overcast</item>
-        <item>@drawable/spring_city_day_clear</item>
-        <item>@drawable/spring_city_day_overcast</item>
-        <item>@drawable/spring_city_night_clear</item>
-        <item>@drawable/spring_city_night_overcast</item>
-        <item>@drawable/summer_city_dawn_clear</item>
-        <item>@drawable/summer_city_dawn_overcast</item>
-        <item>@drawable/summer_city_day_clear</item>
-        <item>@drawable/summer_city_day_overcast</item>
-        <item>@drawable/summer_city_night_clear</item>
-        <item>@drawable/summer_city_night_overcast</item>
-        <item>@drawable/autumn_city_dawn_clear</item>
-        <item>@drawable/autumn_city_dawn_overcast</item>
-        <item>@drawable/autumn_city_day_clear</item>
-        <item>@drawable/autumn_city_day_overcast</item>
-        <item>@drawable/autumn_city_night_clear</item>
-        <item>@drawable/autumn_city_night_overcast</item>
-        <item>@drawable/winter_city_dawn_clear</item>
-        <item>@drawable/winter_city_dawn_overcast</item>
-        <item>@drawable/winter_city_day_clear</item>
-        <item>@drawable/winter_city_day_overcast</item>
-        <item>@drawable/winter_city_night_clear</item>
-        <item>@drawable/winter_city_night_overcast</item>
-    </integer-array>
+    <!-- Background picture array -->
+    <array name="mainBackLayerPic">
+        <item>@drawable/bg_day</item>
+        <item>@drawable/bg_night</item>
+    </array>
+
+    <array name="secondBackLayerPic">
+        <item>@drawable/rain_1</item>
+        <item>@drawable/rain_2</item>
+        <item>@drawable/rain_3</item>
+        <item>@drawable/snow_1</item>
+        <item>@drawable/snow_2</item>
+        <item>@drawable/snow_3</item>
+        <item>@drawable/snow_rain_1</item>
+        <item>@drawable/snow_rain_2</item>
+        <item>@drawable/snow_rain_3</item>
+        <item>@drawable/cloud_day_1</item>
+        <item>@drawable/cloud_day_2</item>
+        <item>@drawable/cloud_day_3</item>
+        <item>@drawable/ph_mist_day</item>
+        <item>@drawable/tint_day_clear</item>
+        <item>@drawable/tint_day_cloudy</item>
+        <item>@drawable/cloud_night_1</item>
+        <item>@drawable/cloud_night_2</item>
+        <item>@drawable/cloud_night_3</item>
+        <item>@drawable/ph_mist_night</item>
+        <item>@drawable/tint_night_clear</item>
+        <item>@drawable/tint_night_cloudy</item>
+        <item>@drawable/lightning</item>
+    </array>
 </resources>

@@ -1,5 +1,8 @@
 package ru.magzyumov.weatherapp;
 
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+
 import androidx.appcompat.app.AppCompatActivity;
 import java.security.SecureRandom;
 import java.util.Calendar;
@@ -16,12 +19,12 @@ public final class Logic extends AppCompatActivity {
 
     // Метод, который возвращает экземпляр объекта.
     // Если объекта нет, то создаем его.
-    public static Logic getInstance(){
+    public static Logic getInstance(Resources resources){
         // Здесь реализована «ленивая» инициализация объекта,
         // то есть, пока объект не нужен, не создаем его.
         synchronized (syncObj) {
             if (instance == null) {
-                instance = new Logic();
+                instance = new Logic(resources);
             }
             return instance;
         }
@@ -30,12 +33,14 @@ public final class Logic extends AppCompatActivity {
     //Поля для хранения
     private boolean isDay = false;          //Поле для хранения день или ночь
     private int currentHour = 0;            //Поле для хренения текущего часа
-    private String backgroundPicName;       //Поле для хранение картинки для заднего фона
+    private int mainLayerPic;        //Поле для хранение картинки для заднего фона
+    private int secondLayerPic;      //Поле для хранение картинки для заднего фона
+    private Resources resources;
 
 
     // Конструктор (вызывать извне его нельзя, поэтому он приватный)
-    private Logic(){
-        backgroundPicName = "winter_city_night_overcast";
+    private Logic(Resources resources){
+        this.resources = resources;
     }
 
     //Метод обновления данных
@@ -44,9 +49,9 @@ public final class Logic extends AppCompatActivity {
         getDataFromServer();
     }
 
-    public String getBackgroundPicName() {return this.backgroundPicName;}
+    public int getMainLayerPic() {return this.mainLayerPic;}
+    public int getSecondLayerPic() { return this.secondLayerPic;}
     public int getCurrentHour() {return this.currentHour;}
-
 
     //Метод будет посылать запрос на сервер потом обрабатывать его
     private void getDataFromServer(){
@@ -55,51 +60,36 @@ public final class Logic extends AppCompatActivity {
     }
 
     private void getBackgroundPic(){
-        boolean dayClear = false;
-        StringBuilder picName = new StringBuilder();
+        int[] mainBackLayerPic;
+        int[] secondBackLayerPic;
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(new Date());
-        int month = calendar.get(Calendar.MONTH);
+
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 
-        switch (month) {
-            case Calendar.DECEMBER:
-            case Calendar.JANUARY:
-            case Calendar.FEBRUARY:
-                picName.append("winter_city_");
-                break;
-            case Calendar.MARCH:
-            case Calendar.APRIL:
-            case Calendar.MAY:
-                picName.append("spring_city_");
-                break;
-            case Calendar.JUNE:
-            case Calendar.JULY:
-            case Calendar.AUGUST:
-                picName.append("summer_city_");
-                break;
-            default:
-                picName.append("autumn_city_");
-                break;
-        }
+        mainBackLayerPic = getLayerImageArray(R.array.mainBackLayerPic);
+        secondBackLayerPic = getLayerImageArray(R.array.secondBackLayerPic);
 
-        if(((currentHour >= 6) & (currentHour <= 8)) || ((currentHour >= 19) & (currentHour <= 20))){
-            isDay = false;
-            picName.append("dawn_");
-        }
-
-        if((currentHour >= 9) & (currentHour <= 18)){
+        if((currentHour >= 8) & (currentHour <= 19)){
             isDay = true;
-            picName.append("day_");
         }
 
-        if((currentHour >= 21) || (currentHour <= 5)){
+        if((currentHour >= 20) || (currentHour <= 7)){
             isDay = false;
-            picName.append("night_");
         }
 
-        picName.append(dayClear ? ("clear") : ("overcast"));
+        this.mainLayerPic = isDay ? mainBackLayerPic[0] : mainBackLayerPic[1];
+        this.secondLayerPic = isDay ? secondBackLayerPic[0] : secondBackLayerPic[1];
+    }
 
-        this.backgroundPicName = picName.toString();
+    // Механизм вытаскивания идентификаторов картинок (к сожалению просто массив не работает)
+    private int[] getLayerImageArray(int resId){
+        TypedArray pictures = resources.obtainTypedArray(resId);
+        int length = pictures.length();
+        int[] answer = new int[length];
+        for(int i = 0; i < length; i++){
+            answer[i] = pictures.getResourceId(i, 0);
+        }
+        return answer;
     }
 }

@@ -7,10 +7,12 @@
     <string name="currentDate">AUG 30</string>
     <string name="currentTime">12:30</string>
     <string name="hintSearchCity">City</string>
+    <string name="weatherIcon">Weather icon</string>
 
     <!-- EU Strings -->
     <string name="celsius" translatable="false">\u2103</string>
     <string name="fahrenheit" translatable="false">\u2109</string>
+    <string name="humidityEU" translatable="false">\uFF05</string>
     <string name="windEUOne">m/s</string>
     <string name="windEUTwo">km/h</string>
     <string name="pressEUOne">mmHg</string>
