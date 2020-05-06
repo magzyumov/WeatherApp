@@ -1,32 +1,42 @@
 package ru.magzyumov.weatherapp;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import ru.magzyumov.weatherapp.Forecast.CurrentForecast;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements FragmentChanger {
+public class MainActivity extends BaseActivity implements FragmentChanger {
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
+    private CurrentForecast currentForecast;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Создаем временный прогноз погоды
+        currentForecast = new CurrentForecast();
+        bundle = new Bundle();
+        bundle.putParcelable("currentForecast", currentForecast);
+
         // На первом старте добавляем основной фрагмент
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
         if(getSupportFragmentManager().getFragments().isEmpty()){
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new MainFragment(),"mainFragment").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, mainFragment,"mainFragment").commit();
         }
 
         //Устанавливаем Toolbar
