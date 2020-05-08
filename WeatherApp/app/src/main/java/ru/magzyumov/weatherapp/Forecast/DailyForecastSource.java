@@ -85,7 +85,7 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
                 image = (true) ? (pictures[(2)+1]) : (pictures[(2)+2]);
                 temp = dailyForecastModel.getList()[i].getMain().getTemp();
                 windSpeed = dailyForecastModel.getList()[i].getWind().getSpeed();
-                pressure = dailyForecastModel.getList()[i].getMain().getPressure();
+                pressure = (int) (dailyForecastModel.getList()[i].getMain().getPressure() * HPA);
                 humidity = dailyForecastModel.getList()[i].getMain().getHumidity();
             } else {
                 image = (true) ? (pictures[(i*2)+1]) : (pictures[(i*2)+2]);

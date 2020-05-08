@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.concurrent.CountDownLatch;
+
 import ru.magzyumov.weatherapp.Forecast.CurrentForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.GetData;
@@ -43,7 +45,6 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
 
         bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
         bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
-        //sendParcel(false);
 
         // На первом старте добавляем основной фрагмент
         MainFragment mainFragment = new MainFragment();
@@ -126,7 +127,6 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
     public void sendParcel(boolean refresh){
 
         if (refresh){
-            //bundle = new Bundle();
             MainFragment mainFragment = (MainFragment) fragmentFinder.findFragment("mainFragment");
             bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
             bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
