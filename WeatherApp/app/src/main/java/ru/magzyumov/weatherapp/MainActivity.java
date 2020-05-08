@@ -36,15 +36,14 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
         //Создаем временный прогноз погоды
         currentForecastParcel = new CurrentForecastParcel();
         dailyForecastParcel = new DailyForecastParcel();
-
-        getData = new GetData(currentForecastParcel, dailyForecastParcel, findViewById(R.id.mainLayout), this);
-        getData.buildCurrent();
-        getData.buildDaily();
-
         bundle = new Bundle();
+
+        getData = new GetData(currentForecastParcel, dailyForecastParcel, getApplicationContext(), this);
+        getData.build();
 
         bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
         bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
+        //sendParcel(false);
 
         // На первом старте добавляем основной фрагмент
         MainFragment mainFragment = new MainFragment();
@@ -124,17 +123,18 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
         this.dailyForecastParcel = dailyForecastParcel;
     }
 
-    public void sendParcel(){
-        bundle = new Bundle();
-        MainFragment mainFragment = (MainFragment) fragmentFinder.findFragment("mainFragment");
+    public void sendParcel(boolean refresh){
 
-        bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
-        bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
-        mainFragment.setArguments(bundle);
+        if (refresh){
+            //bundle = new Bundle();
+            MainFragment mainFragment = (MainFragment) fragmentFinder.findFragment("mainFragment");
+            bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
+            bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
+            mainFragment.setArguments(bundle);
 
-        mainFragment.getParcel();
-        mainFragment.initDailyForecast();
-        mainFragment.makeHeaderTable();
-
+            mainFragment.getParcel();
+            mainFragment.initDailyForecast();
+            mainFragment.makeHeaderTable();
+        }
     }
 }
