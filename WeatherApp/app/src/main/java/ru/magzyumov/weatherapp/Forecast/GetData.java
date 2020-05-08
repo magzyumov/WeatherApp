@@ -14,18 +14,21 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
-import ru.magzyumov.weatherapp.BuildConfig;
+
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.MainActivity;
 import ru.magzyumov.weatherapp.R;
+
+import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
 public class GetData implements Constants {
 
@@ -33,105 +36,84 @@ public class GetData implements Constants {
     private DailyForecastParcel dailyForecastParcel;
     private MainActivity mainActivity;
     private Context context;
-    private View view;
 
-    public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, View view, MainActivity mainActivity){
-        //this.currentForecastParcel = currentForecastParcel;
-        //this.dailyForecastParcel = dailyForecastParcel;
-        this.currentForecastParcel = new CurrentForecastParcel();
-        this.dailyForecastParcel = new DailyForecastParcel();
+    public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context, MainActivity mainActivity){
+        this.currentForecastParcel = currentForecastParcel;
+        this.dailyForecastParcel = dailyForecastParcel;
         this.mainActivity = mainActivity;
-        this.view = view;
+        this.context = context;
     }
 
-    public CurrentForecastParcel getCurrentForecast (){
-        return this.currentForecastParcel;
-    }
-
-    public DailyForecastParcel getDailyForecast (){
-        return this.dailyForecastParcel;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void buildCurrent(){
+    public void build(){
         try {
-            final Handler handler = new Handler();// Запоминаем основной поток
-            final URL uri = new URL(CURR_WEATHER_URL + BuildConfig.WEATHER_API_KEY);
-            Thread receiveForecastThread = new Thread(()-> forecastThread(handler, uri, true));
-            receiveForecastThread.start();
+            final URL currUri = new URL(CURR_WEATHER_URL + WEATHER_API_KEY);
+            final URL dailyUri = new URL(DAILY_WEATHER_URL + WEATHER_API_KEY);
+            final Handler handler = new Handler(); // Запоминаем основной поток
+            new Thread(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                public void run() {
+                    HttpsURLConnection urlConnection = null;
+                    try {
+                        String currResult = makeRequest(currUri, urlConnection);
+                        String dailyResult = makeRequest(dailyUri, urlConnection);
+                        // преобразование данных запроса в модель
+                        Gson gson = new Gson();
+                        final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
+                        final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
+                        // Возвращаемся к основному потоку
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                makeWeather(cwRequest, dwRequest);
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.e(TAG, "Fail connection", e);
+                        e.printStackTrace();
+                    } finally {
+                        if (null != urlConnection) {
+                            urlConnection.disconnect();
+                        }
+                    }
+                }
+            }).start();
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Fail start current thread", e);
+            Log.e(TAG, "Fail URI", e);
             e.printStackTrace();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void buildDaily(){
-        try {
-            final Handler handler = new Handler();// Запоминаем основной поток
-            final URL uri = new URL(DAILY_WEATHER_URL + BuildConfig.WEATHER_API_KEY);
-            Thread receiveForecastThread = new Thread(()-> forecastThread(handler, uri,false));
-            receiveForecastThread.start();
-        } catch (MalformedURLException e) {
-            showNoticeToast(e.getMessage());
-            Log.e(TAG, "Fail start daily thread", e);
-            e.printStackTrace();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void forecastThread(Handler handler, URL uri, boolean current){
-        HttpsURLConnection urlConnection = null;
-        try {
-            urlConnection = (HttpsURLConnection) uri.openConnection();
-            urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
-            urlConnection.setReadTimeout(REQUEST_TIMEOUT); // установка таймаута - 10 000 миллисекунд
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
-            String result = getLines(in);
-            // преобразование данных запроса в модель
-            Gson gson = new Gson();
-            if (current){
-                final CurrentForecastModel weatherRequest = gson.fromJson(result, CurrentForecastModel.class);
-                // Возвращаемся к основному потоку
-                handler.post(()-> makeWeather(weatherRequest));
-            } else {
-                final DailyForecastModel weatherRequest = gson.fromJson(result, DailyForecastModel.class);
-                // Возвращаемся к основному потоку
-                handler.post(()->makeWeather(weatherRequest));
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Fail connection", e);
-            handler.post(()-> showNoticeToast(e.getMessage()));
-            e.printStackTrace();
-        } finally {
-            if (null != urlConnection) {
-                urlConnection.disconnect();
-            }
-        }
-    }
-
-    private void makeWeather(CurrentForecastModel weatherRequest){
-        currentForecastParcel.setCity(weatherRequest.getName());                      // Забираем название года из прогноза
-        currentForecastParcel.setDistrict(weatherRequest.getName());                  // Пока район забираем так же
-        currentForecastParcel.setTemp(weatherRequest.getMain().getTemp());            // Забираем температуру
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void makeWeather(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
+        currentForecastParcel.setCity(cwRequest.getName());                      // Забираем название года из прогноза
+        currentForecastParcel.setDistrict(cwRequest.getName());                  // Пока район забираем так же
+        currentForecastParcel.setTemp(cwRequest.getMain().getTemp());            // Забираем температуру
         currentForecastParcel.setTempEu("Te");                                        // Надо подумать как забрать
-        currentForecastParcel.setImage(weatherRequest.getWeather()[0].getIcon());     // Забираем иконку с сервера
-        currentForecastParcel.setWeather(weatherRequest.getWeather()[0].getMain());   // Состояние погоды
-        currentForecastParcel.setFeeling(weatherRequest.getMain().getFeels_like());   // Ощущения
+        currentForecastParcel.setImage(cwRequest.getWeather()[0].getIcon());     // Забираем иконку с сервера
+        currentForecastParcel.setWeather(cwRequest.getWeather()[0].getMain());   // Состояние погоды
+        currentForecastParcel.setFeeling(cwRequest.getMain().getFeels_like());   // Ощущения
         currentForecastParcel.setFeelingEu("Te");                                     // Надо подумать как забрать
-        currentForecastParcel.setWindSpeed(weatherRequest.getWind().getSpeed());      // Скорость ветра
+        currentForecastParcel.setWindSpeed(cwRequest.getWind().getSpeed());      // Скорость ветра
         currentForecastParcel.setWindSpeedEu("Te");                                   // Надо подумать как забрать
-        currentForecastParcel.setPressure(weatherRequest.getMain().getPressure());    // Давление
+        currentForecastParcel.setPressure(cwRequest.getMain().getPressure());          // Давление
         currentForecastParcel.setPressureEu("Te");                                    // Надо подумать как забрать
-        currentForecastParcel.setHumidity(weatherRequest.getMain().getHumidity());    // Влажность
+        currentForecastParcel.setHumidity(cwRequest.getMain().getHumidity());    // Влажность
         currentForecastParcel.setHumidityEu("Te");                                    // Надо подумать как забрать
+
+        dailyForecastParcel.setList(dwRequest.getList());
+        mainActivity.setDailyForecastParcel(dailyForecastParcel);
         mainActivity.setCurrentForecastParcel(currentForecastParcel);
+        mainActivity.sendParcel(true);
     }
 
-    private void makeWeather(DailyForecastModel weatherRequest){
-        dailyForecastParcel.setList(weatherRequest.getList());
-        mainActivity.setDailyForecastParcel(dailyForecastParcel);
-        mainActivity.sendParcel();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String makeRequest(URL uri, HttpsURLConnection urlConnection) throws IOException {
+        urlConnection = (HttpsURLConnection) uri.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setReadTimeout(REQUEST_TIMEOUT);
+        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        String result = getLines(in);
+        return result;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
