@@ -35,23 +35,12 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Создаем временный прогноз погоды
         currentForecastParcel = new CurrentForecastParcel();
         dailyForecastParcel = new DailyForecastParcel();
-        bundle = new Bundle();
 
         getData = new GetData(currentForecastParcel, dailyForecastParcel, getApplicationContext(), this);
         getData.build();
 
-        bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
-        bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
-
-        // На первом старте добавляем основной фрагмент
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.setArguments(bundle);
-        if(getSupportFragmentManager().getFragments().isEmpty()){
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, mainFragment,"mainFragment").commit();
-        }
 
         //Устанавливаем Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,6 +51,21 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
                 getSupportFragmentManager().popBackStack();
             }
         });
+    }
+
+    public void initActivity(){
+
+        bundle = new Bundle();
+
+        bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
+        bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
+
+        // На первом старте добавляем основной фрагмент
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
+        if(getSupportFragmentManager().getFragments().isEmpty()){
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, mainFragment,"mainFragment").commit();
+        }
     }
 
     @Override

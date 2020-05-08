@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -86,11 +87,10 @@ public class GetData implements Constants {
         currentForecastParcel.setHumidity(cwRequest.getMain().getHumidity());    // Влажность
         currentForecastParcel.setHumidityEu("Te");                                    // Надо подумать как забрать
 
-
         dailyForecastParcel.setList(dwRequest.getList());
         mainActivity.setDailyForecastParcel(dailyForecastParcel);
         mainActivity.setCurrentForecastParcel(currentForecastParcel);
-        mainActivity.sendParcel(true);
+        mainActivity.initActivity();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -103,13 +103,25 @@ public class GetData implements Constants {
             urlConnection.setReadTimeout(REQUEST_TIMEOUT);
             urlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
 
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+            //Если коннекшн в норме
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 result = getLines(in);
+            //Город не найден
+            } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                handler.post(() -> showNoticeToast(context.getResources().getString(R.string.cityNotFound)));
+            //Не верный API ключ
+            } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                handler.post(() -> showNoticeToast(context.getResources().getString(R.string.invalidKey)));
+            //Другая ошибка связи
             } else {
                 String response = urlConnection.getResponseMessage();
                 handler.post(() -> showNoticeToast(response));
             }
+        //Нет интернета
+        } catch (SocketTimeoutException e) {
+            handler.post(() -> showNoticeToast(context.getResources().getString(R.string.connectionTimeout)));
+        //Другая ошибка
         } catch (Exception e) {
             handler.post(() -> showNoticeToast(e.getMessage()));
             e.printStackTrace();

@@ -35,4 +35,9 @@
     <string name="pressEUOne">мм.рт.ст</string>
     <string name="pressEUTwo">г.Па</string>
 
+    <string name="connectionTimeout">Нет интернета нет погоды!!!</string>
+    <string name="cityNotFound">Город не найден!</string>
+    <string name="invalidKey">Неверный ключ приложения!</string>
+    <string name="loading">Загрузка...</string>
+
 </resources>
