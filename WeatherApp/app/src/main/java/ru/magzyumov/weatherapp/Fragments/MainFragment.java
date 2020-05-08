@@ -96,20 +96,11 @@ public class MainFragment extends Fragment implements Constants {
 
     public void initDailyForecast() {
         // строим источник данных
-        DailyForecastDataSource sourceData;
-        if (dailyForecastParcel.getList() == null){
-            sourceData = new DailyForecastSourceBuilder()
-                    .setResources(getResources())
-                    .setContext(baseActivity)
-                    .setDataFromServer(dailyForecastParcel)
-                    .build2();
-        } else {
-            sourceData = new DailyForecastSourceBuilder()
-                    .setResources(getResources())
-                    .setContext(baseActivity)
-                    .setDataFromServer(dailyForecastParcel)
-                    .build();
-        }
+        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
+                .setResources(getResources())
+                .setContext(baseActivity)
+                .setDataFromServer(dailyForecastParcel)
+                .build();
 
         RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
