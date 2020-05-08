@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -52,28 +52,19 @@ public class GetData implements Constants {
             new Thread(new Runnable() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 public void run() {
-                    HttpsURLConnection urlConnection = null;
-                    try {
-                        String currResult = makeRequest(currUri, urlConnection);
-                        String dailyResult = makeRequest(dailyUri, urlConnection);
-                        // преобразование данных запроса в модель
-                        Gson gson = new Gson();
-                        final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
-                        final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
-                        // Возвращаемся к основному потоку
+                    String currResult = makeRequest(currUri, handler);
+                    String dailyResult = makeRequest(dailyUri, handler);
+                    // преобразование данных запроса в модель
+                    Gson gson = new Gson();
+                    final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
+                    final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
+                    // Возвращаемся к основному потоку
+                    if ((cwRequest != null) & (dwRequest != null) ) {
                         handler.post(() -> makeWeather(cwRequest, dwRequest));
-                    } catch (Exception e) {
-                        Log.e(TAG, "Fail connection", e);
-                        e.printStackTrace();
-                    } finally {
-                        if (null != urlConnection) {
-                            urlConnection.disconnect();
-                        }
                     }
                 }
             }).start();
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Fail URI", e);
             e.printStackTrace();
         }
     }
@@ -103,25 +94,48 @@ public class GetData implements Constants {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private String makeRequest(URL uri, HttpsURLConnection urlConnection) throws IOException {
-        urlConnection = (HttpsURLConnection) uri.openConnection();
-        urlConnection.setRequestMethod("GET");
-        urlConnection.setReadTimeout(REQUEST_TIMEOUT);
-        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-        String result = getLines(in);
+    private String makeRequest(URL uri, Handler handler) {
+        HttpsURLConnection urlConnection = null;
+        String result = null;
+        try {
+            urlConnection = (HttpsURLConnection) uri.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(REQUEST_TIMEOUT);
+            urlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
+
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                result = getLines(in);
+            } else {
+                String response = urlConnection.getResponseMessage();
+                handler.post(() -> showNoticeToast(response));
+            }
+        } catch (Exception e) {
+            handler.post(() -> showNoticeToast(e.getMessage()));
+            e.printStackTrace();
+        } finally {
+            if (null != urlConnection) {
+                urlConnection.disconnect();
+            }
+        }
         return result;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private String getLines(BufferedReader in) {
-        return in.lines().collect(Collectors.joining("\n"));
+
+    private String getLines(BufferedReader in) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        while ((line = in.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void showNoticeToast(String message){
         Toast toast = Toast.makeText(context,
                 message,
-                Toast.LENGTH_SHORT);
+                Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         View view = toast.getView();
         view.setBackgroundResource(R.drawable.border);
