@@ -61,12 +61,7 @@ public class GetData implements Constants {
                         final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
                         final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
                         // Возвращаемся к основному потоку
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                makeWeather(cwRequest, dwRequest);
-                            }
-                        });
+                        handler.post(() -> makeWeather(cwRequest, dwRequest));
                     } catch (Exception e) {
                         Log.e(TAG, "Fail connection", e);
                         e.printStackTrace();
@@ -95,10 +90,11 @@ public class GetData implements Constants {
         currentForecastParcel.setFeelingEu("Te");                                     // Надо подумать как забрать
         currentForecastParcel.setWindSpeed(cwRequest.getWind().getSpeed());      // Скорость ветра
         currentForecastParcel.setWindSpeedEu("Te");                                   // Надо подумать как забрать
-        currentForecastParcel.setPressure(cwRequest.getMain().getPressure());          // Давление
+        currentForecastParcel.setPressure((int) (cwRequest.getMain().getPressure() * HPA));          // Давление
         currentForecastParcel.setPressureEu("Te");                                    // Надо подумать как забрать
         currentForecastParcel.setHumidity(cwRequest.getMain().getHumidity());    // Влажность
         currentForecastParcel.setHumidityEu("Te");                                    // Надо подумать как забрать
+
 
         dailyForecastParcel.setList(dwRequest.getList());
         mainActivity.setDailyForecastParcel(dailyForecastParcel);

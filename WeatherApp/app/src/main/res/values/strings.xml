@@ -18,7 +18,6 @@
     <string name="pressEUOne">mmHg</string>
     <string name="pressEUTwo">Pa</string>
 
-
     <string name="menu_select_city">Select city</string>
     <string name="menu_help">Help</string>
     <string name="menu_home">Home</string>
@@ -36,5 +35,4 @@
     <string name="now">now</string>
     <string name="feeling">Feels like:</string>
     <string name="provider">Data provided by Y.Weather</string>
-
 </resources>

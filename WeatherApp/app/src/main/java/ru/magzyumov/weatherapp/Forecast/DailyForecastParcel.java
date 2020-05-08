@@ -3,12 +3,9 @@ package ru.magzyumov.weatherapp.Forecast;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 import ru.magzyumov.weatherapp.Forecast.Model.City;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.List;
-import ru.magzyumov.weatherapp.Forecast.Model.MainDaily;
-import ru.magzyumov.weatherapp.Forecast.Model.WindDaily;
 
 public class DailyForecastParcel extends DailyForecastModel implements Parcelable {
     private int cod;

@@ -21,4 +21,6 @@ public interface Constants {
     String LOCATION = "LOCATION";
     String CURRENT_CITY = "CURRENT_CITY";
 
+    float HPA = 0.75006375541921f;
+
 }
