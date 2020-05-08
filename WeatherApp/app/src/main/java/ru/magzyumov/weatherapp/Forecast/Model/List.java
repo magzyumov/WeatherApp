@@ -2,10 +2,10 @@ package ru.magzyumov.weatherapp.Forecast.Model;
 
 public class List {
     private long dt;
-    private MainHourly main;
+    private MainDaily main;
     private Weather[] weather;
     private Clouds clouds;
-    private Wind wind;
+    private WindDaily wind;
     private SysHourly sys;
     private String dt_txt;
 
@@ -13,17 +13,11 @@ public class List {
         return dt;
     }
 
-    public void setDt(long dt) {
-        this.dt = dt;
-    }
+    public void setDt(long dt) { this.dt = dt; }
 
-    public MainHourly getMain() {
-        return main;
-    }
+    public MainDaily getMain() { return main; }
 
-    public void setMain(MainHourly main) {
-        this.main = main;
-    }
+    public void setMain(MainDaily main) { this.main = main; }
 
     public Weather[] getWeather() {
         return weather;
@@ -41,11 +35,11 @@ public class List {
         this.clouds = clouds;
     }
 
-    public Wind getWind() {
+    public WindDaily getWind() {
         return wind;
     }
 
-    public void setWind(Wind wind) {
+    public void setWind(WindDaily wind) {
         this.wind = wind;
     }
 

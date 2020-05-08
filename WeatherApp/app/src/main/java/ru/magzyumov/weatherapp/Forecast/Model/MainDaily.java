@@ -1,6 +1,6 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
-public class MainHourly {
+public class MainDaily {
     private float temp;
     private float feels_like;
     private float temp_min;

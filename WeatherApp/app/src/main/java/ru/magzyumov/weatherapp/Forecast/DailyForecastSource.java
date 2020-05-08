@@ -12,19 +12,31 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.R;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class DailyForecastSource implements DailyForecastDataSource, Constants {
+    private DailyForecastModel dailyForecastModel;  // Данные с прогнозом с сервера
     private int length;                             // Длина прогноза
     private List<DailyForecast> dataSource;         // Строим этот источник данных
     private Resources resources;                    // Ресурсы приложения
     private Context context;                        // Контекст приложения
     private Calendar calendar;                      // Календарь
-    private SharedPreferences sharedPref;    //Настройки приложения
+    private SharedPreferences sharedPref;           // Настройки приложения
 
     //Конструктор класса
+    public DailyForecastSource(Resources resources, Context context, DailyForecastModel dailyForecast) {
+        this.dailyForecastModel = dailyForecast;
+        this.length = dailyForecast.getList().length;
+        this.dataSource = new ArrayList<>(length);
+        this.resources = resources;
+        this.calendar = Calendar.getInstance();
+        this.context = context;
+        this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+    }
+
     public DailyForecastSource(Resources resources, Context context, int length) {
         this.length = length;
         this.dataSource = new ArrayList<>(length);
@@ -41,8 +53,8 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
         String pressEU;
         String windSpeedEU;
         int image;
-        int temp;
-        int windSpeed;
+        float temp;
+        float windSpeed;
         int pressure;
         int humidity;
 
@@ -55,7 +67,7 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
         int[] pictures = getImageArray();
 
         // заполнение источника данных
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
 
         for (int i = 0; i < length; i++) {
@@ -64,12 +76,24 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
             dayName = dayFormat.format(calendar.getTime());
             dayName = capitalize(dayName);
 
-            image = (true) ? (pictures[(i*2)+1]) : (pictures[(i*2)+2]);
+            if (dailyForecastModel != null) {
+                calendar.setTimeInMillis(dailyForecastModel.getList()[i].getDt()*1000L);
+                date = dateFormat.format(calendar.getTime());
+                dayName = dayFormat.format(calendar.getTime());
+                dayName = capitalize(dayName);
 
-            temp = 12+i;
-            windSpeed = 3+i;
-            pressure = 743+i;
-            humidity = 31+i;
+                image = (true) ? (pictures[(2)+1]) : (pictures[(2)+2]);
+                temp = dailyForecastModel.getList()[i].getMain().getTemp();
+                windSpeed = dailyForecastModel.getList()[i].getWind().getSpeed();
+                pressure = dailyForecastModel.getList()[i].getMain().getPressure();
+                humidity = dailyForecastModel.getList()[i].getMain().getHumidity();
+            } else {
+                image = (true) ? (pictures[(i*2)+1]) : (pictures[(i*2)+2]);
+                temp = i;
+                windSpeed = i;
+                pressure = i;
+                humidity = i;
+            }
 
             dataSource.add(new DailyForecast (date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressEU, windSpeedEU));
         }
