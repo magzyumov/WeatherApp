@@ -1,16 +1,19 @@
 package ru.magzyumov.weatherapp;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import ru.magzyumov.weatherapp.Forecast.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.CurrentForecastParcel;
+import ru.magzyumov.weatherapp.Forecast.DailyForecastParcel;
+import ru.magzyumov.weatherapp.Forecast.GetData;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
@@ -19,18 +22,29 @@ import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 
 public class MainActivity extends BaseActivity implements FragmentChanger {
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
-    private CurrentForecast currentForecast;
+    private CurrentForecastParcel currentForecastParcel;
+    private DailyForecastParcel dailyForecastParcel;
     private Bundle bundle;
+    private GetData getData;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //Создаем временный прогноз погоды
-        currentForecast = new CurrentForecast();
+        currentForecastParcel = new CurrentForecastParcel();
+        dailyForecastParcel = new DailyForecastParcel();
+
+        getData = new GetData(currentForecastParcel, dailyForecastParcel, findViewById(R.id.mainLayout), this);
+        getData.buildCurrent();
+        getData.buildDaily();
+
         bundle = new Bundle();
-        bundle.putParcelable("currentForecast", currentForecast);
+
+        bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
+        bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
 
         // На первом старте добавляем основной фрагмент
         MainFragment mainFragment = new MainFragment();
@@ -85,5 +99,42 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
         transaction.replace(R.id.mainLayout, fragment,tag);
         if(addToBackStack) transaction.addToBackStack("");
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void changeHeader(String text) {
+        getSupportActionBar().setTitle(text);
+    }
+
+    @Override
+    public void changeSubHeader(String text) {
+        getSupportActionBar().setSubtitle(text);
+    }
+
+    @Override
+    public void showBackButton(boolean show) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+    }
+
+    public void setCurrentForecastParcel (CurrentForecastParcel currentForecastParcel){
+        this.currentForecastParcel = currentForecastParcel;
+    }
+
+    public void setDailyForecastParcel (DailyForecastParcel dailyForecastParcel){
+        this.dailyForecastParcel = dailyForecastParcel;
+    }
+
+    public void sendParcel(){
+        bundle = new Bundle();
+        MainFragment mainFragment = (MainFragment) fragmentFinder.findFragment("mainFragment");
+
+        bundle.putParcelable(CURRENT_FORECAST, currentForecastParcel);
+        bundle.putParcelable(DAILY_FORECAST, dailyForecastParcel);
+        mainFragment.setArguments(bundle);
+
+        mainFragment.getParcel();
+        mainFragment.initDailyForecast();
+        mainFragment.makeHeaderTable();
+
     }
 }

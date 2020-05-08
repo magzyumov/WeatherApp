@@ -1,6 +1,6 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
-public class HourForecast {
+public class DailyForecastModel {
     private int cod;
     private int message;
     private int cnt;

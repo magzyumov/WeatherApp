@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +25,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
-import ru.magzyumov.weatherapp.Forecast.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.CurrentForecastParcel;
+import ru.magzyumov.weatherapp.Forecast.DailyForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastSourceBuilder;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Logic;
@@ -36,7 +36,8 @@ import ru.magzyumov.weatherapp.Forecast.DailyForecastAdapter;
 public class MainFragment extends Fragment implements Constants {
     Logic logic;
     private View view;
-    private CurrentForecast currentForecast;
+    private CurrentForecastParcel currentForecastParcel;
+    private DailyForecastParcel dailyForecastParcel;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
 
@@ -66,9 +67,7 @@ public class MainFragment extends Fragment implements Constants {
         //Иницилизируем кнопку-ссылку
         initBottomLink();
 
-        //Забираем посылку с погодой
-        currentForecast = getArguments().getParcelable("currentForecast");
-
+        getParcel();
         initDailyForecast();
 
         //Обновляем данные
@@ -82,16 +81,35 @@ public class MainFragment extends Fragment implements Constants {
         super.onActivityCreated(savedInstanceState);
 
         //Меняем текст в шапке
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.app_name);
+        fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
 
-        //Скрываем кнопку назад
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        //Показываем кнопку назад
+        fragmentChanger.showBackButton(false);
     }
 
-    private void initDailyForecast() {
+    public void getParcel(){
+        //Забираем посылку с погодой
+        currentForecastParcel = getArguments().getParcelable(CURRENT_FORECAST);
+        dailyForecastParcel = getArguments().getParcelable(DAILY_FORECAST);
+    }
+
+    public void initDailyForecast() {
         // строим источник данных
-        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder().setResources(getResources()).setContext(baseActivity).build();
+        DailyForecastDataSource sourceData;
+        if (dailyForecastParcel.getList() == null){
+            sourceData = new DailyForecastSourceBuilder()
+                    .setResources(getResources())
+                    .setContext(baseActivity)
+                    .setDataFromServer(dailyForecastParcel)
+                    .build2();
+        } else {
+            sourceData = new DailyForecastSourceBuilder()
+                    .setResources(getResources())
+                    .setContext(baseActivity)
+                    .setDataFromServer(dailyForecastParcel)
+                    .build();
+        }
 
         RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
@@ -123,42 +141,42 @@ public class MainFragment extends Fragment implements Constants {
         });
     }
 
-    private void makeHeaderTable(){
+    public void makeHeaderTable(){
         TextView currentCity = view.findViewById(R.id.textViewCity);
-        currentCity.setText(currentForecast.getCity());
+        currentCity.setText(currentForecastParcel.getCity());
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
-        currentDistrict.setText(currentForecast.getDistrict());
+        currentDistrict.setText(currentForecastParcel.getDistrict());
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
-        textViewCurrent.setText(currentForecast.getTemp().toString());
+        textViewCurrent.setText(currentForecastParcel.getTemp().toString());
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
 
         TextView currWeather = view.findViewById(R.id.textViewCurrentWeather);
-        currWeather.setText(currentForecast.getWeather());
+        currWeather.setText(currentForecastParcel.getWeather());
 
         TextView currFeelingTemp = view.findViewById(R.id.textViewCurrentFeelingTemp);
-        currFeelingTemp.setText(currentForecast.getFeeling().toString());
+        currFeelingTemp.setText(currentForecastParcel.getFeeling().toString());
 
         TextView currFeelingTempEu = view.findViewById(R.id.textViewCurrentFeelingTempEu);
-        currFeelingTempEu.setText(currentForecast.getFeelingEu());
+        currFeelingTempEu.setText(currentForecastParcel.getFeelingEu());
 
         TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
-        textViewWindSpeed.setText(currentForecast.getWindSpeed());
+        textViewWindSpeed.setText(currentForecastParcel.getWindSpeed());
         TextView textViewWindSpeedEU = view.findViewById(R.id.textViewWindSpeedEU);
-        textViewWindSpeedEU.setText(currentForecast.getWindSpeedEu());
+        textViewWindSpeedEU.setText(currentForecastParcel.getWindSpeedEu());
 
         TextView textViewPressure = view.findViewById(R.id.textViewPressure);
-        textViewPressure.setText(currentForecast.getPressure());
+        textViewPressure.setText(currentForecastParcel.getPressure());
         TextView textViewPressureEU = view.findViewById(R.id.textViewPressureEU);
-        textViewPressureEU.setText(currentForecast.getPressureEu());
+        textViewPressureEU.setText(currentForecastParcel.getPressureEu());
 
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
-        textViewHumidity.setText(currentForecast.getHumidity());
+        textViewHumidity.setText(currentForecastParcel.getHumidity());
         TextView textViewHumidityEU = view.findViewById(R.id.textViewHumidityEU);
-        textViewHumidityEU.setText(currentForecast.getHumidityEu());
+        textViewHumidityEU.setText(currentForecastParcel.getHumidityEu());
 
         //Ставим background картинку
         FrameLayout mainLayout = view.findViewById(R.id.mainFragment);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,11 +55,11 @@ public class LocationFragment extends Fragment implements Constants, SearchView.
         super.onActivityCreated(savedInstanceState);
 
         //Меняем текст в шапке
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.menu_location);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.menu_location);
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
 
         //Показываем кнопку назад
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fragmentChanger.showBackButton(true);
     }
 
     @Override
