@@ -25,6 +25,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
@@ -42,6 +43,7 @@ public class GetData implements Constants {
     private Context context;
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
+    private BaseActivity baseActivity;
 
     public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context, MainActivity mainActivity){
         this.currentForecastParcel = currentForecastParcel;
@@ -50,6 +52,7 @@ public class GetData implements Constants {
         this.context = context;
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
         this.resources = mainActivity.getResources();
+        if (mainActivity instanceof BaseActivity) baseActivity = mainActivity;
     }
 
     public void build(){
@@ -62,6 +65,8 @@ public class GetData implements Constants {
                 public void run() {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
+                    baseActivity.setStringPreference(FORECAST, LAST_CURRENT, currResult);
+                    baseActivity.setStringPreference(FORECAST, LAST_DAILY, dailyResult);
                     // преобразование данных запроса в модель
                     Gson gson = new Gson();
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);

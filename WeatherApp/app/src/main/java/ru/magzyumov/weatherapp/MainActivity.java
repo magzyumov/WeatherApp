@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,8 +11,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import java.util.concurrent.CountDownLatch;
 
 import ru.magzyumov.weatherapp.Forecast.CurrentForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastParcel;
@@ -47,9 +46,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().popBackStack();
-            }
+            public void onClick(View v) { returnFragment(); }
         });
     }
 
@@ -118,6 +115,11 @@ public class MainActivity extends BaseActivity implements FragmentChanger {
     @Override
     public void showBackButton(boolean show) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+    }
+
+    @Override
+    public void returnFragment() {
+        getSupportFragmentManager().popBackStack();
     }
 
     public void setCurrentForecastParcel (CurrentForecastParcel currentForecastParcel){

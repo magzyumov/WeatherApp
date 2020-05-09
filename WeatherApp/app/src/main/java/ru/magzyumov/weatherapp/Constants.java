@@ -21,6 +21,11 @@ public interface Constants {
 
     String LOCATION = "LOCATION";
     String CURRENT_CITY = "CURRENT_CITY";
+    String SEARCH_HISTORY = "SEARCH_HISTORY";
+
+    String FORECAST = "FORECAST";
+    String LAST_CURRENT = "LAST_CURRENT";
+    String LAST_DAILY = "LAST_DAILY";
 
     float HPA = 0.75006375541921f;
 
