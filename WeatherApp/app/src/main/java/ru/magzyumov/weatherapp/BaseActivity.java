@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class BaseActivity extends AppCompatActivity implements Constants {
 
     @Override
@@ -33,6 +36,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         return sharedPref.getString(parameter, "UFA");
     }
 
+    // Чтение String настроек
+    public Set getStringSetPreference(String preference, String parameter) {
+        Set set = new HashSet<String>();
+        // Работаем через специальный класс сохранения и чтения настроек
+        SharedPreferences sharedPref = getSharedPreferences(preference, MODE_PRIVATE);
+        //Прочитать тему, если настройка не найдена - взять по умолчанию true
+        return sharedPref.getStringSet(parameter, set);
+    }
+
     // Сохранение boolean настроек
     public void setBooleanPreference(String preference, String parameter, boolean value) {
         SharedPreferences sharedPref = getSharedPreferences(preference, MODE_PRIVATE);
@@ -48,6 +60,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         // Настройки сохраняются посредством специального класса editor.
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(parameter, value);
+        editor.apply();
+    }
+
+    // Сохранение String настроек
+    public void setStringSetPreference(String preference, String parameter, String value) {
+        Set set = getStringSetPreference(preference, parameter);
+        SharedPreferences sharedPref = getSharedPreferences(preference, MODE_PRIVATE);
+        set.add(value);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(parameter, set);
         editor.apply();
     }
 }

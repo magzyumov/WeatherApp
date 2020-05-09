@@ -24,8 +24,8 @@
 
         <ListView
             android:id="@+id/listViewCity"
-            android:layout_width="fill_parent"
-            android:layout_height="268dp">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         </ListView>
 

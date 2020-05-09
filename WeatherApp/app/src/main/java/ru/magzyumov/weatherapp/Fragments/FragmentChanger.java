@@ -7,4 +7,5 @@ public interface FragmentChanger {
     void changeHeader(String text);
     void changeSubHeader(String text);
     void showBackButton(boolean show);
+    void returnFragment();
 }

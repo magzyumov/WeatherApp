@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SearchView;
+
+import java.util.ArrayList;
 
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
@@ -17,6 +21,9 @@ import ru.magzyumov.weatherapp.R;
 public class LocationFragment extends Fragment implements Constants, SearchView.OnQueryTextListener {
     //Объявляем переменные
     private SearchView searchView;
+    private ListView listView;
+    private ArrayAdapter<String> arrayAdapter;
+    private ArrayList<String> arrayList;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
 
@@ -47,6 +54,12 @@ public class LocationFragment extends Fragment implements Constants, SearchView.
         searchView = view.findViewById(R.id.searchViewCity);
         searchView.setOnQueryTextListener(this);
 
+        //Инициализируем историю поиска
+        listView = view.findViewById(R.id.listViewCity);
+        arrayList = new ArrayList<>(baseActivity.getStringSetPreference(LOCATION, SEARCH_HISTORY));
+        arrayAdapter = new ArrayAdapter<String>(baseActivity, android.R.layout.simple_list_item_1, arrayList);
+        listView.setAdapter(arrayAdapter);
+
         return view;
     }
 
@@ -65,10 +78,14 @@ public class LocationFragment extends Fragment implements Constants, SearchView.
     @Override
     public boolean onQueryTextSubmit(String query) {
         baseActivity.setStringPreference(LOCATION, CURRENT_CITY, query);
-        fragmentChanger.changeFragment("mainFragment", null, false);
+        baseActivity.setStringSetPreference(LOCATION, SEARCH_HISTORY, query);
+        fragmentChanger.returnFragment();
         return false;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) { return false; }
+    public boolean onQueryTextChange(String query) {
+        arrayAdapter.getFilter().filter(query);
+        return false;
+    }
 }
