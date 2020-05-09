@@ -195,7 +195,7 @@
                             <TextView
                                 android:id="@+id/textViewHumidityEU"
                                 style="@style/ForecastTextStyle_CommonBlock"
-                                android:text="%" />
+                                android:text="@string/humidityEU" />
 
                         </LinearLayout>
 
