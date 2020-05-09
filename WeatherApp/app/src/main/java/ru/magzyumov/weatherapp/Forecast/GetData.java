@@ -1,6 +1,8 @@
 package ru.magzyumov.weatherapp.Forecast;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -29,6 +31,7 @@ import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.MainActivity;
 import ru.magzyumov.weatherapp.R;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
 import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
 public class GetData implements Constants {
@@ -37,12 +40,16 @@ public class GetData implements Constants {
     private DailyForecastParcel dailyForecastParcel;
     private MainActivity mainActivity;
     private Context context;
+    private SharedPreferences sharedPref;           // Настройки приложения
+    private Resources resources;
 
     public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context, MainActivity mainActivity){
         this.currentForecastParcel = currentForecastParcel;
         this.dailyForecastParcel = dailyForecastParcel;
         this.mainActivity = mainActivity;
         this.context = context;
+        this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+        this.resources = mainActivity.getResources();
     }
 
     public void build(){
@@ -72,20 +79,31 @@ public class GetData implements Constants {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void makeWeather(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
+        String tempEU;
+        String pressEU;
+        String windSpeedEU;
+        String humidityEU;
+
+        //Забираем инженерные еденицы из настроек
+        tempEU = sharedPref.getBoolean(TEMP_EU, false) ? (resources.getString(R.string.celsius)) : (resources.getString(R.string.fahrenheit));
+        pressEU = sharedPref.getBoolean(PRESS_EU, false) ? (resources.getString(R.string.pressEUTwo)) : (resources.getString(R.string.pressEUOne));
+        windSpeedEU = sharedPref.getBoolean(WIND_EU, false) ? (resources.getString(R.string.windEUTwo)) : (resources.getString(R.string.windEUOne));
+        humidityEU = resources.getString(R.string.humidityEU);
+
         currentForecastParcel.setCity(cwRequest.getName());                      // Забираем название года из прогноза
         currentForecastParcel.setDistrict(cwRequest.getName());                  // Пока район забираем так же
         currentForecastParcel.setTemp(cwRequest.getMain().getTemp());            // Забираем температуру
-        currentForecastParcel.setTempEu("Te");                                        // Надо подумать как забрать
+        currentForecastParcel.setTempEu(tempEU);                                        // Надо подумать как забрать
         currentForecastParcel.setImage(cwRequest.getWeather()[0].getIcon());     // Забираем иконку с сервера
-        currentForecastParcel.setWeather(cwRequest.getWeather()[0].getMain());   // Состояние погоды
+        currentForecastParcel.setWeather(capitalize(cwRequest.getWeather()[0].getDescription()));   // Состояние погоды
         currentForecastParcel.setFeeling(cwRequest.getMain().getFeels_like());   // Ощущения
-        currentForecastParcel.setFeelingEu("Te");                                     // Надо подумать как забрать
+        currentForecastParcel.setFeelingEu(tempEU);                                     // Надо подумать как забрать
         currentForecastParcel.setWindSpeed(cwRequest.getWind().getSpeed());      // Скорость ветра
-        currentForecastParcel.setWindSpeedEu("Te");                                   // Надо подумать как забрать
+        currentForecastParcel.setWindSpeedEu(windSpeedEU);                                   // Надо подумать как забрать
         currentForecastParcel.setPressure((int) (cwRequest.getMain().getPressure() * HPA));          // Давление
-        currentForecastParcel.setPressureEu("Te");                                    // Надо подумать как забрать
+        currentForecastParcel.setPressureEu(pressEU);                                    // Надо подумать как забрать
         currentForecastParcel.setHumidity(cwRequest.getMain().getHumidity());    // Влажность
-        currentForecastParcel.setHumidityEu("Te");                                    // Надо подумать как забрать
+        currentForecastParcel.setHumidityEu(humidityEU);                                    // Надо подумать как забрать
 
         dailyForecastParcel.setList(dwRequest.getList());
         mainActivity.setDailyForecastParcel(dailyForecastParcel);
