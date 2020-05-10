@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle" />
 
@@ -42,7 +42,7 @@
                 android:textSize="38dp" />
 
         </LinearLayout>
-
-
     </FrameLayout>
 </LinearLayout>
+
+
