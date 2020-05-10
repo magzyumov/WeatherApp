@@ -5,11 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -22,6 +17,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,20 +37,34 @@ public class GetData implements Constants {
 
     private CurrentForecastParcel currentForecastParcel;
     private DailyForecastParcel dailyForecastParcel;
-    private MainActivity mainActivity;
     private Context context;
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
-    private BaseActivity baseActivity;
+    private ArrayList<ForecastListener> listeners;
 
-    public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context, MainActivity mainActivity){
+    public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context){
         this.currentForecastParcel = currentForecastParcel;
         this.dailyForecastParcel = dailyForecastParcel;
-        this.mainActivity = mainActivity;
         this.context = context;
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
-        this.resources = mainActivity.getResources();
-        if (mainActivity instanceof BaseActivity) baseActivity = mainActivity;
+        this.resources = context.getResources();
+        this.listeners = new ArrayList<>();
+    }
+
+    public void addListener(ForecastListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void showMsgToListeners(String message){
+        for( int i = 0; i < listeners.size(); i++ ) {
+            listeners.get(i).showMessage(message);
+        }
+    }
+
+    public void dataReady(){
+        for( int i = 0; i < listeners.size(); i++ ) {
+            listeners.get(i).initActivity();
+        }
     }
 
     public void build(){
@@ -65,8 +77,6 @@ public class GetData implements Constants {
                 public void run() {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
-                    baseActivity.setStringPreference(FORECAST, LAST_CURRENT, currResult);
-                    baseActivity.setStringPreference(FORECAST, LAST_DAILY, dailyResult);
                     // преобразование данных запроса в модель
                     Gson gson = new Gson();
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
@@ -82,7 +92,7 @@ public class GetData implements Constants {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     private void makeWeather(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
         String tempEU;
         String pressEU;
@@ -111,9 +121,8 @@ public class GetData implements Constants {
         currentForecastParcel.setHumidityEu(humidityEU);                                    // Надо подумать как забрать
 
         dailyForecastParcel.setList(dwRequest.getList());
-        mainActivity.setDailyForecastParcel(dailyForecastParcel);
-        mainActivity.setCurrentForecastParcel(currentForecastParcel);
-        mainActivity.initActivity();
+
+        dataReady();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -132,21 +141,21 @@ public class GetData implements Constants {
                 result = getLines(in);
             //Город не найден
             } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                handler.post(() -> showNoticeToast(context.getResources().getString(R.string.cityNotFound)));
+                handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.cityNotFound)));
             //Не верный API ключ
             } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                handler.post(() -> showNoticeToast(context.getResources().getString(R.string.invalidKey)));
+                handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.invalidKey)));
             //Другая ошибка связи
             } else {
                 String response = urlConnection.getResponseMessage();
-                handler.post(() -> showNoticeToast(response));
+                handler.post(() -> showMsgToListeners(response));
             }
         //Нет интернета
         } catch (SocketTimeoutException e) {
-            handler.post(() -> showNoticeToast(context.getResources().getString(R.string.connectionTimeout)));
+            handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.connectionTimeout)));
         //Другая ошибка
         } catch (Exception e) {
-            handler.post(() -> showNoticeToast(e.getMessage()));
+            handler.post(() -> showMsgToListeners(e.getMessage()));
             e.printStackTrace();
         } finally {
             if (null != urlConnection) {
@@ -164,18 +173,5 @@ public class GetData implements Constants {
             stringBuilder.append(line).append("\n");
         }
         return stringBuilder.toString();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void showNoticeToast(String message){
-        Toast toast = Toast.makeText(context,
-                message,
-                Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        View view = toast.getView();
-        view.setBackgroundResource(R.drawable.border);
-        TextView text = (TextView) view.findViewById(android.R.id.message);
-        text.setTextSize(36);
-        toast.show();
     }
 }
