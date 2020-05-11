@@ -3,9 +3,9 @@ package ru.magzyumov.weatherapp.Forecast;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import ru.magzyumov.weatherapp.Forecast.Model.CurrForecast;
+import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 
-public class CurrentForecast implements Parcelable {
+public class CurrentForecastParcel implements Parcelable {
     private String city;
     private String district;
     private Float temp;
@@ -21,28 +21,28 @@ public class CurrentForecast implements Parcelable {
     private int humidity;
     private String humidityEu;
 
-    private CurrForecast currentForecast;
+    private CurrentForecastModel currentForecastModel;
 
-    public CurrentForecast (CurrForecast currentForecast){
-        setCity(currentForecast.getName());                      // Забираем название года из прогноза
-        setDistrict(currentForecast.getName());                  // Пока район забираем так же
-        setTemp(currentForecast.getMain().getTemp());            // Забираем температуру
+    public CurrentForecastParcel(CurrentForecastModel currentForecastModel){
+        setCity(currentForecastModel.getName());                      // Забираем название года из прогноза
+        setDistrict(currentForecastModel.getName());                  // Пока район забираем так же
+        setTemp(currentForecastModel.getMain().getTemp());            // Забираем температуру
         setTempEu("Temporaly");                                  // Надо подумать как забрать
-        setImage(currentForecast.getWeather()[0].getIcon());     // Забираем иконку с сервера
-        setWeather(currentForecast.getWeather()[0].getMain());   // Состояние погоды
-        setFeeling(currentForecast.getMain().getFeels_like());   // Ощущения
-        setFeelingEu("Temporaly");                               // Нвдо подумать как забрать
-        setWindSpeed(currentForecast.getWind().getSpeed());      // Скорость ветра
-        setWindSpeedEu("Temporaly");                             // Нвдо подумать как забрать
-        setPressure(currentForecast.getMain().getPressure());    // Давление
-        setPressureEu("Temporaly");                              // Нвдо подумать как забрать
-        setHumidity(currentForecast.getMain().getHumidity());    // Влажность
-        setHumidityEu("Temporaly");                              // Нвдо подумать как забрать
+        setImage(currentForecastModel.getWeather()[0].getIcon());     // Забираем иконку с сервера
+        setWeather(currentForecastModel.getWeather()[0].getMain());   // Состояние погоды
+        setFeeling(currentForecastModel.getMain().getFeels_like());   // Ощущения
+        setFeelingEu("Temporaly");                               // Надо подумать как забрать
+        setWindSpeed(currentForecastModel.getWind().getSpeed());      // Скорость ветра
+        setWindSpeedEu("Temporaly");                             // Надо подумать как забрать
+        setPressure(currentForecastModel.getMain().getPressure());    // Давление
+        setPressureEu("Temporaly");                              // Надо подумать как забрать
+        setHumidity(currentForecastModel.getMain().getHumidity());    // Влажность
+        setHumidityEu("Temporaly");                              // Надо подумать как забрать
     }
 
     // Пока сделаем пустой конструктор
     // и будем заполнять данные спонтанно
-    public CurrentForecast(){
+    public CurrentForecastParcel(){
         setCity("UFA");
         setDistrict("UFA");
         setTemp(23f);
@@ -60,7 +60,7 @@ public class CurrentForecast implements Parcelable {
     }
 
 
-    protected CurrentForecast(Parcel in) {
+    protected CurrentForecastParcel(Parcel in) {
         setCity(in.readString());
         setDistrict(in.readString());
         setTemp(in.readFloat());
@@ -77,15 +77,15 @@ public class CurrentForecast implements Parcelable {
         setHumidityEu(in.readString());
     }
 
-    public static final Creator<CurrentForecast> CREATOR = new Creator<CurrentForecast>() {
+    public static final Creator<CurrentForecastParcel> CREATOR = new Creator<CurrentForecastParcel>() {
         @Override
-        public CurrentForecast createFromParcel(Parcel in) {
-            return new CurrentForecast(in);
+        public CurrentForecastParcel createFromParcel(Parcel in) {
+            return new CurrentForecastParcel(in);
         }
 
         @Override
-        public CurrentForecast[] newArray(int size) {
-            return new CurrentForecast[size];
+        public CurrentForecastParcel[] newArray(int size) {
+            return new CurrentForecastParcel[size];
         }
     };
 
