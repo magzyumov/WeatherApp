@@ -85,23 +85,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:layout_weight="0.38"
                 android:gravity="center|right"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:contentDescription="@string/weatherIcon"
                     android:id="@+id/imageViewWindSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    app:srcCompat="@drawable/ic_wind_dark"
-                    android:layout_marginEnd="5dp" />
+                    android:contentDescription="@string/weatherIcon"
+                    app:srcCompat="@drawable/ic_wind_dark" />
 
                 <TextView
                     android:id="@+id/textViewWindSpeed"
                     style="@style/ForecastTextStyle"
-                    android:text="4" />
+                    android:text="4.56" />
 
                 <TextView
                     android:id="@+id/textViewWindSpeedEU"
@@ -129,7 +129,7 @@
                 <TextView
                     android:id="@+id/textViewPressure"
                     style="@style/ForecastTextStyle"
-                    android:text="743" />
+                    android:text="1010" />
 
                 <TextView
                     android:id="@+id/textViewPressureEU"
@@ -141,18 +141,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:layout_weight="0.43"
                 android:gravity="center|left"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:contentDescription="@string/weatherIcon"
                     android:id="@+id/imageViewHumidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    app:srcCompat="@drawable/ic_humidity_dark"
-                    android:layout_marginEnd="5dp" />
+                    android:contentDescription="@string/weatherIcon"
+                    app:srcCompat="@drawable/ic_humidity_dark" />
 
                 <TextView
                     android:id="@+id/textViewHumidity"

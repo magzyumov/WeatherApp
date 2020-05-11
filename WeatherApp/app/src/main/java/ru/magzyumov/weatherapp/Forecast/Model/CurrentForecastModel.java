@@ -1,6 +1,6 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
-public class CurrForecast {
+public class CurrentForecastModel {
     private Coord coord;
     private Weather[] weather;
     private String base;
