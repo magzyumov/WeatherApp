@@ -23,6 +23,7 @@ import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
+import ru.magzyumov.weatherapp.room.init.DatabaseCopier;
 
 public class MainActivity extends BaseActivity implements FragmentChanger, ForecastListener {
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
@@ -36,6 +37,8 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Forec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DatabaseCopier.getInstance(getApplicationContext());
 
         currentForecastParcel = new CurrentForecastParcel();
         dailyForecastParcel = new DailyForecastParcel();

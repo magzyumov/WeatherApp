@@ -5,26 +5,40 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
+import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
+import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
 
-public class LocationFragment extends Fragment implements Constants, SearchView.OnQueryTextListener {
+public class LocationFragment extends Fragment implements Constants,
+        SearchView.OnQueryTextListener, SearchView.OnFocusChangeListener,
+        ListView.OnItemClickListener {
+
     //Объявляем переменные
-    private SearchView searchView;
     private ListView listView;
-    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> arrayList;
+    private SearchView searchView;
+    private List<Map<String, String>> arrayListCities;
+    private List<Map<String, String>> arrayListHistory;
+    private SimpleAdapter arrayAdapterCities;
+    private SimpleAdapter arrayAdapterHistory;
+    private LocationDao locationDao;
     private BaseActivity baseActivity;
+    private LocationSource locationSource;
     private FragmentChanger fragmentChanger;
 
     public LocationFragment() {
@@ -51,14 +65,28 @@ public class LocationFragment extends Fragment implements Constants, SearchView.
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
         //Инициализируем строку поиска
-        searchView = view.findViewById(R.id.searchViewCity);
+        searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextFocusChangeListener(this);
 
-        //Инициализируем историю поиска
-        listView = view.findViewById(R.id.listViewCity);
-        arrayList = new ArrayList<>(baseActivity.getStringSetPreference(LOCATION, SEARCH_HISTORY));
-        arrayAdapter = new ArrayAdapter<String>(baseActivity, android.R.layout.simple_list_item_1, arrayList);
-        listView.setAdapter(arrayAdapter);
+        //Инициализируем города для поиска
+        locationDao = App.getInstance().getLocationDao();
+        locationSource = new LocationSource(locationDao);
+
+        listView = view.findViewById(R.id.listView);
+        arrayListCities = locationSource.getHashCities();
+        arrayListHistory = locationSource.getSearchedLocations();
+
+        arrayAdapterCities = new SimpleAdapter(baseActivity, arrayListCities, android.R.layout.simple_list_item_2,
+                new String[] {"Region", "City"},
+                new int[] {android.R.id.text2, android.R.id.text1, });
+
+        arrayAdapterHistory = new SimpleAdapter(baseActivity, arrayListHistory, android.R.layout.simple_list_item_2,
+                new String[] {"Region", "City"},
+                new int[] {android.R.id.text2, android.R.id.text1, });
+
+        listView.setAdapter((arrayListHistory.size()==0)?arrayAdapterCities:arrayAdapterHistory);
+        listView.setOnItemClickListener(this);
 
         return view;
     }
@@ -85,7 +113,26 @@ public class LocationFragment extends Fragment implements Constants, SearchView.
 
     @Override
     public boolean onQueryTextChange(String query) {
-        arrayAdapter.getFilter().filter(query);
+        listView.setAdapter(arrayAdapterCities);
+        arrayAdapterCities.getFilter().filter(query);
         return false;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        TextView textViewCity = view.findViewById(android.R.id.text1);
+        TextView textViewRegion = view.findViewById(android.R.id.text2);
+
+        String city = textViewCity.getText().toString();
+        String region = textViewRegion.getText().toString();
+
+        searchView.setQuery(city,false);
+        locationSource.setLocationSearched(region, city);
+        locationSource.setLocationCurrent(region, city);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(hasFocus) listView.setAdapter(arrayAdapterCities);
     }
 }
