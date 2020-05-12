@@ -58,6 +58,10 @@ public interface LocationDao {
     @Query("SELECT COUNT() FROM location")
     long getCountLocations();
 
+    //Получаем количество записей в таблице
+    @Query("SELECT COUNT() FROM location WHERE isSearched = :isSearched")
+    long getCountHistoryLocations(boolean isSearched);
+
     //Вставляем кучу даннх
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertBigData(List<Location> data);
