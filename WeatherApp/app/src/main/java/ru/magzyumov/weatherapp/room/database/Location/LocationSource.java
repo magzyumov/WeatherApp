@@ -39,6 +39,11 @@ public class LocationSource {
         return locationDao.getCountLocations();
     }
 
+    // Получаем количество записей
+    public long getCountHistoryLocations(){
+        return locationDao.getCountHistoryLocations(true);
+    }
+
     // Добавляем местоположение
     public void addLocation(Location location){
         locationDao.insertLocation(location);
@@ -83,6 +88,17 @@ public class LocationSource {
                 city.put("Region", location.region);
                 city.put("City", location.city);
                 result.add(city);
+            }
+        }
+        return result;
+    }
+
+    public List<Location> getHistoryLocations(){
+        List<Location> result = new ArrayList<>();
+
+        for (Location location : locations) {
+            if(location.isSearched){
+                result.add(location);
             }
         }
         return result;

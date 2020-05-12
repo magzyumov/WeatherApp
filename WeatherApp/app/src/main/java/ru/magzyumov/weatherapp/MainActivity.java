@@ -20,6 +20,7 @@ import ru.magzyumov.weatherapp.Forecast.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.GetData;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
+import ru.magzyumov.weatherapp.Fragments.HistoryFragment;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
@@ -78,6 +79,14 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Forec
             // Выполняем транзакцию по замене фрагмента если его нет
             if(getSupportFragmentManager().findFragmentByTag("settingsFragment") == null){
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new SettingsFragment(), "settingsFragment").addToBackStack("").commit();
+            }
+            return true;
+        }
+
+        if (id == R.id.menu_history) {
+            // Выполняем транзакцию по замене фрагмента если его нет
+            if(getSupportFragmentManager().findFragmentByTag("historyFragment") == null){
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new HistoryFragment(), "historyFragment").addToBackStack("").commit();
             }
             return true;
         }

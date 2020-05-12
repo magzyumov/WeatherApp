@@ -77,11 +77,11 @@ public class LocationFragment extends Fragment implements Constants,
         arrayListCities = locationSource.getHashCities();
         arrayListHistory = locationSource.getSearchedLocations();
 
-        arrayAdapterCities = new SimpleAdapter(baseActivity, arrayListCities, android.R.layout.simple_list_item_2,
+        arrayAdapterCities = new SimpleAdapter(getContext(), arrayListCities, android.R.layout.simple_list_item_2,
                 new String[] {"Region", "City"},
                 new int[] {android.R.id.text2, android.R.id.text1, });
 
-        arrayAdapterHistory = new SimpleAdapter(baseActivity, arrayListHistory, android.R.layout.simple_list_item_2,
+        arrayAdapterHistory = new SimpleAdapter(getContext(), arrayListHistory, android.R.layout.simple_list_item_2,
                 new String[] {"Region", "City"},
                 new int[] {android.R.id.text2, android.R.id.text1, });
 

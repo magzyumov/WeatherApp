@@ -39,7 +39,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Заполняем данными записи на экране
-        List<Location> locations = dataSource.getLocations();
+        List<Location> locations = dataSource.getHistoryLocations();
         Location location = locations.get(position);
         holder.locationRegion.setText(location.region);
         holder.locationCity.setText(location.city);
@@ -58,7 +58,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
     @Override
     public int getItemCount() {
-        return (int) dataSource.getCountLocations();
+        return (int) dataSource.getCountHistoryLocations();
     }
 
     public long getMenuPosition() {
