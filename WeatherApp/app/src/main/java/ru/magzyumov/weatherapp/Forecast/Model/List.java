@@ -1,5 +1,6 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
+
 public class List {
     private long dt;
     private MainDaily main;
@@ -9,9 +10,7 @@ public class List {
     private SysHourly sys;
     private String dt_txt;
 
-    public long getDt() {
-        return dt;
-    }
+    public long getDt() { return this.dt; }
 
     public void setDt(long dt) { this.dt = dt; }
 
@@ -58,4 +57,5 @@ public class List {
     public void setDt_txt(String dt_txt) {
         this.dt_txt = dt_txt;
     }
+
 }
