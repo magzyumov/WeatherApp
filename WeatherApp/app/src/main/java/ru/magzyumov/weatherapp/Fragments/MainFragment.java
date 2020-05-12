@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,17 +30,26 @@ import ru.magzyumov.weatherapp.Forecast.CurrentForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastParcel;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastSourceBuilder;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.ForecastListener;
+import ru.magzyumov.weatherapp.Forecast.GetData;
+import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
+import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Logic;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Forecast.DailyForecastAdapter;
 
-public class MainFragment extends Fragment implements Constants {
+import static org.apache.commons.lang3.StringUtils.capitalize;
+
+public class MainFragment extends Fragment implements Constants, ForecastListener {
     Logic logic;
     private View view;
     private CurrentForecastParcel currentForecastParcel;
     private DailyForecastParcel dailyForecastParcel;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
+    private DailyForecastModel dailyForecastModel;
+    private CurrentForecastModel currentForecastModel;
+    private GetData getData;
 
     public MainFragment() {
         // Required empty public constructor
@@ -51,6 +61,15 @@ public class MainFragment extends Fragment implements Constants {
         if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
         if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
         logic = Logic.getInstance(getResources());
+        dailyForecastModel = new DailyForecastModel();
+        currentForecastModel = new CurrentForecastModel();
+        getData = new GetData(getContext());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getData.removeListener(this);
     }
 
     @Override
@@ -58,21 +77,22 @@ public class MainFragment extends Fragment implements Constants {
         super.onDetach();
         fragmentChanger = null;
         baseActivity = null;
+        dailyForecastModel = null;
+        currentForecastModel = null;
+        getData = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_main, container, false);
+        this.view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //Иницилизируем кнопку-ссылку
-        initBottomLink();
-
-        getParcel();
-        initDailyForecast();
+        // Подписываеся на опросчика
+        // погодного сервера
+        getData.addListener(this);
+        getData.build();
 
         //Обновляем данные
         logic.refreshData();
-        makeHeaderTable();
         return view;
     }
 
@@ -88,18 +108,12 @@ public class MainFragment extends Fragment implements Constants {
         fragmentChanger.showBackButton(false);
     }
 
-    public void getParcel(){
-        //Забираем посылку с погодой
-        currentForecastParcel = getArguments().getParcelable(CURRENT_FORECAST);
-        dailyForecastParcel = getArguments().getParcelable(DAILY_FORECAST);
-    }
-
     public void initDailyForecast() {
         // строим источник данных
         DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
                 .setResources(getResources())
                 .setContext(baseActivity)
-                .setDataFromServer(dailyForecastParcel)
+                .setDataFromServer(dailyForecastModel)
                 .build();
 
         RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
@@ -134,40 +148,51 @@ public class MainFragment extends Fragment implements Constants {
 
     public void makeHeaderTable(){
         TextView currentCity = view.findViewById(R.id.textViewCity);
-        currentCity.setText(currentForecastParcel.getCity());
+        //currentCity.setText(currentForecastParcel.getCity());
+        currentCity.setText(currentForecastModel.getName());
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
-        currentDistrict.setText(currentForecastParcel.getDistrict());
+        //currentDistrict.setText(currentForecastParcel.getDistrict());
+        currentDistrict.setText(currentForecastModel.getName());
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
-        textViewCurrent.setText(currentForecastParcel.getTemp().toString());
+        //textViewCurrent.setText(currentForecastParcel.getTemp().toString());
+        textViewCurrent.setText(String.valueOf(currentForecastModel.getMain().getTemp()));
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
 
         TextView currWeather = view.findViewById(R.id.textViewCurrentWeather);
-        currWeather.setText(currentForecastParcel.getWeather());
+        //currWeather.setText(currentForecastParcel.getWeather());
+        currWeather.setText(capitalize(currentForecastModel.getWeather()[0].getDescription()));
 
         TextView currFeelingTemp = view.findViewById(R.id.textViewCurrentFeelingTemp);
-        currFeelingTemp.setText(currentForecastParcel.getFeeling().toString());
+        //currFeelingTemp.setText(currentForecastParcel.getFeeling().toString());
+        currFeelingTemp.setText(String.valueOf(currentForecastModel.getMain().getFeels_like()));
 
         TextView currFeelingTempEu = view.findViewById(R.id.textViewCurrentFeelingTempEu);
-        currFeelingTempEu.setText(currentForecastParcel.getFeelingEu());
+        //currFeelingTempEu.setText(currentForecastParcel.getFeelingEu());
 
         TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
-        textViewWindSpeed.setText(currentForecastParcel.getWindSpeed());
+        //textViewWindSpeed.setText(currentForecastParcel.getWindSpeed());
+        textViewWindSpeed.setText(String.valueOf(currentForecastModel.getWind().getSpeed()));
+
         TextView textViewWindSpeedEU = view.findViewById(R.id.textViewWindSpeedEU);
-        textViewWindSpeedEU.setText(currentForecastParcel.getWindSpeedEu());
+        //textViewWindSpeedEU.setText(currentForecastParcel.getWindSpeedEu());
 
         TextView textViewPressure = view.findViewById(R.id.textViewPressure);
-        textViewPressure.setText(currentForecastParcel.getPressure());
+        //textViewPressure.setText(currentForecastParcel.getPressure());
+        textViewPressure.setText(String.valueOf(currentForecastModel.getMain().getPressure() * HPA));
+
         TextView textViewPressureEU = view.findViewById(R.id.textViewPressureEU);
-        textViewPressureEU.setText(currentForecastParcel.getPressureEu());
+        //textViewPressureEU.setText(currentForecastParcel.getPressureEu());
 
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
-        textViewHumidity.setText(currentForecastParcel.getHumidity());
+        //textViewHumidity.setText(currentForecastParcel.getHumidity());
+        textViewHumidity.setText(String.valueOf(currentForecastModel.getMain().getHumidity()));
+
         TextView textViewHumidityEU = view.findViewById(R.id.textViewHumidityEU);
-        textViewHumidityEU.setText(currentForecastParcel.getHumidityEu());
+        //textViewHumidityEU.setText(currentForecastParcel.getHumidityEu());
 
         //Ставим background картинку
         FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
@@ -190,5 +215,40 @@ public class MainFragment extends Fragment implements Constants {
                 startActivity(browser);
             }
         });
+    }
+
+    @Override
+    public void setCurrentForecastModel(CurrentForecastModel currentForecastModel) {
+        this.currentForecastModel = currentForecastModel;
+    }
+
+    @Override
+    public void setDailyForecastModel(DailyForecastModel dailyForecastModel) {
+        this.dailyForecastModel = dailyForecastModel;
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast toast = Toast.makeText(getContext(),
+                message,
+                Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        View view = toast.getView();
+        view.setBackgroundResource(R.drawable.border);
+        TextView text = (TextView) view.findViewById(android.R.id.message);
+        text.setTextSize(36);
+        toast.show();
+    }
+
+    @Override
+    public void initActivity() {
+        // Обновляем данные в верхнней части
+        makeHeaderTable();
+
+        // Обновляем прогноз
+        initDailyForecast();
+
+        //Иницилизируем кнопку-ссылку
+        initBottomLink();
     }
 }

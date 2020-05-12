@@ -17,17 +17,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
-import ru.magzyumov.weatherapp.MainActivity;
 import ru.magzyumov.weatherapp.R;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
@@ -40,7 +36,7 @@ public class GetData implements Constants {
     private Context context;
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
-    private ArrayList<ForecastListener> listeners;
+    private List<ForecastListener> listeners = new ArrayList<>();
 
     public GetData(CurrentForecastParcel currentForecastParcel, DailyForecastParcel dailyForecastParcel, Context context){
         this.currentForecastParcel = currentForecastParcel;
@@ -51,19 +47,36 @@ public class GetData implements Constants {
         this.listeners = new ArrayList<>();
     }
 
+    public GetData(Context context){
+        this.context = context;
+        this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+        this.resources = context.getResources();
+    }
+
+    // Метод добавления подписчиков на события
     public void addListener(ForecastListener listener) {
         this.listeners.add(listener);
     }
 
+    // Метод удаления подписчиков
+    public void removeListener(ForecastListener listener) {
+        this.listeners.remove(listener);
+    }
+
+    // Метод отправки сообшений подписчикам
     public void showMsgToListeners(String message){
-        for( int i = 0; i < listeners.size(); i++ ) {
-            listeners.get(i).showMessage(message);
+        for (ForecastListener listener:listeners) {
+            listener.showMessage(message);
         }
     }
 
-    public void dataReady(){
-        for( int i = 0; i < listeners.size(); i++ ) {
-            listeners.get(i).initActivity();
+    // Метод информирования подписчиков о
+    // готовности данных
+    public void dataReady(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
+        for (ForecastListener listener:listeners) {
+            listener.setCurrentForecastModel(cwRequest);
+            listener.setDailyForecastModel(dwRequest);
+            listener.initActivity();
         }
     }
 
@@ -83,7 +96,8 @@ public class GetData implements Constants {
                     final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
                     // Возвращаемся к основному потоку
                     if ((cwRequest != null) & (dwRequest != null) ) {
-                        handler.post(() -> makeWeather(cwRequest, dwRequest));
+                        //handler.post(() -> makeWeather(cwRequest, dwRequest));
+                        handler.post(() -> dataReady(cwRequest, dwRequest));
                     }
                 }
             }).start();
@@ -91,7 +105,6 @@ public class GetData implements Constants {
             e.printStackTrace();
         }
     }
-
 
     private void makeWeather(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
         String tempEU;
@@ -122,10 +135,8 @@ public class GetData implements Constants {
 
         dailyForecastParcel.setList(dwRequest.getList());
 
-        dataReady();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private String makeRequest(URL uri, Handler handler) {
         HttpsURLConnection urlConnection = null;
         String result = null;
@@ -164,7 +175,6 @@ public class GetData implements Constants {
         }
         return result;
     }
-
 
     private String getLines(BufferedReader in) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
