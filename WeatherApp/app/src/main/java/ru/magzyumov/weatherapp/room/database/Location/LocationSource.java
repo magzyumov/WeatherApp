@@ -91,9 +91,11 @@ public class LocationSource {
     // Устанвливаем местоположение текущим
     public void setLocationCurrent(String region, String city){
         // Сначала снимаем флаг текущего города
+        // и удаляем прогноз
         // у старого местоположения
         for (Location location : locations) {
             if(location.isCurrent){
+                location.forecast = null;
                 location.isCurrent = false;
                 updateLocation(location);
                 break;
@@ -101,7 +103,7 @@ public class LocationSource {
         }
         // Теперь выставляем флаг у нового
         for (Location location : locations) {
-            if((location.region == region) & (location.city == city)){
+            if(location.region.equals(region) & location.city.equals(city)){
                 location.isCurrent = true;
                 updateLocation(location);
                 break;
@@ -113,7 +115,7 @@ public class LocationSource {
     // участвующим в истории поиска
     public void setLocationSearched(String region, String city){
         for (Location location : locations) {
-            if((location.region == region) & (location.city == city)){
+            if(location.region.equals(region) & location.city.equals(city)){
                 location.isSearched = true;
                 updateLocation(location);
                 break;
@@ -125,7 +127,7 @@ public class LocationSource {
     // из истории поиска
     public void delLocationFromSearch(String region, String city){
         for (Location location : locations) {
-            if((location.region == region) & (location.city == city)){
+            if(location.region.equals(region) & location.city.equals(city)){
                 location.isSearched = false;
                 updateLocation(location);
                 break;

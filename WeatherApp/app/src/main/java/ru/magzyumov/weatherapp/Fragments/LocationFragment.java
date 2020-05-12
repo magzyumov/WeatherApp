@@ -126,7 +126,7 @@ public class LocationFragment extends Fragment implements Constants,
         String city = textViewCity.getText().toString();
         String region = textViewRegion.getText().toString();
 
-        searchView.setQuery(city,false);
+        searchView.setQuery(city,true);
         locationSource.setLocationSearched(region, city);
         locationSource.setLocationCurrent(region, city);
     }
