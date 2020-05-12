@@ -10,7 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import ru.magzyumov.weatherapp.R;
@@ -23,10 +26,14 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private LocationSource dataSource;
     // Позиция в списке, на которой было нажато меню
     private long menuPosition;
+    private SimpleDateFormat dateFormat;
+    private Calendar calendar;
 
     public LocationRecyclerAdapter(LocationSource dataSource, Activity activity){
         this.dataSource = dataSource;
         this.activity = activity;
+        this.dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
+        this.calendar = Calendar.getInstance();
     }
 
     @NonNull
@@ -43,10 +50,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         // Заполняем данными записи на экране
         List<Location> locations = dataSource.getHistoryLocations();
         Location location = locations.get(position);
-        holder.textViewDate.setText(location.city); //Пока без даты
+        calendar.setTimeInMillis(location.date*1000L);
+        holder.textViewDate.setText(dateFormat.format(calendar.getTime()));
         holder.textViewCity.setText(location.city);
         holder.imageViewWeather.setImageResource(R.drawable.bkn_d_light);
-        holder.textViewTemp.setText(location.city); //Пока без температуры
+        holder.textViewTemp.setText(String.valueOf(location.temperature));
         holder.textViewRegion.setText(location.region);
 
         // Тут определяем, какой пункт меню был нажат

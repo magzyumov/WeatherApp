@@ -95,8 +95,9 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Forec
 
     @Override
     public void changeFragment(String tag, Bundle args, boolean addToBackStack) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment fragment = fragmentFinder.findFragment(tag);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         transaction.replace(R.id.mainLayout, fragment,tag);
         if(addToBackStack) transaction.addToBackStack("");
         transaction.commitAllowingStateLoss();
