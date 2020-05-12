@@ -242,6 +242,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     @Override
     public void initActivity() {
+
         // Обновляем данные в верхнней части
         makeHeaderTable();
 
