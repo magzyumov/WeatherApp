@@ -95,7 +95,8 @@ public class LocationSource {
         // у старого местоположения
         for (Location location : locations) {
             if(location.isCurrent){
-                location.forecast = null;
+                location.currentForecast = null;
+                location.dailyForecast = null;
                 location.isCurrent = false;
                 updateLocation(location);
                 break;

@@ -34,8 +34,11 @@ public class Location {
     @ColumnInfo(name = "isSearched")
     public boolean isSearched;
 
-    // Последний прогноз для этого города
-    // Флаг о том, что данную локацию искали ранее
-    @ColumnInfo(name = "forecast")
-    public String forecast;
+    // Последний текущий прогноз для этого города
+    @ColumnInfo(name = "currentForecast")
+    public String currentForecast;
+
+    // Последний текущий прогноз для этого города
+    @ColumnInfo(name = "dailyForecast")
+    public String dailyForecast;
 }
