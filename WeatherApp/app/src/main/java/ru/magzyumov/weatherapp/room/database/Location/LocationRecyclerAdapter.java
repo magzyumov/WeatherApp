@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import ru.magzyumov.weatherapp.R;
 
@@ -41,8 +43,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         // Заполняем данными записи на экране
         List<Location> locations = dataSource.getHistoryLocations();
         Location location = locations.get(position);
-        holder.locationRegion.setText(location.region);
-        holder.locationCity.setText(location.city);
+        holder.textViewDate.setText(location.city); //Пока без даты
+        holder.textViewCity.setText(location.city);
+        holder.imageViewWeather.setImageResource(R.drawable.bkn_d_light);
+        holder.textViewTemp.setText(location.city); //Пока без температуры
+        holder.textViewRegion.setText(location.region);
 
         // Тут определяем, какой пункт меню был нажат
         holder.cardView.setOnLongClickListener(view -> {
@@ -66,15 +71,21 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView locationRegion;
-        TextView locationCity;
+        TextView textViewDate;
+        TextView textViewCity;
+        ImageView imageViewWeather;
+        TextView textViewTemp;
+        TextView textViewRegion;
         View cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView;
-            locationRegion = cardView.findViewById(R.id.textViewRegion);
-            locationCity = cardView.findViewById(R.id.textViewCity);
+            textViewDate = cardView.findViewById(R.id.textViewDate);
+            textViewCity = cardView.findViewById(R.id.textViewCity);
+            imageViewWeather = cardView.findViewById(R.id.imageViewWeather);
+            textViewTemp = cardView.findViewById(R.id.textViewTemp);
+            textViewRegion = cardView.findViewById(R.id.textViewRegion);
         }
     }
 }
