@@ -117,10 +117,12 @@ public class LocationSource {
         // и удаляем прогноз
         // у старого местоположения
         Location currentLocation = locationDao.getCurrentLocation(true);
-        currentLocation.currentForecast = null;
-        currentLocation.dailyForecast = null;
-        currentLocation.isCurrent = false;
-        updateLocation(currentLocation);
+        if (currentLocation != null){
+            currentLocation.currentForecast = null;
+            currentLocation.dailyForecast = null;
+            currentLocation.isCurrent = false;
+            updateLocation(currentLocation);
+        }
 
         // Теперь выставляем флаг у нового
         Location futureLocation = locationDao.getLocationByCityName(region, city);
