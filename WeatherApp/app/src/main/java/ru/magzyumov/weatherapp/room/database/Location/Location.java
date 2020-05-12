@@ -41,4 +41,13 @@ public class Location {
     // Последний текущий прогноз для этого города
     @ColumnInfo(name = "dailyForecast")
     public String dailyForecast;
+
+    // Дата последнего прогноза для этого города
+    @ColumnInfo(name = "date")
+    public long date;
+
+    // Температура по данному городу из
+    // последнего прогноза
+    @ColumnInfo(name = "temperature")
+    public float temperature;
 }

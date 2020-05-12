@@ -42,6 +42,11 @@ public interface LocationDao {
     @Query("SELECT * FROM location WHERE id = :id")
     Location getLocationById(long id);
 
+    // Получаем данные местоположения по
+    // по названию города и региона
+    @Query("SELECT * FROM location WHERE region = :region AND city = :city")
+    Location getLocationByCityName(String region, String city);
+
     // Получаем текущее местоположение
     @Query("SELECT * FROM location WHERE isCurrent = :isCurrent")
     Location getCurrentLocation(boolean isCurrent);
@@ -49,10 +54,6 @@ public interface LocationDao {
     // Забираем местоположения которые были в поиске
     @Query("SELECT * FROM location WHERE isSearched = :isSearched")
     List<Location> getSearchedLocations(boolean isSearched);
-
-    // Получаем названия городов для поиска
-    @Query("SELECT city FROM location")
-    List<String> getCities();
 
     //Получаем количество записей в таблице
     @Query("SELECT COUNT() FROM location")
