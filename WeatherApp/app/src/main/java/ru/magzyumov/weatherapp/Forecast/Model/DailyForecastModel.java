@@ -46,4 +46,8 @@ public class DailyForecastModel {
     public void setCity(City city) {
         this.city = city;
     }
+
+    public DailyForecastModel(){
+        this.list = new List[5];
+    }
 }

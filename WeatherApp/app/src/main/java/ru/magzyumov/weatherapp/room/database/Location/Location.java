@@ -1,9 +1,14 @@
 package ru.magzyumov.weatherapp.room.database.Location;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+
+import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
+import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 
 // @Entity - это признак табличного объекта, то есть объект будет сохраняться
 // в базе данных в виде строки
@@ -34,8 +39,24 @@ public class Location {
     @ColumnInfo(name = "isSearched")
     public boolean isSearched;
 
-    // Последний прогноз для этого города
-    // Флаг о том, что данную локацию искали ранее
-    @ColumnInfo(name = "forecast")
-    public String forecast;
+    // Последний текущий прогноз для этого города
+    @ColumnInfo(name = "currentForecast")
+    public String currentForecast;
+
+    // Последний текущий прогноз для этого города
+    @ColumnInfo(name = "dailyForecast")
+    public String dailyForecast;
+
+    // Дата последнего прогноза для этого города
+    @ColumnInfo(name = "date")
+    public long date;
+
+    // Температура по данному городу из
+    // последнего прогноза
+    @ColumnInfo(name = "temperature")
+    public float temperature;
+
+    // Флаг о том, что данные нужно обновить
+    @ColumnInfo(name = "needUpdate")
+    public boolean needUpdate;
 }

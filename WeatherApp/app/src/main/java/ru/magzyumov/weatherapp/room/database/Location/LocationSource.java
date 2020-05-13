@@ -1,5 +1,6 @@
 package ru.magzyumov.weatherapp.room.database.Location;
 
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +40,35 @@ public class LocationSource {
         return locationDao.getCountLocations();
     }
 
+    // Получаем количество записей
+    // для отображения истории
+    public long getCountHistoryLocations(){
+        return locationDao.getCountHistoryLocations(true);
+    }
+
+    public List<Location> getHistoryLocations(){
+        return locationDao.getSearchedLocations(true);
+    }
+
     // Добавляем местоположение
     public void addLocation(Location location){
         locationDao.insertLocation(location);
         // После изменения БД надо повторно прочесть данные из буфера
         loadLocations();
+    }
+
+    // Установим температуру для текущего местоположения
+    public void setLocationTemperature(String region, String city, float temperature){
+        Location location = locationDao.getLocationByCityName(region, city);
+        location.temperature = temperature;
+        updateLocation(location);
+    }
+
+    // Установим дату прогноза для текущего местоположения
+    public void setLocationDate(String region, String city, long date){
+        Location location = locationDao.getLocationByCityName(region, city);
+        location.date = date;
+        updateLocation(location);
     }
 
     // Заменяем местоположение
@@ -89,38 +114,31 @@ public class LocationSource {
     }
 
     // Устанвливаем местоположение текущим
-    public void setLocationCurrent(String region, String city){
+    public void setLocationCurrent(String region, String city, boolean needUpdate){
         // Сначала снимаем флаг текущего города
         // и удаляем прогноз
         // у старого местоположения
-        for (Location location : locations) {
-            if(location.isCurrent){
-                location.forecast = null;
-                location.isCurrent = false;
-                updateLocation(location);
-                break;
-            }
+        Location currentLocation = locationDao.getCurrentLocation(true);
+        if (currentLocation != null){
+            currentLocation.currentForecast = null;
+            currentLocation.dailyForecast = null;
+            currentLocation.isCurrent = false;
+            updateLocation(currentLocation);
         }
+
         // Теперь выставляем флаг у нового
-        for (Location location : locations) {
-            if(location.region.equals(region) & location.city.equals(city)){
-                location.isCurrent = true;
-                updateLocation(location);
-                break;
-            }
-        }
+        Location futureLocation = locationDao.getLocationByCityName(region, city);
+        futureLocation.isCurrent = true;
+        futureLocation.needUpdate = needUpdate;
+        updateLocation(futureLocation);
     }
 
     // Устанвливаем местоположение
     // участвующим в истории поиска
     public void setLocationSearched(String region, String city){
-        for (Location location : locations) {
-            if(location.region.equals(region) & location.city.equals(city)){
-                location.isSearched = true;
-                updateLocation(location);
-                break;
-            }
-        }
+        Location searchedLocation = locationDao.getLocationByCityName(region, city);
+        searchedLocation.isSearched = true;
+        updateLocation(searchedLocation);
     }
 
     // Удаляем местоположение
@@ -137,14 +155,7 @@ public class LocationSource {
 
     //Получаем текущее местоположение из базы
     public Location getCurrentLocation(){
-        Location result = new Location();
-        for (Location location : locations) {
-            if(location.isCurrent){
-                result = location;
-                break;
-            }
-        }
-        return result;
+        return locationDao.getCurrentLocation(true);
     }
 
     //Добавляем множественные данные

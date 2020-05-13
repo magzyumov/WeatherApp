@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

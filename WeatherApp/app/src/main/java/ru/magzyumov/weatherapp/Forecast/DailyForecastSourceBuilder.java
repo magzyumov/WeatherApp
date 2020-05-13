@@ -30,10 +30,4 @@ public class DailyForecastSourceBuilder {
         dailyForecastSource.init();
         return dailyForecastSource;
     }
-
-    public DailyForecastDataSource build2(){
-        DailyForecastSource dailyForecastSource = new DailyForecastSource(resources, context, 7);
-        dailyForecastSource.init();
-        return dailyForecastSource;
-    }
 }

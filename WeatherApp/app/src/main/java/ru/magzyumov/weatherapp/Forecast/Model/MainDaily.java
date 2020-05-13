@@ -82,4 +82,5 @@ public class MainDaily {
     public void setTemp_kf(float temp_kf) {
         this.temp_kf = temp_kf;
     }
+
 }

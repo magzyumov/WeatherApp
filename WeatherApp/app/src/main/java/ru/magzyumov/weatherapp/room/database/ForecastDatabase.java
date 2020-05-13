@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp.room.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import ru.magzyumov.weatherapp.room.database.Location.Location;
 import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
