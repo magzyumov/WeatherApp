@@ -11,23 +11,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorWhite"
         android:orientation="vertical">
 
-        <SearchView
-            android:id="@+id/searchView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchHistoryRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/backgroundNightColor"
-            android:iconifiedByDefault="false"
-            android:queryHint="@string/hintSearchCity">
-        </SearchView>
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite">
-        </ListView>
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/location_item" />
 
     </LinearLayout>
 </FrameLayout>

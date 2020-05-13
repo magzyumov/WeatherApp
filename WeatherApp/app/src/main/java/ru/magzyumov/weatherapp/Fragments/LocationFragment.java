@@ -37,8 +37,8 @@ public class LocationFragment extends Fragment implements Constants,
     private SimpleAdapter arrayAdapterCities;
     private SimpleAdapter arrayAdapterHistory;
     private LocationDao locationDao;
-    private BaseActivity baseActivity;
     private LocationSource locationSource;
+    private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
 
     public LocationFragment() {
@@ -53,11 +53,23 @@ public class LocationFragment extends Fragment implements Constants,
     }
 
     @Override
+    public void onCreate(Bundle bundle){
+        super.onCreate(bundle);
+        locationDao = App.getInstance().getLocationDao();
+        locationSource = new LocationSource(locationDao);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         fragmentChanger = null;
         baseActivity = null;
+        locationDao = null;
+        locationSource = null;
+        arrayAdapterCities = null;
+        arrayAdapterHistory = null;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,18 +82,15 @@ public class LocationFragment extends Fragment implements Constants,
         searchView.setOnQueryTextFocusChangeListener(this);
 
         //Инициализируем города для поиска
-        locationDao = App.getInstance().getLocationDao();
-        locationSource = new LocationSource(locationDao);
-
         listView = view.findViewById(R.id.listView);
         arrayListCities = locationSource.getHashCities();
         arrayListHistory = locationSource.getSearchedLocations();
 
-        arrayAdapterCities = new SimpleAdapter(baseActivity, arrayListCities, android.R.layout.simple_list_item_2,
+        arrayAdapterCities = new SimpleAdapter(getContext(), arrayListCities, android.R.layout.simple_list_item_2,
                 new String[] {"Region", "City"},
                 new int[] {android.R.id.text2, android.R.id.text1, });
 
-        arrayAdapterHistory = new SimpleAdapter(baseActivity, arrayListHistory, android.R.layout.simple_list_item_2,
+        arrayAdapterHistory = new SimpleAdapter(getContext(), arrayListHistory, android.R.layout.simple_list_item_2,
                 new String[] {"Region", "City"},
                 new int[] {android.R.id.text2, android.R.id.text1, });
 
@@ -128,7 +137,7 @@ public class LocationFragment extends Fragment implements Constants,
 
         searchView.setQuery(city,true);
         locationSource.setLocationSearched(region, city);
-        locationSource.setLocationCurrent(region, city);
+        locationSource.setLocationCurrent(region, city, true);
     }
 
     @Override
