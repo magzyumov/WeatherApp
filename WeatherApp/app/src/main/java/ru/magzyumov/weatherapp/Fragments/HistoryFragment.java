@@ -25,6 +25,7 @@ public class HistoryFragment extends Fragment implements Constants {
     private LocationSource locationSource;
     private FragmentChanger fragmentChanger;
     private LocationRecyclerAdapter locationRecyclerAdapter;
+    private LinearLayoutManager linearLayoutManager;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -37,19 +38,31 @@ public class HistoryFragment extends Fragment implements Constants {
     }
 
     @Override
+    public void onCreate(Bundle bundle){
+        super.onCreate(bundle);
+        // Инициализируем объект для обращения к базе
+        locationDao = App.getInstance().getLocationDao();
+        locationSource = new LocationSource(locationDao);
+
+        // Элемент для адаптера
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        locationRecyclerAdapter = new LocationRecyclerAdapter(locationSource, this);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         fragmentChanger = null;
+        locationDao = null;
+        locationSource = null;
+        fragmentChanger = null;
+        locationRecyclerAdapter = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-
-        //Инициализируем города для поиска
-        locationDao = App.getInstance().getLocationDao();
-        locationSource = new LocationSource(locationDao);
 
         initRecyclerView(view);
 
@@ -60,10 +73,7 @@ public class HistoryFragment extends Fragment implements Constants {
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.searchHistoryRecyclerView);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        locationRecyclerAdapter = new LocationRecyclerAdapter(locationSource,getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(locationRecyclerAdapter);
     }
 
