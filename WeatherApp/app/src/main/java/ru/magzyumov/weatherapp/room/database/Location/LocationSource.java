@@ -1,5 +1,7 @@
 package ru.magzyumov.weatherapp.room.database.Location;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +114,7 @@ public class LocationSource {
     }
 
     // Устанвливаем местоположение текущим
-    public void setLocationCurrent(String region, String city){
+    public void setLocationCurrent(String region, String city, boolean needUpdate){
         // Сначала снимаем флаг текущего города
         // и удаляем прогноз
         // у старого местоположения
@@ -127,6 +129,7 @@ public class LocationSource {
         // Теперь выставляем флаг у нового
         Location futureLocation = locationDao.getLocationByCityName(region, city);
         futureLocation.isCurrent = true;
+        futureLocation.needUpdate = needUpdate;
         updateLocation(futureLocation);
     }
 
@@ -152,14 +155,7 @@ public class LocationSource {
 
     //Получаем текущее местоположение из базы
     public Location getCurrentLocation(){
-        Location result = new Location();
-        for (Location location : locations) {
-            if(location.isCurrent){
-                result = location;
-                break;
-            }
-        }
-        return result;
+        return locationDao.getCurrentLocation(true);
     }
 
     //Добавляем множественные данные

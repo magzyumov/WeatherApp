@@ -21,24 +21,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.R;
+import ru.magzyumov.weatherapp.room.database.Location.Location;
+import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
+import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
 
 import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
 public class GetData implements Constants {
 
     private Context context;
+    private String currentCity;
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
+    private LocationDao locationDao;
+    private LocationSource locationSource;
+    private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
 
     public GetData(Context context){
         this.context = context;
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
         this.resources = context.getResources();
+        this.locationDao = App.getInstance().getLocationDao();
+        this.locationSource = new LocationSource(locationDao);
+    }
+
+    // Метод установки текущего города
+    public void setCurrentCity() {
+        currentLocation = locationSource.getCurrentLocation();
+        if(currentLocation != null) currentCity = currentLocation.city;
+        if (currentCity == null) currentCity = "moskwa";
     }
 
     // Метод добавления подписчиков на события
@@ -58,8 +76,8 @@ public class GetData implements Constants {
         }
     }
 
-    // Метод информирования подписчиков о
-    // готовности данных
+    // Метод информирования подписчиков
+    // о готовности данных
     public void dataReady(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
         for (ForecastListener listener:listeners) {
             listener.setCurrentForecastModel(cwRequest);
@@ -68,16 +86,29 @@ public class GetData implements Constants {
         }
     }
 
+    // Метод записи прогноза в базу
+    private void writeForecastResponseToDB(String currentForecast, String dailyForecast){
+        if(currentLocation != null){
+            currentLocation.currentForecast = currentForecast;
+            currentLocation.dailyForecast = dailyForecast;
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
+    }
+
     public void build(){
         try {
-            final URL currUri = new URL(CURR_WEATHER_URL + WEATHER_API_KEY);
-            final URL dailyUri = new URL(DAILY_WEATHER_URL + WEATHER_API_KEY);
+            String currURL = String.format(CURR_WEATHER_URL, currentCity);
+            String dailyURL = String.format(DAILY_WEATHER_URL, currentCity);
+            final URL currUri = new URL(currURL + WEATHER_API_KEY);
+            final URL dailyUri = new URL(dailyURL + WEATHER_API_KEY);
             final Handler handler = new Handler(); // Запоминаем основной поток
             new Thread(new Runnable() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 public void run() {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
+                    handler.post(() -> writeForecastResponseToDB(currResult, dailyResult));
                     // преобразование данных запроса в модель
                     Gson gson = new Gson();
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);

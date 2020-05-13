@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import ru.magzyumov.weatherapp.R;
 // Адаптер для RecyclerView
 public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecyclerAdapter.ViewHolder> {
 
-    private Activity activity;
+    private Fragment fragment;
     // Источник данных
     private LocationSource dataSource;
     // Позиция в списке, на которой было нажато меню
@@ -29,9 +30,10 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private SimpleDateFormat dateFormat;
     private Calendar calendar;
 
-    public LocationRecyclerAdapter(LocationSource dataSource, Activity activity){
+    public LocationRecyclerAdapter(LocationSource dataSource, Fragment fragment){
         this.dataSource = dataSource;
-        this.activity = activity;
+        this.fragment = fragment;
+        //this.fragment =
         this.dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
         this.calendar = Calendar.getInstance();
     }
@@ -64,8 +66,8 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         });
 
         // Регистрируем контекстное меню
-        if (activity != null){
-            activity.registerForContextMenu(holder.cardView);
+        if (fragment != null){
+            fragment.registerForContextMenu(holder.cardView);
         }
     }
 
