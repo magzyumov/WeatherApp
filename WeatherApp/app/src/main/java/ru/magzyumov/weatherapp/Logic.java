@@ -46,18 +46,10 @@ public final class Logic extends AppCompatActivity {
     //Метод обновления данных
     public void refreshData(){
         getBackgroundPic();
-        getDataFromServer();
     }
 
     public int getMainLayerPic() {return this.mainLayerPic;}
     public int getSecondLayerPic() { return this.secondLayerPic;}
-    public int getCurrentHour() {return this.currentHour;}
-
-    //Метод будет посылать запрос на сервер потом обрабатывать его
-    private void getDataFromServer(){
-        Random random = new SecureRandom();
-        int temp = 90 - random.nextInt(181);
-    }
 
     private void getBackgroundPic(){
         int[] mainBackLayerPic;
@@ -79,7 +71,7 @@ public final class Logic extends AppCompatActivity {
         }
 
         this.mainLayerPic = isDay ? mainBackLayerPic[0] : mainBackLayerPic[1];
-        this.secondLayerPic = isDay ? secondBackLayerPic[0] : secondBackLayerPic[1];
+        this.secondLayerPic = isDay ? secondBackLayerPic[8] : secondBackLayerPic[9];
     }
 
     // Механизм вытаскивания идентификаторов картинок (к сожалению просто массив не работает)

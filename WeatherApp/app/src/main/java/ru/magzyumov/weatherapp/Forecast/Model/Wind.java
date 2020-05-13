@@ -12,9 +12,7 @@ public class Wind {
         this.deg = deg;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
+    public float getSpeed() { return speed; }
 
     public void setSpeed(float speed) {
         this.speed = speed;

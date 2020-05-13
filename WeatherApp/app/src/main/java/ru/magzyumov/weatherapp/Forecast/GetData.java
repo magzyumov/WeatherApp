@@ -31,12 +31,14 @@ import ru.magzyumov.weatherapp.room.database.Location.Location;
 import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
 import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
 
+import static java.util.Locale.getDefault;
 import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
 public class GetData implements Constants {
 
     private Context context;
     private String currentCity;
+    private String currentLang;
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
     private LocationDao locationDao;
@@ -50,13 +52,15 @@ public class GetData implements Constants {
         this.resources = context.getResources();
         this.locationDao = App.getInstance().getLocationDao();
         this.locationSource = new LocationSource(locationDao);
+        this.currentLang = getDefault().getLanguage();
     }
 
     // Метод установки текущего города
-    public void setCurrentCity() {
+    public void initialize() {
         currentLocation = locationSource.getCurrentLocation();
         if(currentLocation != null) currentCity = currentLocation.city;
         if (currentCity == null) currentCity = "moskwa";
+        currentLang = getDefault().getLanguage();
     }
 
     // Метод добавления подписчиков на события
@@ -98,8 +102,8 @@ public class GetData implements Constants {
 
     public void build(){
         try {
-            String currURL = String.format(CURR_WEATHER_URL, currentCity);
-            String dailyURL = String.format(DAILY_WEATHER_URL, currentCity);
+            String currURL = String.format(CURR_WEATHER_URL, currentCity, currentLang);
+            String dailyURL = String.format(DAILY_WEATHER_URL, currentCity, currentLang);
             final URL currUri = new URL(currURL + WEATHER_API_KEY);
             final URL dailyUri = new URL(dailyURL + WEATHER_API_KEY);
             final Handler handler = new Handler(); // Запоминаем основной поток

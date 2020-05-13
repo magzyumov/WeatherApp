@@ -78,15 +78,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="0.38"
-                android:gravity="center|right"
+                android:gravity="center|left"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -101,7 +102,7 @@
                 <TextView
                     android:id="@+id/textViewWindSpeed"
                     style="@style/ForecastTextStyle"
-                    android:text="4.56" />
+                    android:text="5" />
 
                 <TextView
                     android:id="@+id/textViewWindSpeedEU"
@@ -112,24 +113,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.31"
+                android:layout_weight="0.30"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:contentDescription="@string/weatherIcon"
                     android:id="@+id/imageViewPressure"
                     style="@style/ForecastTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    app:srcCompat="@drawable/ic_pressure_dark"
-                    android:layout_marginEnd="5dp" />
+                    android:contentDescription="@string/weatherIcon"
+                    app:srcCompat="@drawable/ic_pressure_dark" />
 
                 <TextView
                     android:id="@+id/textViewPressure"
                     style="@style/ForecastTextStyle"
-                    android:text="1010" />
+                    android:text="749" />
 
                 <TextView
                     android:id="@+id/textViewPressureEU"
@@ -141,8 +142,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.43"
-                android:gravity="center|left"
+                android:layout_weight="0.42"
+                android:gravity="center|right"
                 android:orientation="horizontal">
 
                 <ImageView

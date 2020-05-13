@@ -35,7 +35,7 @@
 
     <string name="now">now</string>
     <string name="feeling">Feels like:</string>
-    <string name="provider">Data provided by Y.Weather</string>
+    <string name="provider">Data provided by OpenWeather</string>
 
     <string name="connectionTimeout">No internet no weather!!!</string>
     <string name="cityNotFound">City not found!</string>

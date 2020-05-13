@@ -6,7 +6,7 @@ public class List {
     private MainDaily main;
     private Weather[] weather;
     private Clouds clouds;
-    private WindDaily wind;
+    private Wind wind;
     private SysHourly sys;
     private String dt_txt;
 
@@ -34,11 +34,11 @@ public class List {
         this.clouds = clouds;
     }
 
-    public WindDaily getWind() {
+    public Wind getWind() {
         return wind;
     }
 
-    public void setWind(WindDaily wind) {
+    public void setWind(Wind wind) {
         this.wind = wind;
     }
 
