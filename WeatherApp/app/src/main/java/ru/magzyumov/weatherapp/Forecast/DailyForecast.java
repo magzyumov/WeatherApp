@@ -13,7 +13,7 @@ public class DailyForecast {
     private String windSpeedEU;
 
     public DailyForecast (String date, String dayName, int image,
-                          float temp, float windSpeed, int pressure, int humidity,
+                          int temp, int windSpeed, int pressure, int humidity,
                           String tempEU, String pressEU, String windSpeedEU){
         this.date = date;
         this.dayName = dayName;

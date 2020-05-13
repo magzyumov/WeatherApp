@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,15 +37,6 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
     }
 
-    public DailyForecastSource(Resources resources, Context context, int length) {
-        this.length = length;
-        this.dataSource = new ArrayList<>(length);
-        this.resources = resources;
-        this.calendar = Calendar.getInstance();
-        this.context = context;
-        this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
-    }
-
     public DailyForecastSource init(){
         String date;
         String dayName;
@@ -54,13 +44,13 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
         String pressEU;
         String windSpeedEU;
         int image;
-        float temp;
-        float windSpeed;
+        int temp;
+        int windSpeed;
         int pressure;
         int humidity;
 
         //Забираем инженерные еденицы из настроек
-        tempEU = sharedPref.getBoolean(TEMP_EU, false) ? (resources.getString(R.string.celsius)) : (resources.getString(R.string.fahrenheit));
+        tempEU = sharedPref.getBoolean(TEMP_EU, false) ? (resources.getString(R.string.fahrenheit)) : (resources.getString(R.string.celsius));
         pressEU = sharedPref.getBoolean(PRESS_EU, false) ? (resources.getString(R.string.pressEUTwo)) : (resources.getString(R.string.pressEUOne));
         windSpeedEU = sharedPref.getBoolean(WIND_EU, false) ? (resources.getString(R.string.windEUTwo)) : (resources.getString(R.string.windEUOne));
 
@@ -84,8 +74,8 @@ public class DailyForecastSource implements DailyForecastDataSource, Constants {
                 dayName = capitalize(dayName);
 
                 image = (true) ? (pictures[(2)+1]) : (pictures[(2)+2]);
-                temp = dailyForecastModel.getList()[i].getMain().getTemp();
-                windSpeed = dailyForecastModel.getList()[i].getWind().getSpeed();
+                temp = (int)dailyForecastModel.getList()[i].getMain().getTemp();
+                windSpeed = (int)dailyForecastModel.getList()[i].getWind().getSpeed();
                 pressure = (int) (dailyForecastModel.getList()[i].getMain().getPressure() * HPA);
                 humidity = dailyForecastModel.getList()[i].getMain().getHumidity();
             } else {

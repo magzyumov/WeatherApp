@@ -55,7 +55,7 @@
     <!-- Style for Main Horizontal Scroll Block -->
     <style name="ForecastTextStyle_CommonBlock">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
@@ -65,11 +65,10 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-
     <!-- Style for Forecast List -->
     <style name="ForecastTextStyle">
         <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>

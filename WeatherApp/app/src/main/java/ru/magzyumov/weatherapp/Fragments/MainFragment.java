@@ -41,6 +41,7 @@ import ru.magzyumov.weatherapp.room.database.Location.Location;
 import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
 import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
 
+import static java.util.Locale.getDefault;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
@@ -104,13 +105,15 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        logic.refreshData();
+        // Пока ждем основных данных,
+        // установим background
+        setBackground();
 
         currentLocation = locationSource.getCurrentLocation();
 
         if (currentLocation != null){
             if(currentLocation.needUpdate){
-                getData.setCurrentCity();
+                getData.initialize();
                 getData.build();
             }
 
@@ -120,7 +123,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
                 initActivity();
             }
         } else {
-            getData.setCurrentCity();
+            getData.initialize();
             getData.build();
         }
 
@@ -139,7 +142,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         fragmentChanger.showBackButton(false);
     }
 
-    public void initDailyForecast() {
+    public void setDailyForecast() {
         // строим источник данных
         DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
                 .setResources(getResources())
@@ -177,13 +180,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
     }
 
-    public void makeHeaderTable(){
-        //Ставим background картинку
-        FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
-        mainLayout.setBackgroundResource(logic.getMainLayerPic());
-
-        FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
-        secondLayout.setBackgroundResource(logic.getSecondLayerPic());
+    public void setCurrentForecast(){
 
         // Вставляем данные в поля
         TextView currentCity = view.findViewById(R.id.textViewCity);
@@ -193,7 +190,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         currentDistrict.setText(currentForecastModel.getName());
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
-        textViewCurrent.setText(String.valueOf(currentForecastModel.getMain().getTemp()));
+        textViewCurrent.setText(String.valueOf((int)currentForecastModel.getMain().getTemp()));
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
@@ -202,13 +199,13 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         currWeather.setText(capitalize(currentForecastModel.getWeather()[0].getDescription()));
 
         TextView currFeelingTemp = view.findViewById(R.id.textViewCurrentFeelingTemp);
-        currFeelingTemp.setText(String.valueOf(currentForecastModel.getMain().getFeels_like()));
+        currFeelingTemp.setText(String.valueOf((int)currentForecastModel.getMain().getFeels_like()));
 
         TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
-        textViewWindSpeed.setText(String.valueOf(currentForecastModel.getWind().getSpeed()));
+        textViewWindSpeed.setText(String.valueOf((int)currentForecastModel.getWind().getSpeed()));
 
         TextView textViewPressure = view.findViewById(R.id.textViewPressure);
-        textViewPressure.setText(String.valueOf(currentForecastModel.getMain().getPressure() * HPA));
+        textViewPressure.setText(String.valueOf((int)(currentForecastModel.getMain().getPressure() * HPA)));
 
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
         textViewHumidity.setText(String.valueOf(currentForecastModel.getMain().getHumidity()));
@@ -227,11 +224,24 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         //TODO: textViewHumidityEU.setText(currentForecastParcel.getHumidityEu());
 
         TextView textViewCurrentEU = view.findViewById(R.id.textViewCurrentTempEU);
-        textViewCurrentEU.setText((baseActivity.getBooleanPreference(SETTING, TEMP_EU)) ? (getString(R.string.celsius)) : (getString(R.string.fahrenheit)));
+        textViewCurrentEU.setText((baseActivity.getBooleanPreference(SETTING, TEMP_EU)) ? (getString(R.string.fahrenheit)) : (getString(R.string.celsius)));
+    }
+
+    public void setBackground(){
+        // TODO: Это надо сделать как-то по другому
+        logic.refreshData();
+
+        //Ставим background картинку
+        FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
+        mainLayout.setBackgroundResource(logic.getMainLayerPic());
+
+        FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
+        secondLayout.setBackgroundResource(logic.getSecondLayerPic());
     }
 
     private void initBottomLink(){
         TextView textView = view.findViewById(R.id.textViewProvider);
+        textView.setVisibility(View.VISIBLE);
         textView.setText(Html.fromHtml("<a href=" + PROVIDER_URL + "><font color=#AAA>" + getString(R.string.provider) + "</font></a>"));
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,10 +279,10 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public void initActivity() {
 
         // Обновляем данные в верхнней части
-        makeHeaderTable();
+        setCurrentForecast();
 
         // Обновляем прогноз
-        initDailyForecast();
+        setDailyForecast();
 
         //Иницилизируем кнопку-ссылку
         initBottomLink();
