@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.room.init;
+package ru.magzyumov.weatherapp.Database.Init;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.magzyumov.weatherapp.room.database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.Location;
 
 public class SQLHandler {
     private static Connection connection;

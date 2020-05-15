@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.Forecast;
+package ru.magzyumov.weatherapp.Forecast.Display;
 
 public class DailyForecast {
     private String date;

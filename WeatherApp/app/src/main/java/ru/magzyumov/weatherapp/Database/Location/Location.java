@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.room.database.Location;
+package ru.magzyumov.weatherapp.Database.Location;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
