@@ -8,8 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,8 +59,8 @@ public class HistoryFragment extends Fragment implements Constants {
         locationRecyclerAdapter = new LocationRecyclerAdapter(locationSource, this);
 
         //Меняем текст в шапке
-        fragmentChanger.changeHeader(getResources().getString(R.string.menu_settings));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_settings));
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_history));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_history));
 
         //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
@@ -70,7 +72,8 @@ public class HistoryFragment extends Fragment implements Constants {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        fragmentChanger.setDrawerIndicatorEnabled(false);   // Деактивируем Drawer
+        // Деактивируем Drawer
+        fragmentChanger.setDrawerIndicatorEnabled(false);
 
         initRecyclerView(view);
 
@@ -83,13 +86,63 @@ public class HistoryFragment extends Fragment implements Constants {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(locationRecyclerAdapter);
+
+        //Установка слушателя на позицию
+        locationRecyclerAdapter.setOnItemClickListener(new LocationRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String region = ((TextView)view.findViewById(R.id.textViewRegion)).getText().toString();
+                String city = ((TextView)view.findViewById(R.id.textViewCity)).getText().toString();
+
+                // Выставляем флаг о том, что нужны обновления данных
+                locationSource.setLocationCurrent(region, city, true);
+
+                // Возвращаемся назад
+                fragmentChanger.returnFragment();
+            }
+        });
+
+        //Установка слушателя на меню
+        locationRecyclerAdapter.setOnMenuClickListener(new LocationRecyclerAdapter.OnMenuClickListener() {
+            @Override
+            public void onMenuClick(View view, int position) {
+                PopupMenu menu = new PopupMenu(getContext(), view);
+                requireActivity().getMenuInflater().inflate(R.menu.menu_popup, menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.remove_context:
+                                // Не особо красивое решение
+                                String[] arr = view.getContentDescription().toString().split("~",2);
+
+                                String region = arr[0];
+                                String city = arr[1];
+
+                                locationSource.setLocationSearched(region, city, false);
+                                locationRecyclerAdapter.notifyDataSetChanged();
+                                return true;
+                            case R.id.clear_context:
+                                for (Location locationForUnSearch : locationSource.getHistoryLocations()) {
+                                    locationSource.setLocationSearched(locationForUnSearch, false);
+                                }
+                                locationRecyclerAdapter.notifyDataSetChanged();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+            }
+        });
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.menu_context, menu);
     }
 
     @Override
@@ -112,6 +165,7 @@ public class HistoryFragment extends Fragment implements Constants {
         return super.onContextItemSelected(item);
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -123,10 +177,13 @@ public class HistoryFragment extends Fragment implements Constants {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        // Освобождаем ресурсы
         fragmentChanger = null;
         locationDao = null;
         locationSource = null;
         fragmentChanger = null;
         locationRecyclerAdapter = null;
     }
+
 }

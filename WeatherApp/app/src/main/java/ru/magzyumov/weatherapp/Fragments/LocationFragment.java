@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -66,20 +68,13 @@ public class LocationFragment extends Fragment implements Constants,
         locationSource = new LocationSource(locationDao);
 
         //Меняем текст в шапке
-        fragmentChanger.changeHeader(getResources().getString(R.string.menu_settings));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_settings));
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
 
         //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
 
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.menu_main, menu);
-
     }
 
     @Override
@@ -89,11 +84,6 @@ public class LocationFragment extends Fragment implements Constants,
 
         // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
-
-        //Инициализируем строку поиска
-        searchView = view.findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnQueryTextFocusChangeListener(this);
 
         //Инициализируем города для поиска
         listView = view.findViewById(R.id.listView);
@@ -112,6 +102,20 @@ public class LocationFragment extends Fragment implements Constants,
         listView.setOnItemClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.menu_location, menu);
+
+        // Поиск пункта меню поиска
+        MenuItem search = menu.findItem(R.id.searchView);
+
+        // Строка поиска
+        searchView = (SearchView) search.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextFocusChangeListener(this);
     }
 
     @Override
@@ -145,6 +149,8 @@ public class LocationFragment extends Fragment implements Constants,
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if(hasFocus) listView.setAdapter(arrayAdapterCities);
+        if(hasFocus) searchView.setQueryHint(getString(R.string.hintSearchCity));
+
     }
 
     @Override
@@ -153,11 +159,16 @@ public class LocationFragment extends Fragment implements Constants,
 
         // Скрываем кнопку назад
         fragmentChanger.showBackButton(false);
+
+        // Снимаем фокус с поля поиска
+        searchView.clearFocus();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+        // Освободдаем ресурсы
         fragmentChanger = null;
         baseActivity = null;
         locationDao = null;

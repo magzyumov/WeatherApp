@@ -215,7 +215,7 @@
                         android:id="@+id/daily_forecast_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:listitem="@layout/forecast_item" />
+                        tools:listitem="@layout/item_forecast" />
 
                 </LinearLayout>
 

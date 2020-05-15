@@ -13,15 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/backgroundNightColor"
-            android:iconifiedByDefault="false"
-            android:queryHint="@string/hintSearchCity">
-        </SearchView>
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
