@@ -131,6 +131,24 @@ public class LocationSource {
         updateLocation(futureLocation);
     }
 
+    public void setLocationCurrent(Location futureLocation, boolean needUpdate){
+        // Сначала снимаем флаг текущего города
+        // и удаляем прогноз
+        // у старого местоположения
+        Location currentLocation = locationDao.getCurrentLocation(true);
+        if (currentLocation != null){
+            currentLocation.currentForecast = null;
+            currentLocation.dailyForecast = null;
+            currentLocation.isCurrent = false;
+            updateLocation(currentLocation);
+        }
+
+        // Теперь выставляем флаг у нового
+        futureLocation.isCurrent = true;
+        futureLocation.needUpdate = needUpdate;
+        updateLocation(futureLocation);
+    }
+
     // Устанвливаем местоположение
     // участвующим в истории поиска
     public void setLocationSearched(String region, String city, boolean isSearched){

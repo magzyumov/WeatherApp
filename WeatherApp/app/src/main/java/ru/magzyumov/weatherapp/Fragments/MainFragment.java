@@ -122,8 +122,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
         fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
 
-        //Показываем кнопку назад
-        //fragmentChanger.showBackButton(false);
     }
 
     public void setDailyForecast() {
@@ -149,7 +147,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         dailyRecyclerView.addItemDecoration(itemDecoration);
 
         //Установка слушателя
-        adapter.SetOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)

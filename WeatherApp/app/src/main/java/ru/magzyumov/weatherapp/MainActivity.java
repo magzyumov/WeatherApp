@@ -2,13 +2,13 @@ package ru.magzyumov.weatherapp;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -46,9 +46,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         //Устанавливаем Toolbar
         Toolbar toolbar = initToolbar();
 
-        initFab();
         initDrawer(toolbar);
-
     }
 
     private Toolbar initToolbar() {
@@ -73,56 +71,6 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void initFab() {
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home){
-            returnFragment();
-        }
-
-        if (id == R.id.menu_location) {
-            // Выполняем транзакцию по замене фрагмента если его нет
-            if(getSupportFragmentManager().findFragmentByTag("locationFragment") == null){
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new LocationFragment(),"locationFragment").addToBackStack("").commit();
-            }
-            return true;
-        }
-
-        if (id == R.id.menu_settings) {
-            // Выполняем транзакцию по замене фрагмента если его нет
-            if(getSupportFragmentManager().findFragmentByTag("settingsFragment") == null){
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new SettingsFragment(), "settingsFragment").addToBackStack("").commit();
-            }
-            return true;
-        }
-
-        if (id == R.id.menu_history) {
-            // Выполняем транзакцию по замене фрагмента если его нет
-            if(getSupportFragmentManager().findFragmentByTag("historyFragment") == null){
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new HistoryFragment(), "historyFragment").addToBackStack("").commit();
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
