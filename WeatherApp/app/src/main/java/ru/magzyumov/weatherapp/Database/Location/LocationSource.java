@@ -1,6 +1,4 @@
-package ru.magzyumov.weatherapp.room.database.Location;
-
-import android.util.Log;
+package ru.magzyumov.weatherapp.Database.Location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,23 +133,17 @@ public class LocationSource {
 
     // Устанвливаем местоположение
     // участвующим в истории поиска
-    public void setLocationSearched(String region, String city){
+    public void setLocationSearched(String region, String city, boolean isSearched){
         Location searchedLocation = locationDao.getLocationByCityName(region, city);
-        searchedLocation.isSearched = true;
+        searchedLocation.isSearched = isSearched;
         updateLocation(searchedLocation);
     }
 
-    // Удаляем местоположение
-    // из истории поиска
-    public void delLocationFromSearch(String region, String city){
-        for (Location location : locations) {
-            if(location.region.equals(region) & location.city.equals(city)){
-                location.isSearched = false;
-                updateLocation(location);
-                break;
-            }
-        }
+    public void setLocationSearched(Location location, boolean isSearched){
+        location.isSearched = isSearched;
+        updateLocation(location);
     }
+
 
     //Получаем текущее местоположение из базы
     public Location getCurrentLocation(){

@@ -2,7 +2,10 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,9 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
-import ru.magzyumov.weatherapp.room.database.Location.LocationRecyclerAdapter;
-import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationRecyclerAdapter;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 public class HistoryFragment extends Fragment implements Constants {
 
@@ -40,6 +44,10 @@ public class HistoryFragment extends Fragment implements Constants {
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
+
+        // Деактивируем Drawer
+        fragmentChanger.setDrawerIndicatorEnabled(false);
+
         // Инициализируем объект для обращения к базе
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
@@ -47,22 +55,22 @@ public class HistoryFragment extends Fragment implements Constants {
         // Элемент для адаптера
         linearLayoutManager = new LinearLayoutManager(getContext());
         locationRecyclerAdapter = new LocationRecyclerAdapter(locationSource, this);
+
+        //Меняем текст в шапке
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_settings));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_settings));
+
+        //Показываем кнопку назад
+        fragmentChanger.showBackButton(true);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentChanger = null;
-        locationDao = null;
-        locationSource = null;
-        fragmentChanger = null;
-        locationRecyclerAdapter = null;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        fragmentChanger.setDrawerIndicatorEnabled(false);   // Деактивируем Drawer
 
         initRecyclerView(view);
 
@@ -77,16 +85,48 @@ public class HistoryFragment extends Fragment implements Constants {
         recyclerView.setAdapter(locationRecyclerAdapter);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.remove_context:
+                Location location = locationRecyclerAdapter.getPressedLocation();
+                locationSource.setLocationSearched(location.region, location.city, false);
+                locationRecyclerAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.clear_context:
+                for (Location locationForUnSearch : locationSource.getHistoryLocations()) {
+                    locationSource.setLocationSearched(locationForUnSearch, false);
+                }
+                locationRecyclerAdapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 
-        //Меняем текст в шапке
-        fragmentChanger.changeHeader(getResources().getString(R.string.menu_history));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_history));
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        //Показываем кнопку назад
-        fragmentChanger.showBackButton(true);
+        // Скрываем кнопку назад
+        fragmentChanger.showBackButton(false);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentChanger = null;
+        locationDao = null;
+        locationSource = null;
+        fragmentChanger = null;
+        locationRecyclerAdapter = null;
     }
 }

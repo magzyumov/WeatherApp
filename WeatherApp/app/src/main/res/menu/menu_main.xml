@@ -24,5 +24,13 @@
         android:orderInCategory="300"
         android:title="@string/menu_settings"
         app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="5"
+        android:title="@string/menu_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
 </menu>
 

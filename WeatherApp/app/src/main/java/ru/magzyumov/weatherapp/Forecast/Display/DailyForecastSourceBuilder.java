@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.Forecast;
+package ru.magzyumov.weatherapp.Forecast.Display;
 
 import android.content.Context;
 import android.content.res.Resources;

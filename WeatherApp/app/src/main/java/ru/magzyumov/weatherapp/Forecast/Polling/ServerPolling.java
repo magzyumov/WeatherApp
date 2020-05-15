@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.Forecast;
+package ru.magzyumov.weatherapp.Forecast.Polling;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,14 +27,14 @@ import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.room.database.Location.Location;
-import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
-import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 import static java.util.Locale.getDefault;
 import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
-public class GetData implements Constants {
+public class ServerPolling implements Constants {
 
     private Context context;
     private String currentCity;
@@ -46,7 +46,7 @@ public class GetData implements Constants {
     private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
 
-    public GetData(Context context){
+    public ServerPolling(Context context){
         this.context = context;
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
         this.resources = context.getResources();

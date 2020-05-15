@@ -1,6 +1,5 @@
-package ru.magzyumov.weatherapp.room.database.Location;
+package ru.magzyumov.weatherapp.Database.Location;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TreeMap;
 
 import ru.magzyumov.weatherapp.R;
 
@@ -27,13 +25,13 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private LocationSource dataSource;
     // Позиция в списке, на которой было нажато меню
     private long menuPosition;
+    private Location pressedLocation;       // Локация на которой было нажато меню
     private SimpleDateFormat dateFormat;
     private Calendar calendar;
 
     public LocationRecyclerAdapter(LocationSource dataSource, Fragment fragment){
         this.dataSource = dataSource;
         this.fragment = fragment;
-        //this.fragment =
         this.dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
         this.calendar = Calendar.getInstance();
     }
@@ -61,6 +59,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
         // Тут определяем, какой пункт меню был нажат
         holder.cardView.setOnLongClickListener(view -> {
+            pressedLocation = location;
             menuPosition = position;
             return false;
         });
@@ -76,9 +75,8 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         return (int) dataSource.getCountHistoryLocations();
     }
 
-    public long getMenuPosition() {
-        return menuPosition;
-    }
+    public long getMenuPosition() { return menuPosition; }
+    public Location getPressedLocation() {return pressedLocation; }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewDate;
