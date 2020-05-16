@@ -32,7 +32,7 @@ public class App extends Application {
         db = Room.databaseBuilder(
                 getApplicationContext(),
                 ForecastDatabase.class,
-                "storage")
+                "storage.db")
                 .allowMainThreadQueries() //Только для примеров и тестирования.
                 .fallbackToDestructiveMigration()
                 .build();

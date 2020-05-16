@@ -3,7 +3,6 @@ package ru.magzyumov.weatherapp.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +31,9 @@ public class SettingsFragment extends Fragment implements Constants {
         if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
     }
 
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
@@ -46,11 +44,6 @@ public class SettingsFragment extends Fragment implements Constants {
 
         //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         //Инициализируем переключатели
         initSwitch(view.findViewById(R.id.switchNightMode), SETTING, NIGHT_MODE);
