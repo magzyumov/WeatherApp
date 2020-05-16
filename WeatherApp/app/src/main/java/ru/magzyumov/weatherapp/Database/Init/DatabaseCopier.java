@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ru.magzyumov.weatherapp.App;
-import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -21,10 +19,9 @@ import static android.content.Context.MODE_PRIVATE;
 // Класс для копрования данных из исходной базы данных в Room
 public class DatabaseCopier {
     private static final String TAG = DatabaseCopier.class.getSimpleName();
-    private static final String DATABASE_NAME = "storage";
+    private static final String DATABASE_NAME = "storage.db";
     private static SharedPreferences sharedPref;
     private static Context appContext;
-    private LocationSource locationSource;
 
     private static class Holder {
         private static final DatabaseCopier INSTANCE = new DatabaseCopier();
@@ -41,15 +38,6 @@ public class DatabaseCopier {
     private DatabaseCopier() {
         if(! sharedPref.getBoolean("INIT", false)){
             copyAttachedDatabase(appContext, DATABASE_NAME);
-
-            SQLHandler.connect();
-
-            LocationDao locationDao = App
-                    .getInstance()
-                    .getLocationDao();
-
-            locationSource = new LocationSource(locationDao);
-            locationSource.insertBigData(SQLHandler.getAllData());
 
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("INIT", true);

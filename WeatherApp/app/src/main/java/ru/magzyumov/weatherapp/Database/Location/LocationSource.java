@@ -1,14 +1,12 @@
 package ru.magzyumov.weatherapp.Database.Location;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 // Вспомогательный класс, развязывающий зависимость между Room и RecyclerView
-public class LocationSource {
+public class LocationSource implements LocationDataSource {
 
     private final LocationDao locationDao;
 
@@ -159,19 +157,13 @@ public class LocationSource {
         updateLocation(searchedLocation);
     }
 
-    public void setLocationSearched(Location location, boolean isSearched){
-        location.isSearched = isSearched;
-        updateLocation(location);
+    public void setLocationSearched(Location futureLocation, boolean isSearched){
+        futureLocation.isSearched = isSearched;
+        updateLocation(futureLocation);
     }
-
 
     //Получаем текущее местоположение из базы
     public Location getCurrentLocation(){
         return locationDao.getCurrentLocation(true);
-    }
-
-    //Добавляем множественные данные
-    public void insertBigData(List<Location> data){
-        locationDao.insertBigData(data);
     }
 }

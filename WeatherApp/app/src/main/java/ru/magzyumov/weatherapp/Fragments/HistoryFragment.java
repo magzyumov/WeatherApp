@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
