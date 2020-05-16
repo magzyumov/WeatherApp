@@ -76,6 +76,7 @@
                     android:id="@+id/imageViewWeather"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     card_view:srcCompat="@drawable/bkn_d_line_dark" />
 
                 <TextView
@@ -84,6 +85,15 @@
                     android:layout_height="wrap_content"
                     android:text="+ 12 "
                     android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/textViewTempEU"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/celsius" />
 
             </LinearLayout>
 

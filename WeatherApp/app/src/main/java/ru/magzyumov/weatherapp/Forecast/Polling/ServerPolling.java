@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -91,10 +92,12 @@ public class ServerPolling implements Constants {
     }
 
     // Метод записи прогноза в базу
-    private void writeForecastResponseToDB(String currentForecast, String dailyForecast){
+    private void writeForecastResponseToDB(String currentForecast, String dailyForecast, CurrentForecastModel cwResult){
         if(currentLocation != null){
             currentLocation.currentForecast = currentForecast;
             currentLocation.dailyForecast = dailyForecast;
+            currentLocation.temperature = cwResult.getMain().getTemp();
+            currentLocation.date = cwResult.getDt();
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
@@ -112,13 +115,13 @@ public class ServerPolling implements Constants {
                 public void run() {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
-                    handler.post(() -> writeForecastResponseToDB(currResult, dailyResult));
                     // преобразование данных запроса в модель
                     Gson gson = new Gson();
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
                     final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
                     // Возвращаемся к основному потоку
                     if ((cwRequest != null) & (dwRequest != null) ) {
+                        handler.post(() -> writeForecastResponseToDB(currResult, dailyResult, cwRequest));
                         handler.post(() -> dataReady(cwRequest, dwRequest));
                     }
                 }

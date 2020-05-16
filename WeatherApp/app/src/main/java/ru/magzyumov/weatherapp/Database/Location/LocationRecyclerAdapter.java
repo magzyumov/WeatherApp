@@ -65,7 +65,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         holder.textViewDate.setText(dateFormat.format(calendar.getTime()));
         holder.textViewCity.setText(location.city);
         holder.imageViewWeather.setImageResource(R.drawable.bkn_d_light);
-        holder.textViewTemp.setText(String.valueOf(location.temperature));
+        holder.textViewTemp.setText(String.valueOf((int)location.temperature));
         holder.textViewRegion.setText(location.region);
 
         holder.imageViewMenu.setContentDescription(location.region + "~" + location.city);
