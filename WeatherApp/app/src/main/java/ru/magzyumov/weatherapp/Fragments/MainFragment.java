@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSourceBuilder;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
@@ -51,7 +52,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private DailyForecastModel dailyForecastModel;
     private CurrentForecastModel currentForecastModel;
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private Location currentLocation;
     private ServerPolling serverPolling;
     private Gson gson;

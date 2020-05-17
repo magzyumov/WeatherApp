@@ -15,7 +15,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import ru.magzyumov.weatherapp.MainActivity;
 import ru.magzyumov.weatherapp.R;
 
 // Адаптер для RecyclerView
@@ -23,7 +22,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
     private Fragment fragment;
     // Источник данных
-    private LocationSource dataSource;
+    private LocationDataSource dataSource;
     // Позиция в списке, на которой было нажато меню
     private long menuPosition;
     private Location pressedLocation;       // Локация на которой было нажато меню
@@ -32,7 +31,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private OnItemClickListener itemClickListener;
     private OnMenuClickListener menuClickListener;
 
-    public LocationRecyclerAdapter(LocationSource dataSource, Fragment fragment){
+    public LocationRecyclerAdapter(LocationDataSource dataSource, Fragment fragment){
         this.dataSource = dataSource;
         this.fragment = fragment;
         this.dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());

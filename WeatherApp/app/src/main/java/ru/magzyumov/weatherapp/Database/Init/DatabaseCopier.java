@@ -1,6 +1,5 @@
 package ru.magzyumov.weatherapp.Database.Init;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -10,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 import static android.content.Context.MODE_PRIVATE;
 

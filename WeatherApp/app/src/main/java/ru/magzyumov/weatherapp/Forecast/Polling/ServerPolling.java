@@ -25,6 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.R;
@@ -43,7 +44,7 @@ public class ServerPolling implements Constants {
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
 
