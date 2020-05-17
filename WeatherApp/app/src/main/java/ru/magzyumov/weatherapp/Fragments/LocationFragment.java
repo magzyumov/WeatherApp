@@ -25,6 +25,7 @@ import java.util.Map;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
@@ -41,7 +42,7 @@ public class LocationFragment extends Fragment implements Constants,
     private SimpleAdapter arrayAdapterCities;
     private SimpleAdapter arrayAdapterHistory;
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
 

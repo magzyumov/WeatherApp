@@ -29,7 +29,7 @@ public class HistoryFragment extends Fragment implements Constants {
 
     //Объявляем переменные
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private FragmentChanger fragmentChanger;
     private LocationRecyclerAdapter locationRecyclerAdapter;
     private LinearLayoutManager linearLayoutManager;
