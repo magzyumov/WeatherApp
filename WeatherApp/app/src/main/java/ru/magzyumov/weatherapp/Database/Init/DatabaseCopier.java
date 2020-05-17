@@ -1,7 +1,6 @@
 package ru.magzyumov.weatherapp.Database.Init;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.File;
@@ -10,14 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static android.content.Context.MODE_PRIVATE;
-
-
-// Класс для копрования данных из исходной базы данных в Room
+// Класс для копрования заранее заготовленной базы данных
 public class DatabaseCopier {
     private static final String TAG = DatabaseCopier.class.getSimpleName();
-    private static final String DATABASE_NAME = "storage.db";
-    private static SharedPreferences sharedPref;
+    private static final String DATABASE_NAME = "storage";
     private static Context appContext;
 
     private static class Holder {
@@ -26,20 +21,12 @@ public class DatabaseCopier {
 
     public static DatabaseCopier getInstance(Context context) {
         appContext = context;
-        sharedPref =  appContext.getSharedPreferences("SETTINGS", MODE_PRIVATE);
         return Holder.INSTANCE;
     }
 
-    // Метод проверяет сущестует ли база даннх.
-    // и вставляет данные в ROOM
+    // Метод проверяет сущестует ли база данных.
     private DatabaseCopier() {
-        if(! sharedPref.getBoolean("INIT", false)){
-            copyAttachedDatabase(appContext, DATABASE_NAME);
-
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("INIT", true);
-            editor.apply();
-        }
+        copyAttachedDatabase(appContext, DATABASE_NAME);
     }
 
     private void copyAttachedDatabase(Context context, String databaseName) {
