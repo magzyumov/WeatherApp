@@ -4,8 +4,8 @@ import android.app.Application;
 
 import androidx.room.Room;
 
-import ru.magzyumov.weatherapp.room.database.ForecastDatabase;
-import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.ForecastDatabase;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 
 // Паттерн Singleton, наследуем класс Application, создаём базу данных
 // в методе onCreate

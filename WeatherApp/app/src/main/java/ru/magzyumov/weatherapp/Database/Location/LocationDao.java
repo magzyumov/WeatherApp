@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.room.database.Location;
+package ru.magzyumov.weatherapp.Database.Location;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,6 +8,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+
+import ru.magzyumov.weatherapp.Database.Location.Location;
 
 // Описание объекта, обрабатывающего данные
 // @Dao - доступ к данным
