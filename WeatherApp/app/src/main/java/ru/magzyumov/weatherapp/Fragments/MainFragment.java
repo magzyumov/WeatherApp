@@ -28,20 +28,20 @@ import com.google.gson.Gson;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
-import ru.magzyumov.weatherapp.Forecast.DailyForecastSourceBuilder;
-import ru.magzyumov.weatherapp.Forecast.DailyForecastDataSource;
-import ru.magzyumov.weatherapp.Forecast.ForecastListener;
-import ru.magzyumov.weatherapp.Forecast.GetData;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
+import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Logic;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Forecast.DailyForecastAdapter;
-import ru.magzyumov.weatherapp.room.database.Location.Location;
-import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
-import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastAdapter;
+import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
-import static java.util.Locale.getDefault;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
@@ -52,9 +52,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private DailyForecastModel dailyForecastModel;
     private CurrentForecastModel currentForecastModel;
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private Location currentLocation;
-    private GetData getData;
+    private ServerPolling serverPolling;
     private Gson gson;
 
     public MainFragment() {
@@ -77,33 +77,18 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
         gson = new Gson();
-        getData = new GetData(getContext());
+        serverPolling = new ServerPolling(getContext());
         // Подписываеся на опросчика погодного сервера
-        getData.addListener(this);
+        serverPolling.addListener(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getData.removeListener(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentChanger = null;
-        baseActivity = null;
-        dailyForecastModel = null;
-        currentForecastModel = null;
-        getData = null;
-        locationDao = null;
-        locationSource = null;
-        gson = null;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        // Активируем Drawer
+        fragmentChanger.setDrawerIndicatorEnabled(true);
 
         // Пока ждем основных данных,
         // установим background
@@ -113,8 +98,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         if (currentLocation != null){
             if(currentLocation.needUpdate){
-                getData.initialize();
-                getData.build();
+                serverPolling.initialize();
+                serverPolling.build();
             }
 
             if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
@@ -123,8 +108,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
                 initActivity();
             }
         } else {
-            getData.initialize();
-            getData.build();
+            serverPolling.initialize();
+            serverPolling.build();
         }
 
         return view;
@@ -138,8 +123,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
         fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
 
-        //Показываем кнопку назад
-        fragmentChanger.showBackButton(false);
     }
 
     public void setDailyForecast() {
@@ -165,7 +148,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         dailyRecyclerView.addItemDecoration(itemDecoration);
 
         //Установка слушателя
-        adapter.SetOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)
@@ -286,5 +269,26 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         //Иницилизируем кнопку-ссылку
         initBottomLink();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // Отписываемся от опросчика погоды
+        serverPolling.removeListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentChanger = null;
+        baseActivity = null;
+        dailyForecastModel = null;
+        currentForecastModel = null;
+        serverPolling = null;
+        locationDao = null;
+        locationSource = null;
+        gson = null;
     }
 }

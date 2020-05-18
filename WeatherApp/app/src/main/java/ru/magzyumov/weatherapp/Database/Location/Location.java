@@ -1,19 +1,14 @@
-package ru.magzyumov.weatherapp.room.database.Location;
+package ru.magzyumov.weatherapp.Database.Location;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
-
-import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 
 // @Entity - это признак табличного объекта, то есть объект будет сохраняться
 // в базе данных в виде строки
 // indices указывает на индексы в таблице
-@Entity(indices = {@Index(value = {"region", "city","isCurrent", "isSearched"})})
+@Entity(indices = {@Index(value = {"region", "city"})})
 public class Location {
 
     // @PrimaryKey - указывает на ключевую запись,

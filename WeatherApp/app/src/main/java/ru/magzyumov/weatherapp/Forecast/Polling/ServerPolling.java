@@ -1,10 +1,11 @@
-package ru.magzyumov.weatherapp.Forecast;
+package ru.magzyumov.weatherapp.Forecast.Polling;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -24,17 +25,18 @@ import javax.net.ssl.HttpsURLConnection;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.room.database.Location.Location;
-import ru.magzyumov.weatherapp.room.database.Location.LocationDao;
-import ru.magzyumov.weatherapp.room.database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 import static java.util.Locale.getDefault;
 import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
-public class GetData implements Constants {
+public class ServerPolling implements Constants {
 
     private Context context;
     private String currentCity;
@@ -42,11 +44,11 @@ public class GetData implements Constants {
     private SharedPreferences sharedPref;           // Настройки приложения
     private Resources resources;
     private LocationDao locationDao;
-    private LocationSource locationSource;
+    private LocationDataSource locationSource;
     private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
 
-    public GetData(Context context){
+    public ServerPolling(Context context){
         this.context = context;
         this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
         this.resources = context.getResources();
@@ -91,10 +93,12 @@ public class GetData implements Constants {
     }
 
     // Метод записи прогноза в базу
-    private void writeForecastResponseToDB(String currentForecast, String dailyForecast){
+    private void writeForecastResponseToDB(String currentForecast, String dailyForecast, CurrentForecastModel cwResult){
         if(currentLocation != null){
             currentLocation.currentForecast = currentForecast;
             currentLocation.dailyForecast = dailyForecast;
+            currentLocation.temperature = cwResult.getMain().getTemp();
+            currentLocation.date = cwResult.getDt();
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
@@ -112,13 +116,13 @@ public class GetData implements Constants {
                 public void run() {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
-                    handler.post(() -> writeForecastResponseToDB(currResult, dailyResult));
                     // преобразование данных запроса в модель
                     Gson gson = new Gson();
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
                     final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
                     // Возвращаемся к основному потоку
                     if ((cwRequest != null) & (dwRequest != null) ) {
+                        handler.post(() -> writeForecastResponseToDB(currResult, dailyResult, cwRequest));
                         handler.post(() -> dataReady(cwRequest, dwRequest));
                     }
                 }

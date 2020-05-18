@@ -15,6 +15,7 @@
     <string name="menu_home">Главная</string>
     <string name="menu_location">Местоположение</string>
     <string name="menu_history">История</string>
+    <string name="menu_search">Поиск</string>
     <string name="menu_settings">Настройки</string>
 
     <string name="settings_NightMode">Ночной режим</string>
@@ -40,5 +41,10 @@
     <string name="cityNotFound">Город не найден!</string>
     <string name="invalidKey">Неверный ключ приложения!</string>
     <string name="loading">Загрузка...</string>
+
+    <string name="add">Добавить</string>
+    <string name="update">Обновить</string>
+    <string name="remove">Удалить</string>
+    <string name="clear">Удалить все</string>
 
 </resources>

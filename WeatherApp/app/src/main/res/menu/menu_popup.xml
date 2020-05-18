@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/remove"
+        android:id="@+id/remove_context"
+        android:orderInCategory="10"/>
+
+    <item
+        android:title="@string/clear"
+        android:id="@+id/clear_context"
+        android:orderInCategory="20"/>
+
+</menu>

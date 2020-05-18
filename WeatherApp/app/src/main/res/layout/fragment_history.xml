@@ -11,14 +11,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchHistoryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/location_item" />
+            tools:listitem="@layout/item_location" />
 
     </LinearLayout>
 </FrameLayout>

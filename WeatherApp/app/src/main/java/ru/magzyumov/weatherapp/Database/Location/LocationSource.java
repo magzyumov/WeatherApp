@@ -1,6 +1,4 @@
-package ru.magzyumov.weatherapp.room.database.Location;
-
-import android.util.Log;
+package ru.magzyumov.weatherapp.Database.Location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 // Вспомогательный класс, развязывающий зависимость между Room и RecyclerView
-public class LocationSource {
+public class LocationSource implements LocationDataSource {
 
     private final LocationDao locationDao;
 
@@ -133,33 +131,39 @@ public class LocationSource {
         updateLocation(futureLocation);
     }
 
+    public void setLocationCurrent(Location futureLocation, boolean needUpdate){
+        // Сначала снимаем флаг текущего города
+        // и удаляем прогноз
+        // у старого местоположения
+        Location currentLocation = locationDao.getCurrentLocation(true);
+        if (currentLocation != null){
+            currentLocation.currentForecast = null;
+            currentLocation.dailyForecast = null;
+            currentLocation.isCurrent = false;
+            updateLocation(currentLocation);
+        }
+
+        // Теперь выставляем флаг у нового
+        futureLocation.isCurrent = true;
+        futureLocation.needUpdate = needUpdate;
+        updateLocation(futureLocation);
+    }
+
     // Устанвливаем местоположение
     // участвующим в истории поиска
-    public void setLocationSearched(String region, String city){
+    public void setLocationSearched(String region, String city, boolean isSearched){
         Location searchedLocation = locationDao.getLocationByCityName(region, city);
-        searchedLocation.isSearched = true;
+        searchedLocation.isSearched = isSearched;
         updateLocation(searchedLocation);
     }
 
-    // Удаляем местоположение
-    // из истории поиска
-    public void delLocationFromSearch(String region, String city){
-        for (Location location : locations) {
-            if(location.region.equals(region) & location.city.equals(city)){
-                location.isSearched = false;
-                updateLocation(location);
-                break;
-            }
-        }
+    public void setLocationSearched(Location futureLocation, boolean isSearched){
+        futureLocation.isSearched = isSearched;
+        updateLocation(futureLocation);
     }
 
     //Получаем текущее местоположение из базы
     public Location getCurrentLocation(){
         return locationDao.getCurrentLocation(true);
-    }
-
-    //Добавляем множественные данные
-    public void insertBigData(List<Location> data){
-        locationDao.insertBigData(data);
     }
 }
