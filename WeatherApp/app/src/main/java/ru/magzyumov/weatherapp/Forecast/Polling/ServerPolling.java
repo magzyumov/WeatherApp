@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -88,7 +87,7 @@ public class ServerPolling implements Constants {
         for (ForecastListener listener:listeners) {
             listener.setCurrentForecastModel(cwRequest);
             listener.setDailyForecastModel(dwRequest);
-            listener.initActivity();
+            listener.initListener();
         }
     }
 
@@ -121,7 +120,7 @@ public class ServerPolling implements Constants {
                     final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
                     final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
                     // Возвращаемся к основному потоку
-                    if ((cwRequest != null) & (dwRequest != null) ) {
+                    if (((cwRequest != null) & (dwRequest != null)) & ((currResult != null)&(dailyResult != null)) ) {
                         handler.post(() -> writeForecastResponseToDB(currResult, dailyResult, cwRequest));
                         handler.post(() -> dataReady(cwRequest, dwRequest));
                     }

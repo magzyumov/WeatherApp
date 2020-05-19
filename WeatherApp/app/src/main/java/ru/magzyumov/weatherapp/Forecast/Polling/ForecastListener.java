@@ -7,5 +7,5 @@ public interface ForecastListener {
     void setCurrentForecastModel(CurrentForecastModel currentForecastModel);
     void setDailyForecastModel(DailyForecastModel dailyForecastModel);
     void showMessage(String message);
-    void initActivity();
+    void initListener();
 }

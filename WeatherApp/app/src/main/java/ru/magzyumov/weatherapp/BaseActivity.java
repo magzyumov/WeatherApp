@@ -33,7 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         // Работаем через специальный класс сохранения и чтения настроек
         SharedPreferences sharedPref = getSharedPreferences(preference, MODE_PRIVATE);
         //Прочитать тему, если настройка не найдена - взять по умолчанию true
-        return sharedPref.getString(parameter, "UFA");
+        return sharedPref.getString(parameter, "");
     }
 
     // Чтение String настроек
