@@ -79,7 +79,7 @@ public class LocationFragment extends Fragment implements Constants,
 
         // Инициализируем Alert
         alertDialog = new AlertDialogWindow(getContext(), getString(R.string.citySearch),
-                getString(R.string.cityNotFound), getString(R.string.ok));
+                getString(R.string.unknownCity), getString(R.string.ok));
 
         setHasOptionsMenu(true);
     }
