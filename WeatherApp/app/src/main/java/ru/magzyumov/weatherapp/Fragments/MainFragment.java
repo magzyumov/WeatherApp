@@ -29,7 +29,7 @@ import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
-import ru.magzyumov.weatherapp.Dialog.BottomDialogListener;
+import ru.magzyumov.weatherapp.Dialog.DialogListener;
 import ru.magzyumov.weatherapp.Dialog.BottomFragmentDialog;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSourceBuilder;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
@@ -325,7 +325,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     }
 
-    private BottomDialogListener dialogListener = new BottomDialogListener() {
+    private DialogListener dialogListener = new DialogListener() {
         @Override
         public void onDialogSubmit() {
             checkStatus();
@@ -334,5 +334,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
             // Nothing
         }
     };
-
 }
+
+
