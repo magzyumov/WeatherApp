@@ -63,19 +63,9 @@ public class LocationFragment extends Fragment implements Constants,
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
 
-        // Деактивируем Drawer
-        fragmentChanger.setDrawerIndicatorEnabled(false);
-
         // Инициализируем объект для обращения к базе
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
-
-        //Меняем текст в шапке
-        fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
-
-        //Показываем кнопку назад
-        fragmentChanger.showBackButton(true);
 
         // Инициализируем Alert
         alertDialog = new AlertDialogWindow(getContext(), getString(R.string.citySearch),
@@ -89,8 +79,7 @@ public class LocationFragment extends Fragment implements Constants,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
-        // Деактивируем Drawer
-        fragmentChanger.setDrawerIndicatorEnabled(false);
+        initView();
 
         //Инициализируем города для поиска
         listView = view.findViewById(R.id.listView);
@@ -194,5 +183,18 @@ public class LocationFragment extends Fragment implements Constants,
         arrayListHistory = null;
         arrayListCities = null;
         alertDialog = null;
+    }
+
+    // Небольшие приготовления View
+    private void initView(){
+        // Деактивируем Drawer
+        fragmentChanger.setDrawerIndicatorEnabled(false);
+
+        //Меняем текст в шапке
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
+
+        //Показываем кнопку назад
+        fragmentChanger.showBackButton(true);
     }
 }
