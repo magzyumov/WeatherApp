@@ -52,7 +52,8 @@
     <!-- Alert strings -->
     <string name="messageFromServer">Server response</string>
     <string name="connectionTimeout">No internet no weather!!!</string>
-    <string name="cityNotFound">Unknown city</string>
+    <string name="cityNotFound">City not found</string>
+    <string name="unknownCity">Unknown city</string>
     <string name="invalidKey">Invalid API key!</string>
     <string name="loading">Loading...</string>
     <string name="ok">Ок</string>

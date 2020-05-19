@@ -45,6 +45,7 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
     private DialogListener dialogListener;
+    private AlertDialogWindow alertDialog;
 
 
     public static BottomFragmentDialog newInstance() {
@@ -68,6 +69,10 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
 
         // Устанавливаем стиль
         setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomDialogStyle);
+
+        // Инициализируем Alert
+        alertDialog = new AlertDialogWindow(getContext(), getString(R.string.citySearch),
+                getString(R.string.unknownCity), getString(R.string.ok));
     }
 
     @Nullable
@@ -105,6 +110,9 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+
+        baseActivity.setStringPreference(LOCATION, CURRENT_CITY, query);
+        if(!contains(arrayListCities, query)) alertDialog.show();
         if (dialogListener != null) dialogListener.onDialogSubmit();
         dismiss();
         return false;
@@ -155,10 +163,24 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
         locationSource = null;
         arrayAdapterCities = null;
         arrayAdapterHistory = null;
+        arrayListCities = null;
+        arrayListHistory = null;
+        dialogListener = null;
+        alertDialog = null;
     }
 
     public void setDialogListener(DialogListener dialogListener){
         this.dialogListener = dialogListener;
+    }
+
+    private boolean contains(List<Map<String, String>> arrayList, String checkValue){
+        for (Map<String, String> entry : arrayList) {
+            for (String key : entry.keySet()) {
+                String value = entry.get(key);
+                if (value.equals(checkValue)) return true;
+            }
+        }
+        return false;
     }
 }
 

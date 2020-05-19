@@ -40,7 +40,7 @@ public class ServerPolling implements Constants {
     private Context context;
     private String currentCity;
     private String currentLang;
-    private SharedPreferences sharedPref;           // Настройки приложения
+    private SharedPreferences sharedPrefForecast;
     private Resources resources;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
@@ -49,7 +49,7 @@ public class ServerPolling implements Constants {
 
     public ServerPolling(Context context){
         this.context = context;
-        this.sharedPref = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+        this.sharedPrefForecast = context.getSharedPreferences(FORECAST, Context.MODE_PRIVATE);
         this.resources = context.getResources();
         this.locationDao = App.getInstance().getLocationDao();
         this.locationSource = new LocationSource(locationDao);
@@ -101,6 +101,14 @@ public class ServerPolling implements Constants {
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
+        writeForecastResponseToPreference(currentForecast, dailyForecast);
+    }
+
+    private void writeForecastResponseToPreference(String current, String daily){
+        SharedPreferences.Editor editor = sharedPrefForecast.edit();
+        editor.putString(CURRENT, current);
+        editor.putString(DAILY, daily);
+        editor.apply();
     }
 
     public void build(){

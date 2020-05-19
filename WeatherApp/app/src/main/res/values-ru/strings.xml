@@ -45,6 +45,7 @@
     <string name="messageFromServer">Ответ от сервера</string>
     <string name="connectionTimeout">Нет интернета нет погоды</string>
     <string name="cityNotFound">Город не найден</string>
+    <string name="unknownCity">Неизвестный город</string>
     <string name="invalidKey">Неверный ключ приложения!</string>
     <string name="loading">Загрузка...</string>
     <string name="ok">Понятно</string>

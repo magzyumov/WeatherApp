@@ -142,14 +142,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         //Иницилизируем кнопку-ссылку
         initBottomLink();
-
-        // Запишем прогноз в SharedPreference
-        if(currentLocation.currentForecast != null){
-            baseActivity.setStringPreference(FORECAST, CURRENT, currentLocation.currentForecast);
-        }
-        if(currentLocation.dailyForecast != null){
-            baseActivity.setStringPreference(FORECAST, DAILY, currentLocation.dailyForecast);
-        }
     }
 
     @Override
