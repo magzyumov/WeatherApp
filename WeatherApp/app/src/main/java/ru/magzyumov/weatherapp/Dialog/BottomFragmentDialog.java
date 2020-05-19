@@ -44,7 +44,7 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
     private LocationDataSource locationSource;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
-    private BottomDialogListener dialogListener;
+    private DialogListener dialogListener;
 
 
     public static BottomFragmentDialog newInstance() {
@@ -157,7 +157,7 @@ public class BottomFragmentDialog extends BottomSheetDialogFragment implements C
         arrayAdapterHistory = null;
     }
 
-    public void setDialogListener(BottomDialogListener dialogListener){
+    public void setDialogListener(DialogListener dialogListener){
         this.dialogListener = dialogListener;
     }
 }

@@ -1,6 +1,6 @@
 package ru.magzyumov.weatherapp.Dialog;
 
-public interface BottomDialogListener {
+public interface DialogListener {
     void onDialogSubmit();
     void onDialogReject();
 }
