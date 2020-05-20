@@ -48,9 +48,6 @@ public class HistoryFragment extends Fragment implements Constants {
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
 
-        // Деактивируем Drawer
-        fragmentChanger.setDrawerIndicatorEnabled(false);
-
         // Инициализируем объект для обращения к базе
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
@@ -59,12 +56,6 @@ public class HistoryFragment extends Fragment implements Constants {
         linearLayoutManager = new LinearLayoutManager(getContext());
         locationRecyclerAdapter = new LocationRecyclerAdapter(locationSource, this);
 
-        //Меняем текст в шапке
-        fragmentChanger.changeHeader(getResources().getString(R.string.menu_history));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_history));
-
-        //Показываем кнопку назад
-        fragmentChanger.showBackButton(true);
     }
 
 
@@ -73,8 +64,7 @@ public class HistoryFragment extends Fragment implements Constants {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        // Деактивируем Drawer
-        fragmentChanger.setDrawerIndicatorEnabled(false);
+        initView();
 
         initRecyclerView(view);
 
@@ -185,6 +175,19 @@ public class HistoryFragment extends Fragment implements Constants {
         locationSource = null;
         fragmentChanger = null;
         locationRecyclerAdapter = null;
+    }
+
+    // Небольшие приготовления View
+    private void initView(){
+        // Деактивируем Drawer
+        fragmentChanger.setDrawerIndicatorEnabled(false);
+
+        //Меняем текст в шапке
+        fragmentChanger.changeHeader(getResources().getString(R.string.menu_history));
+        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_history));
+
+        //Показываем кнопку назад
+        fragmentChanger.showBackButton(true);
     }
 
 }
