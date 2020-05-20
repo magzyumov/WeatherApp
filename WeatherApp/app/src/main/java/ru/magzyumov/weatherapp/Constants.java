@@ -19,13 +19,13 @@ public interface Constants {
     String PRESS_EU = "PRESS_EU";
     String NOTICE = "NOTICE";
 
-    String LOCATION = "LOCATION";
-    String CURRENT_CITY = "CURRENT_CITY";
-    String SEARCH_HISTORY = "SEARCH_HISTORY";
+    String LOCATION = "location";
+    String CURRENT_CITY = "current_city";
+    String SEARCH_HISTORY = "search_history";
 
-    String FORECAST = "FORECAST";
-    String LAST_CURRENT = "LAST_CURRENT";
-    String LAST_DAILY = "LAST_DAILY";
+    String FORECAST = "forecast";
+    String CURRENT = "current";
+    String DAILY = "daily";
 
     float HPA = 0.75006375541921f;
 

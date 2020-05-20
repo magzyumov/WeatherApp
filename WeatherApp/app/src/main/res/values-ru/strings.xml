@@ -37,14 +37,18 @@
     <string name="pressEUOne">мм.рт.ст</string>
     <string name="pressEUTwo">г.Па</string>
 
-    <string name="connectionTimeout">Нет интернета нет погоды!!!</string>
-    <string name="cityNotFound">Город не найден!</string>
-    <string name="invalidKey">Неверный ключ приложения!</string>
-    <string name="loading">Загрузка...</string>
-
-    <string name="add">Добавить</string>
-    <string name="update">Обновить</string>
+    <!-- Context menu -->
     <string name="remove">Удалить</string>
     <string name="clear">Удалить все</string>
+
+    <!-- Alert strings -->
+    <string name="messageFromServer">Ответ от сервера</string>
+    <string name="connectionTimeout">Нет интернета нет погоды</string>
+    <string name="cityNotFound">Город не найден</string>
+    <string name="unknownCity">Неизвестный город</string>
+    <string name="invalidKey">Неверный ключ приложения!</string>
+    <string name="loading">Загрузка...</string>
+    <string name="ok">Понятно</string>
+    <string name="citySearch">Поиск города</string>
 
 </resources>

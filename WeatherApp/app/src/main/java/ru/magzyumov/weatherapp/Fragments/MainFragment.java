@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,9 @@ import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
+import ru.magzyumov.weatherapp.Dialog.DialogListener;
+import ru.magzyumov.weatherapp.Dialog.BottomFragmentDialog;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSourceBuilder;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
@@ -56,6 +58,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private Location currentLocation;
     private ServerPolling serverPolling;
     private Gson gson;
+    private AlertDialogWindow alertDialog;
 
     public MainFragment() {
         // Required empty public constructor
@@ -78,8 +81,13 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         locationSource = new LocationSource(locationDao);
         gson = new Gson();
         serverPolling = new ServerPolling(getContext());
+
         // Подписываеся на опросчика погодного сервера
         serverPolling.addListener(this);
+
+        // Инициализируем Alert
+        alertDialog = new AlertDialogWindow(getContext(), getString(R.string.messageFromServer),
+                getString(R.string.cityNotFound), getString(R.string.ok));
     }
 
 
@@ -90,27 +98,11 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         // Активируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(true);
 
+        checkStatus();
+
         // Пока ждем основных данных,
         // установим background
         setBackground();
-
-        currentLocation = locationSource.getCurrentLocation();
-
-        if (currentLocation != null){
-            if(currentLocation.needUpdate){
-                serverPolling.initialize();
-                serverPolling.build();
-            }
-
-            if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
-                currentForecastModel = gson.fromJson(currentLocation.currentForecast, CurrentForecastModel.class);
-                dailyForecastModel = gson.fromJson(currentLocation.dailyForecast, DailyForecastModel.class);
-                initActivity();
-            }
-        } else {
-            serverPolling.initialize();
-            serverPolling.build();
-        }
 
         return view;
     }
@@ -122,52 +114,73 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
         fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
-
     }
 
-    public void setDailyForecast() {
-        // строим источник данных
-        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
-                .setResources(getResources())
-                .setContext(baseActivity)
-                .setDataFromServer(dailyForecastModel)
-                .build();
-
-        RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
-        dailyRecyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        dailyRecyclerView.setLayoutManager(layoutManager);
-
-        DailyForecastAdapter adapter = new DailyForecastAdapter(sourceData);
-        dailyRecyclerView.setAdapter(adapter);
-
-        // Добавим разделитель карточек
-        DividerItemDecoration itemDecoration = new DividerItemDecoration( getContext(), LinearLayoutManager.VERTICAL);
-        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
-        dailyRecyclerView.addItemDecoration(itemDecoration);
-
-        //Установка слушателя
-        adapter.setOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)
-                        .setAction( "OK" , new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast. makeText (getContext(), "Кнопка в Snackbar нажата" ,
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }).show();
-            }
-        });
+    @Override
+    public void setCurrentForecastModel(CurrentForecastModel currentForecastModel) {
+        this.currentForecastModel = currentForecastModel;
     }
 
-    public void setCurrentForecast(){
+    @Override
+    public void setDailyForecastModel(DailyForecastModel dailyForecastModel) {
+        this.dailyForecastModel = dailyForecastModel;
+    }
+
+    @Override
+    public void showMessage(String message) {
+        alertDialog.show(message);
+    }
+
+    @Override
+    public void initListener() {
+
+        // Обновляем данные в верхнней части
+        setCurrentForecast();
+
+        // Обновляем прогноз
+        setDailyForecast();
+
+        //Иницилизируем кнопку-ссылку
+        initBottomLink();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // Отписываемся от опросчика погоды
+        serverPolling.removeListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentChanger = null;
+        baseActivity = null;
+        dailyForecastModel = null;
+        currentForecastModel = null;
+        serverPolling = null;
+        locationDao = null;
+        locationSource = null;
+        gson = null;
+        alertDialog = null;
+    }
+
+    private void setCurrentForecast(){
 
         // Вставляем данные в поля
         TextView currentCity = view.findViewById(R.id.textViewCity);
         currentCity.setText(currentForecastModel.getName());
+
+        // Устанавливаем OnClickListener
+        currentCity.setOnClickListener(new TextView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomFragmentDialog bottomFragmentDialog = BottomFragmentDialog.newInstance();
+                bottomFragmentDialog.setDialogListener(dialogListener);
+                bottomFragmentDialog.show(fragmentChanger.getFragmentTransaction(),"dialog_fragment");
+            }
+        });
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
         currentDistrict.setText(currentForecastModel.getName());
@@ -210,7 +223,45 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         textViewCurrentEU.setText((baseActivity.getBooleanPreference(SETTING, TEMP_EU)) ? (getString(R.string.fahrenheit)) : (getString(R.string.celsius)));
     }
 
-    public void setBackground(){
+    private void setDailyForecast() {
+        // Строим источник данных
+        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
+                .setResources(getResources())
+                .setContext(baseActivity)
+                .setDataFromServer(dailyForecastModel)
+                .build();
+
+        RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
+        dailyRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        dailyRecyclerView.setLayoutManager(layoutManager);
+
+        DailyForecastAdapter adapter = new DailyForecastAdapter(sourceData);
+        dailyRecyclerView.setAdapter(adapter);
+
+        // Добавим разделитель карточек
+        DividerItemDecoration itemDecoration = new DividerItemDecoration( getContext(), LinearLayoutManager.VERTICAL);
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
+        if(dailyRecyclerView.getItemDecorationCount() == 0) dailyRecyclerView.addItemDecoration(itemDecoration);
+
+        //Установка слушателя
+        adapter.setOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)
+                        .setAction( "OK" , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast. makeText (getContext(), "Кнопка в Snackbar нажата" ,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void setBackground(){
         // TODO: Это надо сделать как-то по другому
         logic.refreshData();
 
@@ -235,60 +286,46 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
     }
 
-    @Override
-    public void setCurrentForecastModel(CurrentForecastModel currentForecastModel) {
-        this.currentForecastModel = currentForecastModel;
+    private void checkStatus(){
+        currentLocation = locationSource.getCurrentLocation();
+
+        if (currentLocation != null){
+            if(currentLocation.needUpdate){
+                serverPolling.initialize();
+                serverPolling.build();
+            }
+
+            // Смотрим есть ли данные в SharedPreference
+            String previousForecastCurrent = baseActivity.getStringPreference(FORECAST, CURRENT);
+            String previousForecastDaily = baseActivity.getStringPreference(FORECAST, DAILY);
+
+            // Смотрим, есть ли данные по этому городу в базе
+            if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
+                currentForecastModel = gson.fromJson(currentLocation.currentForecast, CurrentForecastModel.class);
+                dailyForecastModel = gson.fromJson(currentLocation.dailyForecast, DailyForecastModel.class);
+                initListener();
+            } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
+                // Если данных нет в базе забираем данные с SharedPreference прошлого города
+                currentForecastModel = gson.fromJson(previousForecastCurrent, CurrentForecastModel.class);
+                dailyForecastModel = gson.fromJson(previousForecastDaily, DailyForecastModel.class);
+                initListener();
+            }
+        } else {
+            serverPolling.initialize();
+            serverPolling.build();
+        }
+
     }
 
-    @Override
-    public void setDailyForecastModel(DailyForecastModel dailyForecastModel) {
-        this.dailyForecastModel = dailyForecastModel;
-    }
-
-    @Override
-    public void showMessage(String message) {
-        Toast toast = Toast.makeText(getContext(),
-                message,
-                Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        View view = toast.getView();
-        view.setBackgroundResource(R.drawable.border);
-        TextView text = (TextView) view.findViewById(android.R.id.message);
-        text.setTextSize(36);
-        toast.show();
-    }
-
-    @Override
-    public void initActivity() {
-
-        // Обновляем данные в верхнней части
-        setCurrentForecast();
-
-        // Обновляем прогноз
-        setDailyForecast();
-
-        //Иницилизируем кнопку-ссылку
-        initBottomLink();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // Отписываемся от опросчика погоды
-        serverPolling.removeListener(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentChanger = null;
-        baseActivity = null;
-        dailyForecastModel = null;
-        currentForecastModel = null;
-        serverPolling = null;
-        locationDao = null;
-        locationSource = null;
-        gson = null;
-    }
+    private DialogListener dialogListener = new DialogListener() {
+        @Override
+        public void onDialogSubmit() {
+            checkStatus();
+        }
+        public void onDialogReject() {
+            // Nothing
+        }
+    };
 }
+
+
