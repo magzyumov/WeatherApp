@@ -118,8 +118,8 @@ public class LocationSource implements LocationDataSource {
         // у старого местоположения
         Location currentLocation = locationDao.getCurrentLocation(true);
         if (currentLocation != null){
-            currentLocation.currentForecast = null;
-            currentLocation.dailyForecast = null;
+            //currentLocation.currentForecast = null;
+            //currentLocation.dailyForecast = null;
             currentLocation.isCurrent = false;
             updateLocation(currentLocation);
         }
