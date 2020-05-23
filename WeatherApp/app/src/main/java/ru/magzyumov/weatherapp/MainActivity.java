@@ -23,6 +23,8 @@ import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 import ru.magzyumov.weatherapp.Database.Init.DatabaseCopier;
+import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
+
 
 public class MainActivity extends BaseActivity implements FragmentChanger, NavigationView.OnNavigationItemSelectedListener{
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
@@ -126,6 +128,9 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         } else if (id == R.id.nav_settings) {
             // Выполняем транзакцию по замене фрагмента
             changeFragment(new SettingsFragment(),"settingsFragment", true, null);
+        } else if (id == R.id.nav_google) {
+            // Выполняем транзакцию по замене фрагмента
+            changeFragment(new PlacesFragment(),"placesFragment", true, null);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

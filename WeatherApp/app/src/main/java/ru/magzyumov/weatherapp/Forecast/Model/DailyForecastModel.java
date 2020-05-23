@@ -4,7 +4,7 @@ public class DailyForecastModel {
     private int cod;
     private int message;
     private int cnt;
-    private List[] list;
+    private ForecastList[] list;
     private City city;
 
     public int getCod() {
@@ -31,11 +31,11 @@ public class DailyForecastModel {
         this.cnt = cnt;
     }
 
-    public List[] getList() {
+    public ForecastList[] getList() {
         return list;
     }
 
-    public void setList(List[] list) {
+    public void setList(ForecastList[] list) {
         this.list = list;
     }
 
@@ -48,6 +48,6 @@ public class DailyForecastModel {
     }
 
     public DailyForecastModel(){
-        this.list = new List[5];
+        this.list = new ForecastList[5];
     }
 }
