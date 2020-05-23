@@ -116,11 +116,13 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     @Override
     public void setCurrentForecast(CurrentForecast currentForecast) {
         this.currentForecast = currentForecast;
+        setCurrentForecast();
     }
 
     @Override
     public void setDailyForecast(DailyForecastSource dailyForecast) {
         this.dailyForecast = dailyForecast;
+        setDailyForecast();
     }
 
     @Override
