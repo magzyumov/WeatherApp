@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/placesFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:tag="placesFragment"
+    tools:context=".Fragments.PlacesFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <fragment android:id="@+id/autoCompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    </LinearLayout>
+</FrameLayout>
+
+

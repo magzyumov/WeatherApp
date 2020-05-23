@@ -8,8 +8,6 @@ import android.os.Handler;
 
 import androidx.annotation.RequiresApi;
 
-import com.google.gson.Gson;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +23,9 @@ import javax.net.ssl.HttpsURLConnection;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
-import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
+import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
+import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
@@ -46,6 +45,7 @@ public class ServerPolling implements Constants {
     private LocationDataSource locationSource;
     private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
+    private ResponseParser responseParser;
 
     public ServerPolling(Context context){
         this.context = context;
@@ -54,6 +54,7 @@ public class ServerPolling implements Constants {
         this.locationDao = App.getInstance().getLocationDao();
         this.locationSource = new LocationSource(locationDao);
         this.currentLang = getDefault().getLanguage();
+        this.responseParser = new ResponseParser(resources);
     }
 
     // Метод установки текущего города
@@ -81,23 +82,22 @@ public class ServerPolling implements Constants {
         }
     }
 
-    // Метод информирования подписчиков
-    // о готовности данных
-    public void dataReady(CurrentForecastModel cwRequest, DailyForecastModel dwRequest){
+    // Метод информирования подписчиков о готовности данных
+    public void dataReady(CurrentForecast cwRequest, DailyForecastSource dwRequest){
         for (ForecastListener listener:listeners) {
-            listener.setCurrentForecastModel(cwRequest);
-            listener.setDailyForecastModel(dwRequest);
+            listener.setCurrentForecast(cwRequest);
+            listener.setDailyForecast(dwRequest);
             listener.initListener();
         }
     }
 
     // Метод записи прогноза в базу
-    private void writeForecastResponseToDB(String currentForecast, String dailyForecast, CurrentForecastModel cwResult){
+    private void writeForecastResponseToDB(String currentForecast, String dailyForecast, CurrentForecast cwResult){
         if(currentLocation != null){
             currentLocation.currentForecast = currentForecast;
             currentLocation.dailyForecast = dailyForecast;
-            currentLocation.temperature = cwResult.getMain().getTemp();
-            currentLocation.date = cwResult.getDt();
+            currentLocation.temperature = cwResult.getTempForDb();
+            currentLocation.date = cwResult.getDate();
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
@@ -124,9 +124,8 @@ public class ServerPolling implements Constants {
                     String currResult = makeRequest(currUri, handler);
                     String dailyResult = makeRequest(dailyUri, handler);
                     // преобразование данных запроса в модель
-                    Gson gson = new Gson();
-                    final CurrentForecastModel cwRequest = gson.fromJson(currResult, CurrentForecastModel.class);
-                    final DailyForecastModel dwRequest = gson.fromJson(dailyResult, DailyForecastModel.class);
+                    final CurrentForecast cwRequest = responseParser.getCurrentForecast(currResult);
+                    final DailyForecastSource dwRequest = responseParser.getDailyForecast(dailyResult);
                     // Возвращаемся к основному потоку
                     if (((cwRequest != null) & (dwRequest != null)) & ((currResult != null)&(dailyResult != null)) ) {
                         handler.post(() -> writeForecastResponseToDB(currResult, dailyResult, cwRequest));
@@ -151,7 +150,7 @@ public class ServerPolling implements Constants {
             //Если коннекшн в норме
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                result = getLines(in);
+                result = convertStreamToString(in);
             //Город не найден
             } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.cityNotFound)));
@@ -178,7 +177,7 @@ public class ServerPolling implements Constants {
         return result;
     }
 
-    private String getLines(BufferedReader in) throws IOException {
+    private String convertStreamToString(BufferedReader in) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String line = null;
         while ((line = in.readLine()) != null) {

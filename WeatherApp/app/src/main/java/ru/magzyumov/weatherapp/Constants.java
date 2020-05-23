@@ -4,11 +4,9 @@ public interface Constants {
     String TAG = "WEATHER";
     String CURR_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&lang=%s&appid=";
     String DAILY_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&lang=%s&appid=";
+
     int REQUEST_TIMEOUT = 5000;
     int CONNECTION_TIMEOUT = 5000;
-
-    String CURRENT_FORECAST = "currentForecast";
-    String DAILY_FORECAST = "dailyForecast";
 
     String PROVIDER_URL = "https://openweathermap.org/";
 
