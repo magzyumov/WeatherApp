@@ -22,12 +22,15 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Firebase.FirebasePlace;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
@@ -50,6 +53,8 @@ public class PlacesFragment extends Fragment implements Constants,
     private PlacesClient placesClient;
     private AutocompleteSupportFragment autocompleteFragment;
 
+    private DatabaseReference mDatabase;
+
 
     public PlacesFragment() {
         // Required empty public constructor
@@ -70,9 +75,13 @@ public class PlacesFragment extends Fragment implements Constants,
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
 
+        // Инициализируем Google Places
         if (!Places.isInitialized()) {
             Places.initialize(getContext(), PLACES_API_KEY);
         }
+
+        // Инициализация Google Firebase Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         setHasOptionsMenu(true);
     }
@@ -94,7 +103,12 @@ public class PlacesFragment extends Fragment implements Constants,
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.e(TAG, place.getId() + " " + place.getName() + " " + place.getAddress()  + " " + place.getLatLng());
+                String key = mDatabase.child("locations").push().getKey();
+                FirebasePlace location = new FirebasePlace(place.getId(), place.getName(), place.getAddress(),
+                        String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
+
+                //mDatabase.child("locations").child(key).setValue(location);
+                mDatabase.child("locations").child(place.getId()).setValue(location);
                 fragmentChanger.returnFragment();
             }
 
