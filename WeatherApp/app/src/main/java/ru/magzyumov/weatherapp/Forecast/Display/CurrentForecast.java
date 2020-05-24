@@ -17,11 +17,14 @@ public class CurrentForecast {
     private String humidityEu;
     private float tempForDb;
     private long date;
+    private int backImageFirst;
+    private int backImageSecond;
 
     public CurrentForecast(String city, String district, String temp, String tempEu, String image,
                            String weather, String feeling, String feelingEu, String windSpeed,
                            String windSpeedEu, String pressure, String pressureEu,
-                           String humidity, String humidityEu, float tempForDb, long date) {
+                           String humidity, String humidityEu, float tempForDb, long date,
+                           int backImageFirst, int backImageSecond) {
 
         this.city = city;
         this.district = district;
@@ -39,6 +42,8 @@ public class CurrentForecast {
         this.humidityEu = humidityEu;
         this.tempForDb = tempForDb;
         this.date = date;
+        this.setBackImageFirst(backImageFirst);
+        this.setBackImageSecond(backImageSecond);
     }
 
     public String getCity() {
@@ -167,5 +172,21 @@ public class CurrentForecast {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public int getBackImageFirst() {
+        return backImageFirst;
+    }
+
+    public void setBackImageFirst(int backImageFirst) {
+        this.backImageFirst = backImageFirst;
+    }
+
+    public int getBackImageSecond() {
+        return backImageSecond;
+    }
+
+    public void setBackImageSecond(int backImageSecond) {
+        this.backImageSecond = backImageSecond;
     }
 }

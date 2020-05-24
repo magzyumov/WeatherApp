@@ -2,9 +2,6 @@ package ru.magzyumov.weatherapp.Forecast.Polling;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 import ru.magzyumov.weatherapp.Constants;
 
@@ -19,7 +16,6 @@ public class ConnectionThreads implements Constants {
         for (int i = 0; i < names.length ; i++) {
             handlerThreads[i] = new HandlerThread(names[i]);
             handlerThreads[i].start();
-            Log.e("THREAD", handlerThreads[i].getName() + " STARTED");
             handlers[i] = new Handler(handlerThreads[i].getLooper());
         }
     }

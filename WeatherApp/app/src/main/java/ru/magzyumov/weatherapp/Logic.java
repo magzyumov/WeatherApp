@@ -4,11 +4,10 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 
 import androidx.appcompat.app.AppCompatActivity;
-import java.security.SecureRandom;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Random;
 
 public final class Logic extends AppCompatActivity {
     //Внутреннее поле, будет хранить единственный экземпляр
@@ -59,7 +58,7 @@ public final class Logic extends AppCompatActivity {
 
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 
-        mainBackLayerPic = getLayerImageArray(R.array.mainBackLayerPic);
+        mainBackLayerPic = getLayerImageArray(R.array.firstBackLayerPic);
         secondBackLayerPic = getLayerImageArray(R.array.secondBackLayerPic);
 
         if((currentHour >= 8) & (currentHour <= 19)){

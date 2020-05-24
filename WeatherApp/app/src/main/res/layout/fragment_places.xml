@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/placesFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,11 +13,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <fragment android:id="@+id/autoCompleteFragment"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/idCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            xmlns:android="http://schemas.android.com/apk/res/android" />
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="4dp">
+
+            <fragment android:id="@+id/autoCompleteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                xmlns:android="http://schemas.android.com/apk/res/android" />
+
+        </androidx.cardview.widget.CardView>
+
+
 
     </LinearLayout>
 </FrameLayout>

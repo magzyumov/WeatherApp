@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -117,6 +118,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public void setCurrentForecast(CurrentForecast currentForecast) {
         this.currentForecast = currentForecast;
         setCurrentForecast();
+        setBackground();
     }
 
     @Override
@@ -137,6 +139,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         // Обновляем данные в верхнней части
         setCurrentForecast();
+
+        // Обновляем задний фон
+        setBackground();
     }
 
     @Override
@@ -257,10 +262,10 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         //Ставим background картинку
         FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
-        mainLayout.setBackgroundResource(logic.getMainLayerPic());
+        mainLayout.setBackgroundResource(currentForecast.getBackImageFirst());
 
         FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
-        secondLayout.setBackgroundResource(logic.getSecondLayerPic());
+        secondLayout.setBackgroundResource(currentForecast.getBackImageSecond());
     }
 
     private void initBottomLink(){
