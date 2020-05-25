@@ -37,7 +37,6 @@ import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
-import ru.magzyumov.weatherapp.Logic;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastAdapter;
 import ru.magzyumov.weatherapp.Database.Location.Location;
@@ -45,7 +44,6 @@ import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
-    private Logic logic;
     private View view;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
@@ -72,7 +70,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
-        logic = Logic.getInstance(getResources());
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
         responseParser = new ResponseParser(getResources());
@@ -95,9 +92,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         fragmentChanger.setDrawerIndicatorEnabled(true);
 
         checkStatus();
-
-        // Пока ждем основных данных, установим background
-        setBackground();
 
         //Иницилизируем кнопку-ссылку
         initBottomLink();
@@ -257,9 +251,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void setBackground(){
-        // TODO: Это надо сделать как-то по другому
-        logic.refreshData();
-
         //Ставим background картинку
         FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
         mainLayout.setBackgroundResource(currentForecast.getBackImageFirst());
