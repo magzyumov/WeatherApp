@@ -1,7 +1,7 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
 
-public class List {
+public class ForecastList {
     private long dt;
     private MainDaily main;
     private Weather[] weather;
