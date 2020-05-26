@@ -108,7 +108,7 @@
     </array>
 
     <!-- Background picture array -->
-    <array name="mainBackLayerPic">
+    <array name="firstBackLayerPic">
         <item>@drawable/bg_day</item>
         <item>@drawable/bg_night</item>
     </array>

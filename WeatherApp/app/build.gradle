@@ -18,6 +18,8 @@ android {
         properties.load(project.rootProject.file("apikey.properties").newDataInputStream())
         def weatherApiKey  = properties.getProperty("weather_api_key", "")
         it.buildConfigField "String", "WEATHER_API_KEY", weatherApiKey
+        def placesApiKey  = properties.getProperty("places_api_key", "")
+        it.buildConfigField "String", "PLACES_API_KEY", placesApiKey
     }
 
     buildTypes {
@@ -41,6 +43,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.firebase:firebase-database:19.3.0'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

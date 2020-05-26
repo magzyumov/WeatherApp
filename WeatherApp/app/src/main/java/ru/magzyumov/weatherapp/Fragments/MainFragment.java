@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
@@ -31,34 +31,30 @@ import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.Dialog.DialogListener;
 import ru.magzyumov.weatherapp.Dialog.BottomFragmentDialog;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSourceBuilder;
+import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
-import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
-import ru.magzyumov.weatherapp.Logic;
+import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastAdapter;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
-import static org.apache.commons.lang3.StringUtils.capitalize;
-
 public class MainFragment extends Fragment implements Constants, ForecastListener {
-    private Logic logic;
     private View view;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
-    private DailyForecastModel dailyForecastModel;
-    private CurrentForecastModel currentForecastModel;
+    private DailyForecastSource dailyForecast;
+    private CurrentForecast currentForecast;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
     private Location currentLocation;
     private ServerPolling serverPolling;
-    private Gson gson;
     private AlertDialogWindow alertDialog;
+    private ResponseParser responseParser;
 
     public MainFragment() {
         // Required empty public constructor
@@ -74,12 +70,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
-        logic = Logic.getInstance(getResources());
-        dailyForecastModel = new DailyForecastModel();
-        currentForecastModel = new CurrentForecastModel();
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
-        gson = new Gson();
+        responseParser = new ResponseParser(getResources());
         serverPolling = new ServerPolling(getContext());
 
         // Подписываеся на опросчика погодного сервера
@@ -100,9 +93,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         checkStatus();
 
-        // Пока ждем основных данных,
-        // установим background
-        setBackground();
+        //Иницилизируем кнопку-ссылку
+        initBottomLink();
 
         return view;
     }
@@ -117,13 +109,16 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     @Override
-    public void setCurrentForecastModel(CurrentForecastModel currentForecastModel) {
-        this.currentForecastModel = currentForecastModel;
+    public void setCurrentForecast(CurrentForecast currentForecast) {
+        this.currentForecast = currentForecast;
+        setCurrentForecast();
+        setBackground();
     }
 
     @Override
-    public void setDailyForecastModel(DailyForecastModel dailyForecastModel) {
-        this.dailyForecastModel = dailyForecastModel;
+    public void setDailyForecast(DailyForecastSource dailyForecast) {
+        this.dailyForecast = dailyForecast;
+        setDailyForecast();
     }
 
     @Override
@@ -133,15 +128,14 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     @Override
     public void initListener() {
+        // Обновляем прогноз
+        setDailyForecast();
 
         // Обновляем данные в верхнней части
         setCurrentForecast();
 
-        // Обновляем прогноз
-        setDailyForecast();
-
-        //Иницилизируем кнопку-ссылку
-        initBottomLink();
+        // Обновляем задний фон
+        setBackground();
     }
 
     @Override
@@ -157,12 +151,11 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         super.onDetach();
         fragmentChanger = null;
         baseActivity = null;
-        dailyForecastModel = null;
-        currentForecastModel = null;
+        dailyForecast = null;
+        currentForecast = null;
         serverPolling = null;
         locationDao = null;
         locationSource = null;
-        gson = null;
         alertDialog = null;
     }
 
@@ -170,7 +163,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         // Вставляем данные в поля
         TextView currentCity = view.findViewById(R.id.textViewCity);
-        currentCity.setText(currentForecastModel.getName());
+        currentCity.setText(currentForecast.getCity());
 
         // Устанавливаем OnClickListener
         currentCity.setOnClickListener(new TextView.OnClickListener() {
@@ -183,28 +176,28 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
-        currentDistrict.setText(currentForecastModel.getName());
+        currentDistrict.setText(currentForecast.getCity());
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
-        textViewCurrent.setText(String.valueOf((int)currentForecastModel.getMain().getTemp()));
+        textViewCurrent.setText(currentForecast.getTemp());
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
         imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
 
         TextView currWeather = view.findViewById(R.id.textViewCurrentWeather);
-        currWeather.setText(capitalize(currentForecastModel.getWeather()[0].getDescription()));
+        currWeather.setText(currentForecast.getWeather());
 
         TextView currFeelingTemp = view.findViewById(R.id.textViewCurrentFeelingTemp);
-        currFeelingTemp.setText(String.valueOf((int)currentForecastModel.getMain().getFeels_like()));
+        currFeelingTemp.setText(currentForecast.getFeeling());
 
         TextView textViewWindSpeed = view.findViewById(R.id.textViewWindSpeed);
-        textViewWindSpeed.setText(String.valueOf((int)currentForecastModel.getWind().getSpeed()));
+        textViewWindSpeed.setText(currentForecast.getWindSpeed());
 
         TextView textViewPressure = view.findViewById(R.id.textViewPressure);
-        textViewPressure.setText(String.valueOf((int)(currentForecastModel.getMain().getPressure() * HPA)));
+        textViewPressure.setText(currentForecast.getPressure());
 
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
-        textViewHumidity.setText(String.valueOf(currentForecastModel.getMain().getHumidity()));
+        textViewHumidity.setText(currentForecast.getHumidity());
 
         //TODO: Надо подумать как забрать единицы измерения;
         TextView currFeelingTempEu = view.findViewById(R.id.textViewCurrentFeelingTempEu);
@@ -224,12 +217,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void setDailyForecast() {
-        // Строим источник данных
-        DailyForecastDataSource sourceData = new DailyForecastSourceBuilder()
-                .setResources(getResources())
-                .setContext(baseActivity)
-                .setDataFromServer(dailyForecastModel)
-                .build();
+
+        DailyForecastDataSource sourceData = dailyForecast;
 
         RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
@@ -262,15 +251,12 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void setBackground(){
-        // TODO: Это надо сделать как-то по другому
-        logic.refreshData();
-
         //Ставим background картинку
         FrameLayout mainLayout = view.findViewById(R.id.mainFragment);
-        mainLayout.setBackgroundResource(logic.getMainLayerPic());
+        mainLayout.setBackgroundResource(currentForecast.getBackImageFirst());
 
         FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
-        secondLayout.setBackgroundResource(logic.getSecondLayerPic());
+        secondLayout.setBackgroundResource(currentForecast.getBackImageSecond());
     }
 
     private void initBottomLink(){
@@ -301,13 +287,13 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
             // Смотрим, есть ли данные по этому городу в базе
             if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
-                currentForecastModel = gson.fromJson(currentLocation.currentForecast, CurrentForecastModel.class);
-                dailyForecastModel = gson.fromJson(currentLocation.dailyForecast, DailyForecastModel.class);
+                currentForecast = responseParser.getCurrentForecast(currentLocation.currentForecast);
+                dailyForecast = responseParser.getDailyForecast(currentLocation.dailyForecast);
                 initListener();
             } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
                 // Если данных нет в базе забираем данные с SharedPreference прошлого города
-                currentForecastModel = gson.fromJson(previousForecastCurrent, CurrentForecastModel.class);
-                dailyForecastModel = gson.fromJson(previousForecastDaily, DailyForecastModel.class);
+                currentForecast = responseParser.getCurrentForecast(previousForecastCurrent);
+                dailyForecast = responseParser.getDailyForecast(previousForecastDaily);
                 initListener();
             }
         } else {
