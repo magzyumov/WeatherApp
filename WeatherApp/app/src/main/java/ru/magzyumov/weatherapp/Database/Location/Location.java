@@ -42,12 +42,14 @@ public class Location {
     public boolean isSearched;
 
     // Последний текущий прогноз для этого города
+    @TypeConverters(CurrentForecastConverter.class)
     @ColumnInfo(name = "currentForecast")
-    public String currentForecast;
+    public CurrentForecast currentForecast;
 
     // Последний текущий прогноз для этого города
+    @TypeConverters(DailyForecastConverter.class)
     @ColumnInfo(name = "dailyForecast")
-    public String dailyForecast;
+    public DailyForecastSource dailyForecast;
 
     // Дата последнего прогноза для этого города
     @ColumnInfo(name = "date")
@@ -61,16 +63,4 @@ public class Location {
     // Флаг о том, что данные нужно обновить
     @ColumnInfo(name = "needUpdate")
     public boolean needUpdate;
-
-    // Последний текущий прогноз для этого города
-    // в виде объекта
-    @TypeConverters(CurrentForecastConverter.class)
-    @ColumnInfo(name = "currentForecastObj")
-    public CurrentForecast currentForecastObj;
-
-    // Последний текущий прогноз для этого города
-    // в виде объекта
-    @TypeConverters(DailyForecastConverter.class)
-    @ColumnInfo(name = "dailyForecastObj")
-    public DailyForecastSource dailyForecastObj;
 }
