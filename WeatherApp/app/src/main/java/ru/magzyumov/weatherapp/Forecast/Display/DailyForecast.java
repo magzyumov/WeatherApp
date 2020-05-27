@@ -3,7 +3,7 @@ package ru.magzyumov.weatherapp.Forecast.Display;
 public class DailyForecast {
     private String date;
     private String dayName;
-    private int image;
+    private String image;
     private String temp;
     private String windSpeed;
     private String pressure;
@@ -12,7 +12,7 @@ public class DailyForecast {
     private String pressEU;
     private String windSpeedEU;
 
-    public DailyForecast (String date, String dayName, int image,
+    public DailyForecast (String date, String dayName, String image,
                           int temp, int windSpeed, int pressure, int humidity,
                           String tempEU, String pressEU, String windSpeedEU){
         this.date = date;
@@ -35,7 +35,7 @@ public class DailyForecast {
         return dayName;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
