@@ -6,6 +6,8 @@ import android.content.res.Resources;
 
 import android.os.Handler;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
@@ -114,6 +117,26 @@ public class ServerPolling implements Constants {
         writeForecastResponseToPreference(DAILY, dailyForecast);
     }
 
+    public void writeForecastResponseToDB(DailyForecastSource dailyForecast){
+        if(currentLocation != null){
+            currentLocation.dailyForecastObj = dailyForecast;
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
+        writeForecastResponseToPreference(DAILY, new Gson().toJson(dailyForecast));
+    }
+
+    public void writeForecastResponseToDB(CurrentForecast currentForecast){
+        if(currentLocation != null){
+            currentLocation.currentForecastObj = currentForecast;
+            currentLocation.temperature = currentForecast.getTempForDb();
+            currentLocation.date = currentForecast.getDate();
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
+        writeForecastResponseToPreference(DAILY, new Gson().toJson(currentForecast));
+    }
+
     private void writeForecastResponseToPreference(String tag, String data){
         SharedPreferences.Editor editor = sharedPrefForecast.edit();
         editor.putString(tag, data);
@@ -122,10 +145,12 @@ public class ServerPolling implements Constants {
 
     public void responsePars(CurrentForecastModel currentForecastModel){
         dataReady(responseParser.getCurrentForecast(currentForecastModel));
+        writeForecastResponseToDB(responseParser.getCurrentForecast(currentForecastModel));
     }
 
     public void responsePars(DailyForecastModel dailyForecastModel){
         dataReady(responseParser.getDailyForecast(dailyForecastModel));
+        writeForecastResponseToDB(responseParser.getDailyForecast(dailyForecastModel));
     }
 
     public void responsePars(OneCallModel oneCallModel){

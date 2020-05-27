@@ -1,11 +1,10 @@
 package ru.magzyumov.weatherapp.Forecast.Display;
 
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-public class PicassoLoader {
+    public class PicassoLoader {
 
     public void load(String path, ImageView imageView){
         Picasso.get().load(path).into(imageView);
