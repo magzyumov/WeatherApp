@@ -294,8 +294,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
             if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
                 //currentForecast = responseParser.getCurrentForecast(currentLocation.currentForecast);
                 //dailyForecast = responseParser.getDailyForecast(currentLocation.dailyForecast);
-                currentForecast = currentLocation.currentForecastObj;
-                dailyForecast = currentLocation.dailyForecastObj;
+                currentForecast = currentLocation.currentForecast;
+                dailyForecast = currentLocation.dailyForecast;
                 initListener();
             } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
                 // Если данных нет в базе забираем данные с SharedPreference прошлого города

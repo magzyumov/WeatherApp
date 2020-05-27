@@ -97,29 +97,9 @@ public class ServerPolling implements Constants {
     }
 
     // Метод записи прогноза в базу
-    public void writeForecastResponseToDB(String currentForecast, float temp, long date){
-        if(currentLocation != null){
-            currentLocation.currentForecast = currentForecast;
-            currentLocation.temperature = temp;
-            currentLocation.date = date;
-            currentLocation.needUpdate = false;
-            locationSource.updateLocation(currentLocation);
-        }
-        writeForecastResponseToPreference(CURRENT, currentForecast);
-    }
-
-    public void writeForecastResponseToDB(String dailyForecast){
-        if(currentLocation != null){
-            currentLocation.dailyForecast = dailyForecast;
-            currentLocation.needUpdate = false;
-            locationSource.updateLocation(currentLocation);
-        }
-        writeForecastResponseToPreference(DAILY, dailyForecast);
-    }
-
     public void writeForecastResponseToDB(DailyForecastSource dailyForecast){
         if(currentLocation != null){
-            currentLocation.dailyForecastObj = dailyForecast;
+            currentLocation.dailyForecast = dailyForecast;
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
@@ -128,7 +108,7 @@ public class ServerPolling implements Constants {
 
     public void writeForecastResponseToDB(CurrentForecast currentForecast){
         if(currentLocation != null){
-            currentLocation.currentForecastObj = currentForecast;
+            currentLocation.currentForecast = currentForecast;
             currentLocation.temperature = currentForecast.getTempForDb();
             currentLocation.date = currentForecast.getDate();
             currentLocation.needUpdate = false;
