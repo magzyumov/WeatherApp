@@ -51,8 +51,8 @@ public class RetrofitClass implements Constants {
                         if(response.isSuccessful()){
                             if(response.body() != null){
                                 handler.post(() -> serverPolling.responsePars(response.body()));
-                                handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body()),
-                                        response.body().getMain().getTemp(), response.body().getDt()));
+                                //handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body()),
+                                //        response.body().getMain().getTemp(), response.body().getDt()));
                             }
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
@@ -84,7 +84,7 @@ public class RetrofitClass implements Constants {
                         if(response.isSuccessful()){
                             if(response.body() != null){
                                 handler.post(() -> serverPolling.responsePars(response.body()));
-                                handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body())));
+                               // handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body())));
                             }
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
@@ -116,7 +116,6 @@ public class RetrofitClass implements Constants {
                         if(response.isSuccessful()){
                             if(response.body() != null){
                                 handler.post(() -> serverPolling.responsePars(response.body()));
-                                handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body())));
                             }
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
