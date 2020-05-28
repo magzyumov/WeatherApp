@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
@@ -34,6 +35,7 @@ import ru.magzyumov.weatherapp.Dialog.BottomFragmentDialog;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Display.PicassoLoader;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
@@ -55,6 +57,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private ServerPolling serverPolling;
     private AlertDialogWindow alertDialog;
     private ResponseParser responseParser;
+    private PicassoLoader picassoLoader;
 
     public MainFragment() {
         // Required empty public constructor
@@ -74,6 +77,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         locationSource = new LocationSource(locationDao);
         responseParser = new ResponseParser(getResources());
         serverPolling = new ServerPolling(getContext());
+        picassoLoader = new PicassoLoader();
 
         // Подписываеся на опросчика погодного сервера
         serverPolling.addListener(this);
@@ -157,6 +161,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         locationDao = null;
         locationSource = null;
         alertDialog = null;
+        picassoLoader = null;
     }
 
     private void setCurrentForecast(){
@@ -182,7 +187,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         textViewCurrent.setText(currentForecast.getTemp());
 
         ImageView imageViewCurrent = view.findViewById(R.id.imageViewCurrent);
-        imageViewCurrent.setImageResource(R.drawable.bkn_d_line_light);
+        picassoLoader.load(currentForecast.getImage(), imageViewCurrent);
 
         TextView currWeather = view.findViewById(R.id.textViewCurrentWeather);
         currWeather.setText(currentForecast.getWeather());
@@ -287,8 +292,10 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
             // Смотрим, есть ли данные по этому городу в базе
             if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
-                currentForecast = responseParser.getCurrentForecast(currentLocation.currentForecast);
-                dailyForecast = responseParser.getDailyForecast(currentLocation.dailyForecast);
+                //currentForecast = responseParser.getCurrentForecast(currentLocation.currentForecast);
+                //dailyForecast = responseParser.getDailyForecast(currentLocation.dailyForecast);
+                currentForecast = currentLocation.currentForecast;
+                dailyForecast = currentLocation.dailyForecast;
                 initListener();
             } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
                 // Если данных нет в базе забираем данные с SharedPreference прошлого города

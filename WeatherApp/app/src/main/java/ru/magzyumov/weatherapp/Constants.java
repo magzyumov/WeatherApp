@@ -2,6 +2,8 @@ package ru.magzyumov.weatherapp;
 
 public interface Constants {
     String TAG = "WEATHER";
+    String BASE_URL = "https://api.openweathermap.org/";
+    String IMAGE_URL = "https://openweathermap.org/img/wn/%s@4x.png";
     String CURR_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&lang=%s&appid=";
     String DAILY_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&lang=%s&appid=";
 

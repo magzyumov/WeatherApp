@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
 
@@ -56,6 +58,7 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private PicassoLoader picassoLoader;
         private TextView textViewDate;
         private TextView textViewDayName;
         private ImageView imageViewWeather;
@@ -69,6 +72,7 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            picassoLoader = new PicassoLoader();
             textViewDate = itemView.findViewById(R.id.textViewDate);
             textViewDayName = itemView.findViewById(R.id.textViewDayName);
             imageViewWeather = itemView.findViewById(R.id.imageViewWeather);
@@ -103,13 +107,13 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
             });
         }
 
-        public void setData(String date, String dayName, int picture, String temp,
+        public void setData(String date, String dayName, String picture, String temp,
                             String tempEU, String windSpeed, String windSpeedEU,
                             String pressure, String pressureEU, String humidity){
 
             getTextViewDate().setText(date);
             getTextViewDayName().setText(dayName);
-            getImageViewWeather().setImageResource(picture);
+            picassoLoader.load(picture, getImageViewWeather());
             getTextViewTemp().setText(temp);
             getTextViewTempEU().setText(tempEU);
             getTextViewWindSpeed().setText(windSpeed);
