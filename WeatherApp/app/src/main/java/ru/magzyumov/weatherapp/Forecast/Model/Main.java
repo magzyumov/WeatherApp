@@ -1,11 +1,32 @@
 package ru.magzyumov.weatherapp.Forecast.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Main {
+
+    @SerializedName("temp")
+    @Expose
     private float temp;
+
+    @SerializedName("feels_like")
+    @Expose
     private float feels_like;
+
+    @SerializedName("temp_min")
+    @Expose
     private float temp_min;
+
+    @SerializedName("temp_max")
+    @Expose
     private float temp_max;
+
+    @SerializedName("pressure")
+    @Expose
     private int pressure;
+
+    @SerializedName("humidity")
+    @Expose
     private int humidity;
 
     public float getTemp() {

@@ -86,9 +86,7 @@ public class CurrentForecast {
         this.tempEu = tempEu;
     }
 
-    public String getImage() {
-        return image;
-    }
+    public String getImage() { return image; }
 
     public void setImage(String image) {
         this.image = image;

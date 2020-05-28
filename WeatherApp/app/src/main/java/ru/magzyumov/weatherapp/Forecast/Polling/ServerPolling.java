@@ -6,31 +6,26 @@ import android.content.res.Resources;
 
 import android.os.Handler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
-import ru.magzyumov.weatherapp.R;
+import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
+import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
 
 import static java.util.Locale.getDefault;
-import static ru.magzyumov.weatherapp.BuildConfig.WEATHER_API_KEY;
 
 public class ServerPolling implements Constants {
 
@@ -44,7 +39,7 @@ public class ServerPolling implements Constants {
     private Location currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
     private ResponseParser responseParser;
-    private ConnectionThreads connectionThreads;
+    private RetrofitClass retrofitClass;
 
     public ServerPolling(Context context){
         this.context = context;
@@ -54,9 +49,7 @@ public class ServerPolling implements Constants {
         this.locationSource = new LocationSource(locationDao);
         this.currentLang = getDefault().getLanguage();
         this.responseParser = new ResponseParser(resources);
-        if(connectionThreads == null) {
-            this.connectionThreads = new ConnectionThreads(CURRENT, DAILY);
-        }
+        this.retrofitClass = new RetrofitClass(this);
     }
 
     // Метод установки текущего города
@@ -65,6 +58,12 @@ public class ServerPolling implements Constants {
         if(currentLocation != null) currentCity = currentLocation.city;
         if (currentCity == null) currentCity = "moskwa";
         currentLang = getDefault().getLanguage();
+    }
+
+    public void build(){
+        final Handler handler = new Handler(); // Запоминаем основной поток
+        retrofitClass.getCurrentRequest(currentCity, currentLang, handler);
+        retrofitClass.getDailyRequest(currentCity, currentLang, handler);
     }
 
     // Метод добавления подписчиков на события
@@ -98,24 +97,24 @@ public class ServerPolling implements Constants {
     }
 
     // Метод записи прогноза в базу
-    private void writeForecastResponseToDB(String currentForecast, CurrentForecast cwResult){
-        if(currentLocation != null){
-            currentLocation.currentForecast = currentForecast;
-            currentLocation.temperature = cwResult.getTempForDb();
-            currentLocation.date = cwResult.getDate();
-            currentLocation.needUpdate = false;
-            locationSource.updateLocation(currentLocation);
-        }
-        writeForecastResponseToPreference(CURRENT, currentForecast);
-    }
-
-    private void writeForecastResponseToDB(String dailyForecast){
+    public void writeForecastResponseToDB(DailyForecastSource dailyForecast){
         if(currentLocation != null){
             currentLocation.dailyForecast = dailyForecast;
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
-        writeForecastResponseToPreference(DAILY, dailyForecast);
+        writeForecastResponseToPreference(DAILY, new Gson().toJson(dailyForecast));
+    }
+
+    public void writeForecastResponseToDB(CurrentForecast currentForecast){
+        if(currentLocation != null){
+            currentLocation.currentForecast = currentForecast;
+            currentLocation.temperature = currentForecast.getTempForDb();
+            currentLocation.date = currentForecast.getDate();
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
+        writeForecastResponseToPreference(DAILY, new Gson().toJson(currentForecast));
     }
 
     private void writeForecastResponseToPreference(String tag, String data){
@@ -124,91 +123,21 @@ public class ServerPolling implements Constants {
         editor.apply();
     }
 
-    public void build(){
-        final Handler handler = new Handler(); // Запоминаем основной поток
-        connectionThreads.postTask(CURRENT, ()-> currentForecastRequest(handler));
-        connectionThreads.postTask(DAILY, ()-> dailyForecastRequest(handler));
+    public void responsePars(CurrentForecastModel currentForecastModel){
+        dataReady(responseParser.getCurrentForecast(currentForecastModel));
+        writeForecastResponseToDB(responseParser.getCurrentForecast(currentForecastModel));
     }
 
-    private String makeRequest(URL uri, Handler handler) {
-        HttpsURLConnection urlConnection = null;
-        String result = null;
-        try {
-            urlConnection = (HttpsURLConnection) uri.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(REQUEST_TIMEOUT);
-            urlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
-
-            //Если коннекшн в норме
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                result = convertStreamToString(in);
-            //Город не найден
-            } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.cityNotFound)));
-            //Не верный API ключ
-            } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.invalidKey)));
-            //Другая ошибка связи
-            } else {
-                String response = urlConnection.getResponseMessage();
-                handler.post(() -> showMsgToListeners(response));
-            }
-        //Нет интернета
-        } catch (SocketTimeoutException e) {
-            handler.post(() -> showMsgToListeners(context.getResources().getString(R.string.connectionTimeout)));
-        //Другая ошибка
-        } catch (Exception e) {
-            handler.post(() -> showMsgToListeners(e.getMessage()));
-            e.printStackTrace();
-        } finally {
-            if (null != urlConnection) {
-                urlConnection.disconnect();
-            }
-        }
-        return result;
+    public void responsePars(DailyForecastModel dailyForecastModel){
+        dataReady(responseParser.getDailyForecast(dailyForecastModel));
+        writeForecastResponseToDB(responseParser.getDailyForecast(dailyForecastModel));
     }
 
-    private String convertStreamToString(BufferedReader in) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
-        while ((line = in.readLine()) != null) {
-            stringBuilder.append(line).append("\n");
-        }
-        return stringBuilder.toString();
+    public void responsePars(OneCallModel oneCallModel){
+        //Nothing
     }
 
-    private void dailyForecastRequest(Handler handler){
-        try{
-            String dailyURL = String.format(DAILY_WEATHER_URL, currentCity, currentLang);
-            final URL dailyUri = new URL(dailyURL + WEATHER_API_KEY);
-            //final Handler handler = new Handler(); // Запоминаем основной поток
-
-            String dailyResult = makeRequest(dailyUri, handler);
-            final DailyForecastSource dwRequest = responseParser.getDailyForecast(dailyResult);
-            if ( (dwRequest != null) & (dailyResult != null) ) {
-                handler.post(() -> writeForecastResponseToDB(dailyResult));
-                handler.post(() -> dataReady(dwRequest));
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void currentForecastRequest(Handler handler){
-        try{
-            String currURL = String.format(CURR_WEATHER_URL, currentCity, currentLang);
-            final URL currUri = new URL(currURL + WEATHER_API_KEY);
-            //final Handler handler = new Handler(); // Запоминаем основной поток
-
-            String currResult = makeRequest(currUri, handler);
-            final CurrentForecast cwRequest = responseParser.getCurrentForecast(currResult);
-            if ( (cwRequest != null) & (currResult != null) ) {
-                handler.post(() -> writeForecastResponseToDB(currResult, cwRequest));
-                handler.post(() -> dataReady(cwRequest));
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    public Resources getResources(){
+        return this.resources;
     }
 }

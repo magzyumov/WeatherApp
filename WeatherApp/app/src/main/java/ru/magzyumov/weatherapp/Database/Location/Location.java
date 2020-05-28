@@ -4,11 +4,18 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import ru.magzyumov.weatherapp.Database.Location.Converters.CurrentForecastConverter;
+import ru.magzyumov.weatherapp.Database.Location.Converters.DailyForecastConverter;
+import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
+import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 
 // @Entity - это признак табличного объекта, то есть объект будет сохраняться
 // в базе данных в виде строки
 // indices указывает на индексы в таблице
 @Entity(indices = {@Index(value = {"region", "city"})})
+
 public class Location {
 
     // @PrimaryKey - указывает на ключевую запись,
@@ -35,12 +42,14 @@ public class Location {
     public boolean isSearched;
 
     // Последний текущий прогноз для этого города
+    @TypeConverters(CurrentForecastConverter.class)
     @ColumnInfo(name = "currentForecast")
-    public String currentForecast;
+    public CurrentForecast currentForecast;
 
     // Последний текущий прогноз для этого города
+    @TypeConverters(DailyForecastConverter.class)
     @ColumnInfo(name = "dailyForecast")
-    public String dailyForecast;
+    public DailyForecastSource dailyForecast;
 
     // Дата последнего прогноза для этого города
     @ColumnInfo(name = "date")
