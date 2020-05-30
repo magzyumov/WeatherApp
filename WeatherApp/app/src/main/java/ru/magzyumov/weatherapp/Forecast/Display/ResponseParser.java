@@ -13,7 +13,7 @@ import java.util.Locale;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.ForecastList;
+import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel.ForecastList;
 import ru.magzyumov.weatherapp.R;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;

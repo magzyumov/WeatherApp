@@ -30,7 +30,6 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
     private ActionBarDrawerToggle toggle;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
