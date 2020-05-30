@@ -41,6 +41,10 @@ public class Location {
     @ColumnInfo(name = "isSearched")
     public boolean isSearched;
 
+    // Флаг о том, что данные нужно обновить
+    @ColumnInfo(name = "needUpdate")
+    public boolean needUpdate;
+
     // Последний текущий прогноз для этого города
     @TypeConverters(CurrentForecastConverter.class)
     @ColumnInfo(name = "currentForecast")
@@ -50,17 +54,4 @@ public class Location {
     @TypeConverters(DailyForecastConverter.class)
     @ColumnInfo(name = "dailyForecast")
     public DailyForecastSource dailyForecast;
-
-    // Дата последнего прогноза для этого города
-    @ColumnInfo(name = "date")
-    public long date;
-
-    // Температура по данному городу из
-    // последнего прогноза
-    @ColumnInfo(name = "temperature")
-    public float temperature;
-
-    // Флаг о том, что данные нужно обновить
-    @ColumnInfo(name = "needUpdate")
-    public boolean needUpdate;
 }
