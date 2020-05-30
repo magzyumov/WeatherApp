@@ -111,8 +111,6 @@ public class ServerPolling implements Constants {
     public void writeForecastResponseToDB(CurrentForecast currentForecast){
         if(currentLocation != null){
             currentLocation.currentForecast = currentForecast;
-            currentLocation.temperature = currentForecast.getTempForDb();
-            currentLocation.date = currentForecast.getDate();
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }

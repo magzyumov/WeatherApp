@@ -57,18 +57,18 @@
 
             <TextView
                 android:id="@+id/textViewCity"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="0.4"
                 android:gravity="start"
                 android:text="Стерлитамак"
                 android:textAlignment="viewStart"
                 android:textSize="30sp" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_weight="0.6"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    card_view:srcCompat="@drawable/bkn_d_line_dark" />
+                    card_view:srcCompat="@drawable/w_10d" />
 
                 <TextView
                     android:id="@+id/textViewTemp"
@@ -90,10 +90,10 @@
                     android:id="@+id/textViewTempEU"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="10dp"
-                    android:text="@string/celsius" />
+                    android:text="@string/celsius"
+                    android:textSize="30sp" />
 
             </LinearLayout>
 

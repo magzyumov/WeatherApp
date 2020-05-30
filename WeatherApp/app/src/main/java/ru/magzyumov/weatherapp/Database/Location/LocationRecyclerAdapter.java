@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import ru.magzyumov.weatherapp.Forecast.Display.PicassoLoader;
 import ru.magzyumov.weatherapp.R;
 
 // Адаптер для RecyclerView
@@ -30,12 +31,14 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private Calendar calendar;
     private OnItemClickListener itemClickListener;
     private OnMenuClickListener menuClickListener;
+    private PicassoLoader picassoLoader;
 
     public LocationRecyclerAdapter(LocationDataSource dataSource, Fragment fragment){
         this.dataSource = dataSource;
         this.fragment = fragment;
         this.dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
         this.calendar = Calendar.getInstance();
+        this.picassoLoader = new PicassoLoader();
     }
 
     @NonNull
@@ -60,11 +63,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         // Заполняем данными записи на экране
         List<Location> locations = dataSource.getHistoryLocations();
         Location location = locations.get(position);
-        calendar.setTimeInMillis(location.date*1000L);
+        calendar.setTimeInMillis(location.currentForecast.getDate()*1000L);
         holder.textViewDate.setText(dateFormat.format(calendar.getTime()));
         holder.textViewCity.setText(location.city);
-        holder.imageViewWeather.setImageResource(R.drawable.bkn_d_light);
-        holder.textViewTemp.setText(String.valueOf((int)location.temperature));
+        picassoLoader.load(location.currentForecast.getImage(), holder.imageViewWeather);
+        holder.textViewTemp.setText(location.currentForecast.getTemp());
         holder.textViewRegion.setText(location.region);
 
         holder.imageViewMenu.setContentDescription(location.region + "~" + location.city);
