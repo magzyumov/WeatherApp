@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp.Dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -77,7 +78,7 @@ public class AlertDialogWindow  {
 
     // Метод показа Alert с динамичным сообщением
     public void show(String message){
-        builder.setMessage(message);
+        alertDialog.setMessage(message);
         alertDialog.show();
     }
 }

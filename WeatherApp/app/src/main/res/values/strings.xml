@@ -14,9 +14,12 @@
     <string name="fahrenheit" translatable="false">\u2109</string>
     <string name="humidityEU" translatable="false">\uFF05</string>
     <string name="windEUOne">m/s</string>
-    <string name="windEUTwo">km/h</string>
+    <string name="windEUTwo">m.p.h</string>
     <string name="pressEUOne">mmHg</string>
-    <string name="pressEUTwo">Pa</string>
+    <string name="pressEUTwo">hPa</string>
+    <string name="imperial">Imperial</string>
+    <string name="metric">Metric</string>
+
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
@@ -32,9 +35,6 @@
 
     <string name="settings_NightMode">Night Mode</string>
     <string name="settings_Notice">Notifications</string>
-    <string name="settings_TempEU">Temperature</string>
-    <string name="settings_WindEU">Wind power</string>
-    <string name="settings_PressureEU">Pressure</string>
     <string name="settings_EUText">"Units of measurement"</string>
     <string name="settings_NoticeText">"These can be reports of sudden changes in the weather or warnings of the Ministry of Emergencies"</string>
 
