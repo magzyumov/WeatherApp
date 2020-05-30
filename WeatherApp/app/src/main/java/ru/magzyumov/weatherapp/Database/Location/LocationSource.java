@@ -55,20 +55,6 @@ public class LocationSource implements LocationDataSource {
         loadLocations();
     }
 
-    // Установим температуру для текущего местоположения
-    public void setLocationTemperature(String region, String city, float temperature){
-        Location location = locationDao.getLocationByCityName(region, city);
-        location.temperature = temperature;
-        updateLocation(location);
-    }
-
-    // Установим дату прогноза для текущего местоположения
-    public void setLocationDate(String region, String city, long date){
-        Location location = locationDao.getLocationByCityName(region, city);
-        location.date = date;
-        updateLocation(location);
-    }
-
     // Заменяем местоположение
     public void updateLocation(Location location){
         locationDao.updateLocation(location);

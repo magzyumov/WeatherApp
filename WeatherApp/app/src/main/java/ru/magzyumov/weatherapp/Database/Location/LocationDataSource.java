@@ -20,12 +20,6 @@ public interface LocationDataSource {
     // Добавляем местоположение
     void addLocation(Location location);
 
-    // Установим температуру для текущего местоположения
-    void setLocationTemperature(String region, String city, float temperature);
-
-    // Установим дату прогноза для текущего местоположения
-    void setLocationDate(String region, String city, long date);
-
     // Заменяем местоположение
     void updateLocation(Location location);
 
