@@ -14,9 +14,7 @@ public interface Constants {
 
     String SETTING = "SETTING";
     String NIGHT_MODE = "NIGHT_MODE";
-    String TEMP_EU = "TEMP_EU";
-    String WIND_EU = "WIND_EU";
-    String PRESS_EU = "PRESS_EU";
+    String EU = "EU";
     String NOTICE = "NOTICE";
 
     String LOCATION = "location";

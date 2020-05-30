@@ -2,7 +2,6 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
@@ -83,8 +82,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         serverPolling.addListener(this);
 
         // Инициализируем Alert
-        alertDialog = new AlertDialogWindow(getContext(), getString(R.string.messageFromServer),
-                getString(R.string.cityNotFound), getString(R.string.ok));
+        alertDialog = new AlertDialogWindow(getContext(), getString(R.string.messageFromServer), getString(R.string.ok));
     }
 
 
@@ -204,21 +202,20 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         TextView textViewHumidity = view.findViewById(R.id.textViewHumidity);
         textViewHumidity.setText(currentForecast.getHumidity());
 
-        //TODO: Надо подумать как забрать единицы измерения;
         TextView currFeelingTempEu = view.findViewById(R.id.textViewCurrentFeelingTempEu);
-        //TODO: currFeelingTempEu.setText(currentForecastParcel.getFeelingEu());
+        currFeelingTempEu.setText(currentForecast.getFeelingEu());
 
         TextView textViewWindSpeedEU = view.findViewById(R.id.textViewWindSpeedEU);
-        //TODO: textViewWindSpeedEU.setText(currentForecastParcel.getWindSpeedEu());
+        textViewWindSpeedEU.setText(currentForecast.getWindSpeedEu());
 
         TextView textViewPressureEU = view.findViewById(R.id.textViewPressureEU);
-        //TODO: textViewPressureEU.setText(currentForecastParcel.getPressureEu());
+        textViewPressureEU.setText(currentForecast.getPressureEu());
 
         TextView textViewHumidityEU = view.findViewById(R.id.textViewHumidityEU);
-        //TODO: textViewHumidityEU.setText(currentForecastParcel.getHumidityEu());
+        textViewHumidityEU.setText(currentForecast.getHumidityEu());
 
         TextView textViewCurrentEU = view.findViewById(R.id.textViewCurrentTempEU);
-        textViewCurrentEU.setText((baseActivity.getBooleanPreference(SETTING, TEMP_EU)) ? (getString(R.string.fahrenheit)) : (getString(R.string.celsius)));
+        textViewCurrentEU.setText(currentForecast.getTempEu());
     }
 
     private void setDailyForecast() {

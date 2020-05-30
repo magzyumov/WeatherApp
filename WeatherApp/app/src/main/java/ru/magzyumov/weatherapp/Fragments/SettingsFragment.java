@@ -47,9 +47,7 @@ public class SettingsFragment extends Fragment implements Constants {
 
         //Инициализируем переключатели
         initSwitch(view.findViewById(R.id.switchNightMode), SETTING, NIGHT_MODE);
-        initSwitch(view.findViewById(R.id.switchTempEU), SETTING, TEMP_EU);
-        initSwitch(view.findViewById(R.id.switchWindEU), SETTING, WIND_EU);
-        initSwitch(view.findViewById(R.id.switchPressureEU), SETTING, PRESS_EU);
+        initSwitch(view.findViewById(R.id.switchEU), SETTING, EU);
         initSwitch(view.findViewById(R.id.switchNotice), SETTING, NOTICE);
 
         return view;

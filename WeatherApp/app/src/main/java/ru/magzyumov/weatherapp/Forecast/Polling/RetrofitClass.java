@@ -41,7 +41,6 @@ public class RetrofitClass implements Constants {
 
     public void getCurrentRequest(String city, String units, Handler handler){
 
-        units = "metric";
         String lang = getDefault().getLanguage();
 
         openWeather.loadCurrentWeather(city, units, lang, keyApi)
@@ -51,8 +50,6 @@ public class RetrofitClass implements Constants {
                         if(response.isSuccessful()){
                             if(response.body() != null){
                                 handler.post(() -> serverPolling.responsePars(response.body()));
-                                //handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body()),
-                                //        response.body().getMain().getTemp(), response.body().getDt()));
                             }
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
@@ -67,14 +64,13 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
-                        //Log.e(TAG, t.getMessage());
+                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
                     }
                 });
     }
 
     public void getDailyRequest(String city, String units, Handler handler){
 
-        units = "metric";
         String lang = getDefault().getLanguage();
 
         openWeather.loadDailyWeather(city, units, lang, keyApi)
@@ -84,7 +80,6 @@ public class RetrofitClass implements Constants {
                         if(response.isSuccessful()){
                             if(response.body() != null){
                                 handler.post(() -> serverPolling.responsePars(response.body()));
-                               // handler.post(() -> serverPolling.writeForecastResponseToDB(gson.toJson(response.body())));
                             }
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
@@ -99,14 +94,13 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<DailyForecastModel> call, Throwable t) {
-                        //Log.e(TAG, t.getMessage());
+                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
                     }
                 });
     }
 
     public void getOneCallRequest(String latitude, String longitude, String units, Handler handler){
 
-        units = "metric";
         String lang = getDefault().getLanguage();
 
         openWeather.loadOneCallWeather(latitude, longitude, units, lang, keyApi)
@@ -130,7 +124,7 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<OneCallModel> call, Throwable t) {
-                        //Log.e(TAG, t.getMessage());
+                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
                     }
                 });
     }

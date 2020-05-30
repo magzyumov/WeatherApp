@@ -15,7 +15,6 @@ import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
@@ -31,8 +30,9 @@ public class ServerPolling implements Constants {
 
     private Context context;
     private String currentCity;
-    private String currentLang;
+    private String currentEU;
     private SharedPreferences sharedPrefForecast;
+    private SharedPreferences sharedPrefSettings;
     private Resources resources;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
@@ -44,10 +44,11 @@ public class ServerPolling implements Constants {
     public ServerPolling(Context context){
         this.context = context;
         this.sharedPrefForecast = context.getSharedPreferences(FORECAST, Context.MODE_PRIVATE);
+        this.sharedPrefSettings = context.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
         this.resources = context.getResources();
         this.locationDao = App.getInstance().getLocationDao();
         this.locationSource = new LocationSource(locationDao);
-        this.currentLang = getDefault().getLanguage();
+        this.currentEU = getDefault().getLanguage();
         this.responseParser = new ResponseParser(resources);
         this.retrofitClass = new RetrofitClass(this);
     }
@@ -57,13 +58,14 @@ public class ServerPolling implements Constants {
         currentLocation = locationSource.getCurrentLocation();
         if(currentLocation != null) currentCity = currentLocation.city;
         if (currentCity == null) currentCity = "moskwa";
-        currentLang = getDefault().getLanguage();
+        currentEU = getDefault().getLanguage();
     }
 
     public void build(){
-        final Handler handler = new Handler(); // Запоминаем основной поток
-        retrofitClass.getCurrentRequest(currentCity, currentLang, handler);
-        retrofitClass.getDailyRequest(currentCity, currentLang, handler);
+        final Handler handler = new Handler();
+        currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
+        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        retrofitClass.getDailyRequest(currentCity, currentEU, handler);
     }
 
     // Метод добавления подписчиков на события

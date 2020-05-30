@@ -24,9 +24,6 @@
     <string name="settings_NoticeText">Это могут быть сообщения о резких переменах в погоде или предупреждения МЧС</string>
     <string name="settings_EUText">"Еденицы измерения"</string>
     <string name="settings_Notice">Уведомления</string>
-    <string name="settings_TempEU">Температура</string>
-    <string name="settings_WindEU">Сила ветра</string>
-    <string name="settings_PressureEU">Давление</string>
 
     <string name="now">сейчас</string>
     <string name="feeling">Ошущается как:</string>
@@ -34,9 +31,11 @@
 
     <!-- EU Strings -->
     <string name="windEUOne">м/с</string>
-    <string name="windEUTwo">км/ч</string>
+    <string name="windEUTwo">м/ч</string>
     <string name="pressEUOne">мм.рт.ст</string>
     <string name="pressEUTwo">г.Па</string>
+    <string name="imperial">Имперские</string>
+    <string name="metric">Метрические</string>
 
     <!-- Context menu -->
     <string name="remove">Удалить</string>

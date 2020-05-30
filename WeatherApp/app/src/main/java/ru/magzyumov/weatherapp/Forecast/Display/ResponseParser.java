@@ -1,8 +1,9 @@
 package ru.magzyumov.weatherapp.Forecast.Display;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
@@ -21,17 +23,33 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 public class ResponseParser implements Constants {
     private Gson gson;
     private Resources resources;
+    private SharedPreferences sharedPrefSettings;
     private CurrentForecastModel currentForecastModel;
     private DailyForecastModel dailyForecastModel;
+    private String tempEU;
+    private String pressureEU;
+    private String windSpeedEU;
+    private String humidityEu;
 
     // Конструктор для парсинга модели
     public ResponseParser (Resources resources){
         this.gson = new Gson();
         this.resources = resources;
+        this.sharedPrefSettings = App.getInstance()
+                .getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+    }
+
+    private void initEU(){
+        tempEU = sharedPrefSettings.getBoolean(EU,false) ? (resources.getString(R.string.fahrenheit)) : (resources.getString(R.string.celsius));
+        windSpeedEU = sharedPrefSettings.getBoolean(EU,false) ? (resources.getString(R.string.windEUTwo)) : (resources.getString(R.string.windEUOne));
+        pressureEU = sharedPrefSettings.getBoolean(EU,false) ? (resources.getString(R.string.pressEUTwo)) : (resources.getString(R.string.pressEUOne));
+        humidityEu = resources.getString(R.string.humidityEU);
     }
 
     public CurrentForecast getCurrentForecast(CurrentForecastModel cfResponse){
         CurrentForecast result = null;
+
+        initEU();
 
         if (cfResponse != null) {
             int[] imagesFirst = getImageArray(R.array.firstBackLayerPic);
@@ -43,17 +61,17 @@ public class ResponseParser implements Constants {
             String city = cfResponse.getName();
             String district = cfResponse.getName();
             String temp = String.valueOf((int)cfResponse.getMain().getTemp());
-            String tempEu = "";
             String image = String.format(IMAGE_URL,cfResponse.getWeather()[0].getIcon());
             String weather = capitalize(cfResponse.getWeather()[0].getDescription());
             String feeling = String.valueOf((int)cfResponse.getMain().getFeels_like());
-            String feelingEu = "";
+            String feelingEu = tempEU;
             String windSpeed = String.valueOf((int)cfResponse.getWind().getSpeed());
-            String windSpeedEu = "";
-            String pressure = String.valueOf((int)(cfResponse.getMain().getPressure() * HPA));
-            String pressureEu = "";
+            String pressure = sharedPrefSettings.getBoolean(EU,false) ?
+                    (String.valueOf((cfResponse.getMain().getPressure()))) :
+                    (String.valueOf((int)(cfResponse.getMain().getPressure() * HPA)));
+
             String humidity = String.valueOf(cfResponse.getMain().getHumidity());
-            String humidityEu = "";
+
             float tempForDb = cfResponse.getMain().getTemp();
             long date = cfResponse.getDt();
 
@@ -63,8 +81,8 @@ public class ResponseParser implements Constants {
             backImageFirst = isDay ? imagesFirst[0] : imagesFirst[1];
             backImageSecond = getSecondPic(cfResponse.getWeather()[0].getId(), isDay);
 
-            result = new CurrentForecast(city, district, temp, tempEu, image, weather, feeling,
-                    feelingEu, windSpeed, windSpeedEu, pressure, pressureEu, humidity, humidityEu,
+            result = new CurrentForecast(city, district, temp, tempEU, image, weather, feeling,
+                    feelingEu, windSpeed, windSpeedEU, pressure, pressureEU, humidity, humidityEu,
                     tempForDb, date, backImageFirst, backImageSecond);
         }
 
@@ -75,6 +93,8 @@ public class ResponseParser implements Constants {
         CurrentForecast result = null;
         CurrentForecastModel cfResponse = gson.fromJson(response, CurrentForecastModel.class);
 
+        initEU();
+
         if (cfResponse != null) {
             int[] imagesFirst = getImageArray(R.array.firstBackLayerPic);
 
@@ -85,17 +105,18 @@ public class ResponseParser implements Constants {
             String city = cfResponse.getName();
             String district = cfResponse.getName();
             String temp = String.valueOf((int)cfResponse.getMain().getTemp());
-            String tempEu = "";
             String image = String.format(IMAGE_URL,cfResponse.getWeather()[0].getIcon());
             String weather = capitalize(cfResponse.getWeather()[0].getDescription());
             String feeling = String.valueOf((int)cfResponse.getMain().getFeels_like());
-            String feelingEu = "";
+            String feelingEu = tempEU;
             String windSpeed = String.valueOf((int)cfResponse.getWind().getSpeed());
-            String windSpeedEu = "";
-            String pressure = String.valueOf((int)(cfResponse.getMain().getPressure() * HPA));
-            String pressureEu = "";
+
+            String pressure = sharedPrefSettings.getBoolean(EU,false) ?
+                    (String.valueOf((cfResponse.getMain().getPressure()))) :
+                    (String.valueOf((int)(cfResponse.getMain().getPressure() * HPA)));
+
             String humidity = String.valueOf(cfResponse.getMain().getHumidity());
-            String humidityEu = "";
+
             float tempForDb = cfResponse.getMain().getTemp();
             long date = cfResponse.getDt();
 
@@ -105,8 +126,8 @@ public class ResponseParser implements Constants {
             backImageFirst = isDay ? imagesFirst[0] : imagesFirst[1];
             backImageSecond = getSecondPic(cfResponse.getWeather()[0].getId(), isDay);
 
-            result = new CurrentForecast(city, district, temp, tempEu, image, weather, feeling,
-                    feelingEu, windSpeed, windSpeedEu, pressure, pressureEu, humidity, humidityEu,
+            result = new CurrentForecast(city, district, temp, tempEU, image, weather, feeling,
+                    feelingEu, windSpeed, windSpeedEU, pressure, pressureEU, humidity, humidityEu,
                     tempForDb, date, backImageFirst, backImageSecond);
         }
 
@@ -116,11 +137,10 @@ public class ResponseParser implements Constants {
     public DailyForecastSource getDailyForecast(DailyForecastModel dfResponse){
         DailyForecastSource result = null;
 
+        initEU();
+
         String date;
         String dayName;
-        String tempEU;
-        String pressEU;
-        String windSpeedEU;
         String image;
         int temp;
         int windSpeed;
@@ -135,11 +155,6 @@ public class ResponseParser implements Constants {
 
             Calendar calendar = Calendar.getInstance();
 
-            //Забираем инженерные еденицы из настроек
-            tempEU = resources.getString(R.string.celsius);
-            pressEU = resources.getString(R.string.pressEUOne);
-            windSpeedEU = resources.getString(R.string.windEUOne);
-
             // Берем изображения из ресурсов
             int[] pictures = getImageArray(R.array.weather_images_daily);
 
@@ -152,10 +167,14 @@ public class ResponseParser implements Constants {
                 image = String.format(IMAGE_URL, list.getWeather()[0].getIcon());
                 temp = (int)list.getMain().getTemp();
                 windSpeed = (int)list.getWind().getSpeed();
-                pressure = (int) (list.getMain().getPressure() * HPA);
+
+                pressure = sharedPrefSettings.getBoolean(EU,false) ?
+                        (list.getMain().getPressure()) :
+                        (int)(list.getMain().getPressure() * HPA);
+
                 humidity = list.getMain().getHumidity();
 
-                result.getDataSource().add(new DailyForecast(date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressEU, windSpeedEU));
+                result.getDataSource().add(new DailyForecast(date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
             }
         }
 
@@ -167,9 +186,6 @@ public class ResponseParser implements Constants {
 
         String date;
         String dayName;
-        String tempEU;
-        String pressEU;
-        String windSpeedEU;
         String image;
         int temp;
         int windSpeed;
@@ -186,11 +202,6 @@ public class ResponseParser implements Constants {
 
             Calendar calendar = Calendar.getInstance();
 
-            //Забираем инженерные еденицы из настроек
-            tempEU = resources.getString(R.string.celsius);
-            pressEU = resources.getString(R.string.pressEUOne);
-            windSpeedEU = resources.getString(R.string.windEUOne);
-
             // Берем изображения из ресурсов
             int[] pictures = getImageArray(R.array.weather_images_daily);
 
@@ -203,10 +214,14 @@ public class ResponseParser implements Constants {
                 image = String.format(IMAGE_URL, list.getWeather()[0].getIcon());
                 temp = (int)list.getMain().getTemp();
                 windSpeed = (int)list.getWind().getSpeed();
-                pressure = (int) (list.getMain().getPressure() * HPA);
+
+                pressure = sharedPrefSettings.getBoolean(EU,false) ?
+                        (list.getMain().getPressure()) :
+                        (int)(list.getMain().getPressure() * HPA);
+
                 humidity = list.getMain().getHumidity();
 
-                result.getDataSource().add(new DailyForecast (date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressEU, windSpeedEU));
+                result.getDataSource().add(new DailyForecast (date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
             }
         }
 
