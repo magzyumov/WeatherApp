@@ -1,8 +1,18 @@
 package ru.magzyumov.weatherapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -26,47 +36,38 @@ import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
 
 public class MainActivity extends BaseActivity implements FragmentChanger, NavigationView.OnNavigationItemSelectedListener{
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
+    private BroadcastReceiver networkReceiver;
     private ActionBarDrawerToggle toggle;
+    private TextView alarmBox;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        networkReceiver = new NetworkReceiver(this);
+
         DatabaseCopier.getInstance(getApplicationContext());
 
         if(getSupportFragmentManager().getFragments().isEmpty()){
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, new MainFragment(),"mainFragment").commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.mainLayout, new MainFragment(),"mainFragment").commit();
         }
 
-        //Устанавливаем Toolbar
         Toolbar toolbar = initToolbar();
 
         initDrawer(toolbar);
+
+        initNotificationChannel();
+
+        registerNetworkReceiver();
     }
 
-    private Toolbar initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        return toolbar;
-    }
-
-    private void initDrawer(Toolbar toolbar) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnFragment();
-            }
-        });
-
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkReceiver();
     }
 
     @Override
@@ -108,7 +109,6 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         toggle.setDrawerIndicatorEnabled(enabled);
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -148,4 +148,77 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     public FragmentTransaction getFragmentTransaction(){
         return getSupportFragmentManager().beginTransaction();
     }
+
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel("network", "name", importance);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void registerNetworkReceiver() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    private void unregisterNetworkReceiver() {
+        try {
+            unregisterReceiver(networkReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showAlarm(boolean value){
+
+        alarmBox = findViewById(R.id.textViewAlarm);
+
+        if(alarmBox != null){
+            if(value){
+                alarmBox.setText(getString(R.string.okInternet));
+                alarmBox.setBackgroundColor(Color.GREEN);
+                alarmBox.setTextColor(Color.BLACK);
+
+                Handler handler = new Handler();
+                Runnable delay = () -> alarmBox.setVisibility(View.GONE);
+                handler.postDelayed(delay, 3000);
+            }else {
+                alarmBox.setVisibility(View.VISIBLE);
+                alarmBox.setText(getString(R.string.noInternet));
+                alarmBox.setBackgroundColor(Color.RED);
+                alarmBox.setTextColor(Color.WHITE);
+            }
+        }
+    }
+
+    private Toolbar initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        return toolbar;
+    }
+
+    private void initDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnFragment();
+            }
+        });
+
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
 }
