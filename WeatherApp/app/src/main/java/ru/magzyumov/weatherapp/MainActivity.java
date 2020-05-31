@@ -153,8 +153,12 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel("network", "name", importance);
-            notificationManager.createNotificationChannel(channel);
+
+            NotificationChannel network = new NotificationChannel("network", "Network", importance);
+            notificationManager.createNotificationChannel(network);
+
+            NotificationChannel pushMessage = new NotificationChannel("pushMessage", "Cloud", importance);
+            notificationManager.createNotificationChannel(pushMessage);
         }
     }
 
