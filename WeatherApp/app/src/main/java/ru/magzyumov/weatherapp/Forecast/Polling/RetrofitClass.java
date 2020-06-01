@@ -99,7 +99,7 @@ public class RetrofitClass implements Constants {
                 });
     }
 
-    public void getOneCallRequest(String latitude, String longitude, String units, Handler handler){
+    public void getOneCallRequest(double latitude, double longitude, String units, Handler handler){
 
         String lang = getDefault().getLanguage();
 

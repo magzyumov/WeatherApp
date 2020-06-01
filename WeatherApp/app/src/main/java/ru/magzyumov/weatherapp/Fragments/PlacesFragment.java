@@ -50,10 +50,7 @@ public class PlacesFragment extends Fragment implements Constants,
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
     private AlertDialogWindow alertDialog;
-
-    private PlacesClient placesClient;
     private AutocompleteSupportFragment autocompleteFragment;
-
     private DatabaseReference mDatabase;
 
 
@@ -92,20 +89,16 @@ public class PlacesFragment extends Fragment implements Constants,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places, container, false);
 
-        // Initialize the AutocompleteSupportFragment.
         autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autoCompleteFragment);
 
-        // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
 
         autocompleteFragment.setActivityMode(AutocompleteActivityMode.FULLSCREEN);
 
-        // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 String key = mDatabase.child("locations").push().getKey();
                 FirebasePlace location = new FirebasePlace(place.getId(), place.getName(), place.getAddress(),
                         String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
@@ -117,7 +110,6 @@ public class PlacesFragment extends Fragment implements Constants,
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i(TAG, "An error occurred: " + status);
             }
         });

@@ -66,6 +66,7 @@ public class ServerPolling implements Constants {
         currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
         retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
         retrofitClass.getDailyRequest(currentCity, currentEU, handler);
+        retrofitClass.getOneCallRequest(54.734773, 55.957829,currentEU, handler);
     }
 
     // Метод добавления подписчиков на события
@@ -134,7 +135,8 @@ public class ServerPolling implements Constants {
     }
 
     public void responsePars(OneCallModel oneCallModel){
-        //Nothing
+        // TODO: По готовности расскоментировать вызов
+        //responseParser.getCurrentForecast(oneCallModel);
     }
 
     public Resources getResources(){
