@@ -79,6 +79,7 @@ public class SettingsFragment extends Fragment implements Constants {
         super.onDetach();
 
         // Освобождаем ресурсы
+        view = null;
         fragmentChanger = null;
         baseActivity = null;
     }

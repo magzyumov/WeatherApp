@@ -10,6 +10,8 @@
     <string name="hintSearchCity">Город</string>
     <string name="weatherIcon">Иконка погоды</string>
 
+    <string name="detailedData">Подробные данные</string>
+
     <string name = "internetConnection">Интернет соединение</string>
     <string name="noInternet">Нет интернет соединения!</string>
     <string name="okInternet">Интернет соединение в норме!</string>

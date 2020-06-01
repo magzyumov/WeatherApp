@@ -4,18 +4,13 @@ public interface Constants {
     String TAG = "WEATHER";
     String BASE_URL = "https://api.openweathermap.org/";
     String IMAGE_URL = "https://openweathermap.org/img/wn/%s@4x.png";
-    String CURR_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&lang=%s&appid=";
-    String DAILY_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&lang=%s&appid=";
-
-    int REQUEST_TIMEOUT = 5000;
-    int CONNECTION_TIMEOUT = 5000;
 
     String PROVIDER_URL = "https://openweathermap.org/";
 
-    String SETTING = "SETTING";
-    String NIGHT_MODE = "NIGHT_MODE";
-    String EU = "EU";
-    String NOTICE = "NOTICE";
+    String SETTING = "settings";
+    String NIGHT_MODE = "night_mode";
+    String EU = "eu";
+    String NOTICE = "notice";
 
     String LOCATION = "location";
     String CURRENT_CITY = "current_city";
