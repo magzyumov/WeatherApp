@@ -9,6 +9,8 @@
     <string name="hintSearchCity">City</string>
     <string name="weatherIcon">Weather icon</string>
 
+    <string name="detailedData">Detailed data</string>
+
     <string name= "internetConnection">Internet connection</string>
     <string name="noInternet">Could not connect to internet!</string>
     <string name="okInternet">Connection established!</string>

@@ -5,21 +5,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-public class NetworkReceiver extends BroadcastReceiver {
-
-    private boolean firstConnection;
-    private boolean isOnline;
+public class NetworkReceiver extends BroadcastReceiver implements Constants {
     private MainActivity mainActivity;
     private int messageId = 0;
+    private SharedPreferences sharedPreferences;
 
     public NetworkReceiver(MainActivity mainActivity){
         this.mainActivity = mainActivity;
+        this.sharedPreferences = mainActivity.getSharedPreferences(SETTING, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -36,6 +36,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 message = mainActivity.getString(R.string.noInternet);
             }
 
+            if(sharedPreferences.getBoolean(NOTICE, true)) {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "network")
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(mainActivity.getString(R.string.internetConnection))
@@ -43,7 +44,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 NotificationManager notificationManager =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(messageId++, builder.build());
-
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

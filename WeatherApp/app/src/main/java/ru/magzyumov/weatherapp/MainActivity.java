@@ -5,11 +5,13 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -39,12 +41,14 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     private BroadcastReceiver networkReceiver;
     private ActionBarDrawerToggle toggle;
     private TextView alarmBox;
-
+    private BaseActivity baseActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(this instanceof BaseActivity) baseActivity = (BaseActivity) this;
 
         networkReceiver = new NetworkReceiver(this);
 
@@ -150,6 +154,10 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     }
 
     private void initNotificationChannel() {
+        if(!baseActivity.isContain(SETTING, NOTICE)){
+            baseActivity.setBooleanPreference(SETTING,NOTICE,true);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_LOW;
