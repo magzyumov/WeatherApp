@@ -4,11 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.location.Address;
+import android.location.Geocoder;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import ru.magzyumov.weatherapp.App;
@@ -16,6 +21,8 @@ import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel.ForecastList;
+import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
+import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel.Current;
 import ru.magzyumov.weatherapp.R;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
@@ -77,6 +84,51 @@ public class ResponseParser implements Constants {
 
             if (cfResponse.getDt() > cfResponse.getSys().getSunrise()) isDay = true;
             if (cfResponse.getDt() > cfResponse.getSys().getSunset()) isDay = false;
+
+            backImageFirst = isDay ? imagesFirst[0] : imagesFirst[1];
+            backImageSecond = getSecondPic(cfResponse.getWeather()[0].getId(), isDay);
+
+            result = new CurrentForecast(city, district, temp, tempEU, image, weather, feeling,
+                    feelingEu, windSpeed, windSpeedEU, pressure, pressureEU, humidity, humidityEu,
+                    tempForDb, date, backImageFirst, backImageSecond);
+        }
+
+        return result;
+    }
+
+    public CurrentForecast getCurrentForecast(OneCallModel response){
+
+        Current cfResponse = response.getCurrent();
+        CurrentForecast result = null;
+
+        initEU();
+
+        if (cfResponse != null) {
+            int[] imagesFirst = getImageArray(R.array.firstBackLayerPic);
+
+            int backImageFirst = 0;
+            int backImageSecond = 0;
+            boolean isDay = false;
+
+            String city = "";
+            String district = city;
+            String temp = String.valueOf((int)cfResponse.getTemp());
+            String image = String.format(IMAGE_URL,cfResponse.getWeather()[0].getIcon());
+            String weather = capitalize(cfResponse.getWeather()[0].getDescription());
+            String feeling = String.valueOf((int)cfResponse.getFeelsLike());
+            String feelingEu = tempEU;
+            String windSpeed = String.valueOf((int)cfResponse.getWindSpeed());
+            String pressure = sharedPrefSettings.getBoolean(EU,false) ?
+                    (String.valueOf((cfResponse.getPressure()))) :
+                    (String.valueOf((int)(cfResponse.getPressure() * HPA)));
+
+            String humidity = String.valueOf(cfResponse.getHumidity());
+
+            float tempForDb = (float) cfResponse.getTemp();
+            long date = cfResponse.getDt();
+
+            if (cfResponse.getDt() > cfResponse.getSunrise()) isDay = true;
+            if (cfResponse.getDt() > cfResponse.getSunset()) isDay = false;
 
             backImageFirst = isDay ? imagesFirst[0] : imagesFirst[1];
             backImageSecond = getSecondPic(cfResponse.getWeather()[0].getId(), isDay);
@@ -290,5 +342,45 @@ public class ResponseParser implements Constants {
                 break;
         }
         return result;
+    }
+
+    private String getNameCity(double latitude, double longitude) {
+        String result = null;
+
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
+                List<Address> addresses = gc.getFromLocation (latitude, longitude, 1);
+                for (Address a : addresses) {
+                    for (int i = 0; i < a.getMaxAddressLineIndex() ; i++) {
+                    }
+
+                    if (a.hasLatitude() && a.hasLongitude()) {
+                        result = a.getAddressLine(0);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    private LatLng getCoordinateCity(String nameCity) {
+        LatLng ll = null;
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
+                List<Address> addresses = gc.getFromLocationName(nameCity, 1);
+                for (Address a : addresses) {
+                    if (a.hasLatitude() && a.hasLongitude()) {
+                        ll = new LatLng(a.getLatitude(), a.getLongitude());
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ll;
     }
 }
