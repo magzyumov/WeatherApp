@@ -28,7 +28,7 @@ public class CloudMessaging extends FirebaseMessagingService implements Constant
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
                     "pushMessage")
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_app)
                     .setContentTitle(title)
                     .setContentText(text);
             NotificationManager notificationManager =
