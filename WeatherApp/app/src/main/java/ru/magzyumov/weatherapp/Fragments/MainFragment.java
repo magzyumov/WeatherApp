@@ -19,9 +19,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 
 import ru.magzyumov.weatherapp.App;
@@ -46,6 +48,7 @@ import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
     private View view;
+    private ImageView bottomSheetArrow;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
     private DailyForecastSource dailyForecast;
@@ -57,6 +60,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private AlertDialogWindow alertDialog;
     private ResponseParser responseParser;
     private PicassoLoader picassoLoader;
+    private LinearLayout bottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     public MainFragment() {
         // Required empty public constructor
@@ -85,17 +90,16 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         alertDialog = new AlertDialogWindow(getContext(), getString(R.string.messageFromServer), getString(R.string.ok));
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Активируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(true);
+
+        initBottomSheet();
 
         checkStatus();
 
-        //Иницилизируем кнопку-ссылку
         initBottomLink();
 
         return view;
@@ -274,6 +278,17 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
     }
 
+    private void initBottomSheet(){
+        bottomSheet = view.findViewById(R.id.bottom_sheet);
+
+        bottomSheetArrow = view.findViewById(R.id.imageViewDetailedData);
+        bottomSheetArrow.setOnClickListener(bottomSheetArrowClickListener);
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
+    }
+
     private void checkStatus(){
         currentLocation = locationSource.getCurrentLocation();
 
@@ -307,13 +322,44 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     }
 
-    private DialogListener dialogListener = new DialogListener() {
+    private DialogListener dialogListener =
+            new DialogListener() {
         @Override
         public void onDialogSubmit() {
             checkStatus();
         }
         public void onDialogReject() {
             // Nothing
+        }
+    };
+
+    private BottomSheetBehavior.BottomSheetCallback bottomSheetCallback =
+            new BottomSheetBehavior.BottomSheetCallback() {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            if ((newState == BottomSheetBehavior.STATE_DRAGGING)
+                    || (newState == BottomSheetBehavior.STATE_EXPANDED)) {
+                bottomSheetArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_36dp);
+            } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_black_36dp);
+            }
+        }
+
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+        }
+    };
+
+    private View.OnClickListener bottomSheetArrowClickListener =
+            new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
         }
     };
 }

@@ -11,4 +11,5 @@
     <color name="colorDarkGray">#959595</color>
     <color name="backgroundDefaultColor">#FAFAFA</color>
     <color name="backgroundNightColor">#B3AFAF</color>
+    <color name="colorAlarm">#FF0000</color>
 </resources>

@@ -9,6 +9,12 @@
     <string name="hintSearchCity">City</string>
     <string name="weatherIcon">Weather icon</string>
 
+    <string name="detailedData">Detailed data</string>
+
+    <string name= "internetConnection">Internet connection</string>
+    <string name="noInternet">Could not connect to internet!</string>
+    <string name="okInternet">Connection established!</string>
+
     <!-- EU Strings -->
     <string name="celsius" translatable="false">\u2103</string>
     <string name="fahrenheit" translatable="false">\u2109</string>
@@ -19,7 +25,6 @@
     <string name="pressEUTwo">hPa</string>
     <string name="imperial">Imperial</string>
     <string name="metric">Metric</string>
-
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

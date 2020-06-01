@@ -19,9 +19,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+    </style>
+
 
     <!-- Style for settings activity -->
     <style name="SettingsMainLinearLayout">
@@ -90,5 +93,15 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
+    <!-- No Internet Connection -->
+    <style name="noInternet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:text">@string/okInternet</item>
+    </style>
 </resources>
-
