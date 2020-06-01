@@ -24,7 +24,6 @@
         android:background="@drawable/rain_3">
 
         <LinearLayout
-            android:id="@+id/bottom_sheet_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -80,7 +79,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            app:srcCompat="@drawable/bkn_minus_ra_d_dark" />
+                            app:srcCompat="@drawable/w_02d" />
                     </LinearLayout>
 
                     <TextView
@@ -221,6 +220,6 @@
 
     </FrameLayout>
 
-</FrameLayout>
+    </FrameLayout>
     <include layout="@layout/bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

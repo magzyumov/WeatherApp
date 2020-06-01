@@ -38,7 +38,7 @@ public class NetworkReceiver extends BroadcastReceiver implements Constants {
 
             if(sharedPreferences.getBoolean(NOTICE, true)) {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "network")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_app)
                         .setContentTitle(mainActivity.getString(R.string.internetConnection))
                         .setContentText(message);
                 NotificationManager notificationManager =
