@@ -19,8 +19,6 @@ import androidx.fragment.app.Fragment;
 
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -37,9 +35,6 @@ import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.CloudMessaging.RequestSingleton;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
-
-import static ru.magzyumov.weatherapp.BuildConfig.FCM_SERVER_KEY;
-
 
 public class SendPushFragment extends Fragment implements Constants {
 
