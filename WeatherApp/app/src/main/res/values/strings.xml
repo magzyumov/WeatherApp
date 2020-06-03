@@ -37,6 +37,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search</string>
     <string name="menu_google">Google search</string>
+    <string name="menu_send_push">Send push message</string>
 
     <string name="settings_NightMode">Night Mode</string>
     <string name="settings_Notice">Notifications</string>
@@ -64,5 +65,10 @@
     <string name="loading">Loading...</string>
     <string name="ok">Ок</string>
     <string name="citySearch">City search</string>
+
+    <!-- Firebase cloud messaging window -->
+    <string name="buttonSend">Send notification</string>
+    <string name="labelTitle">Title</string>
+    <string name="labelMessage">Message</string>
 
 </resources>
