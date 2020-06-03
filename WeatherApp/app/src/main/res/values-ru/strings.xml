@@ -24,6 +24,7 @@
     <string name="menu_search">Поиск</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_google">Поиск Google</string>
+    <string name="menu_send_push">Отправить уведомление</string>
 
     <string name="settings_NightMode">Ночной режим</string>
 
@@ -56,5 +57,10 @@
     <string name="loading">Загрузка...</string>
     <string name="ok">Понятно</string>
     <string name="citySearch">Поиск города</string>
+
+    <!-- Firebase cloud messaging window -->
+    <string name="buttonSend">Отправить уведомление</string>
+    <string name="labelTitle">Заголовок</string>
+    <string name="labelMessage">Сообщение</string>
 
 </resources>

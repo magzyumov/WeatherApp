@@ -4,14 +4,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,11 +25,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
+import ru.magzyumov.weatherapp.BroadcastReceivers.BatteryReceiver;
+import ru.magzyumov.weatherapp.BroadcastReceivers.NetworkReceiver;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.HistoryFragment;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
+import ru.magzyumov.weatherapp.Fragments.SendPushFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 import ru.magzyumov.weatherapp.Database.Init.DatabaseCopier;
 import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
@@ -39,6 +41,7 @@ import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
 public class MainActivity extends BaseActivity implements FragmentChanger, NavigationView.OnNavigationItemSelectedListener{
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
     private BroadcastReceiver networkReceiver;
+    private BroadcastReceiver batteryReceiver;
     private ActionBarDrawerToggle toggle;
     private TextView alarmBox;
     private BaseActivity baseActivity;
@@ -51,6 +54,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         if(this instanceof BaseActivity) baseActivity = (BaseActivity) this;
 
         networkReceiver = new NetworkReceiver(this);
+        batteryReceiver = new BatteryReceiver(this);
 
         DatabaseCopier.getInstance(getApplicationContext());
 
@@ -65,13 +69,13 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
         initNotificationChannel();
 
-        registerNetworkReceiver();
+        registerReceivers();
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
-        unregisterNetworkReceiver();
+        unregisterReceivers();
     }
 
     @Override
@@ -115,23 +119,19 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_home) {
-            // Вынимаем из стека послдний фрагмент
             returnFragment();
         } else if (id == R.id.nav_location) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new LocationFragment(),"locationFragment", true, null);
         } else if (id == R.id.nav_history) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new HistoryFragment(),"historyFragment", true, null);
         } else if (id == R.id.nav_settings) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new SettingsFragment(),"settingsFragment", true, null);
         } else if (id == R.id.nav_google) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new PlacesFragment(),"placesFragment", true, null);
+        } else if (id == R.id.nav_send_push) {
+            changeFragment(new SendPushFragment(),"sendPushFragment", true, null);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -170,18 +170,23 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         }
     }
 
-    private void registerNetworkReceiver() {
+    private void registerReceivers() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+            IntentFilter  intentFilter = new IntentFilter();
+            intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+            intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+            intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
+            intentFilter.addAction(Intent.ACTION_BATTERY_OKAY);
+            registerReceiver(batteryReceiver, intentFilter);
         }
     }
 
-    private void unregisterNetworkReceiver() {
+    private void unregisterReceivers() {
         try {
             unregisterReceiver(networkReceiver);
+            unregisterReceiver(batteryReceiver);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

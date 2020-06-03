@@ -1,5 +1,7 @@
 package ru.magzyumov.weatherapp;
 
+import static ru.magzyumov.weatherapp.BuildConfig.FCM_SERVER_KEY;
+
 public interface Constants {
     String TAG = "WEATHER";
     String BASE_URL = "https://api.openweathermap.org/";
@@ -20,6 +22,23 @@ public interface Constants {
     String CURRENT = "current";
     String DAILY = "daily";
 
+    String TIMESTAMP_PATTERN = "dd MMMM HH:mm:ss";
+
+    // Firebase database structure
+    String PHONES = "phones";
+    String INSTALLATION = "installation";
+    String BATTERY = "battery";
+
+    // Firebase cloud messaging
+    String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
+    String SUBSCRIBE_TO = "all_users";
+    String TOPIC = "/topics/" + SUBSCRIBE_TO;
+    String contentType = "application/json";
+    String serverKey = "key=" + FCM_SERVER_KEY;
+
     float HPA = 0.75006375541921f;
+
+
+
 
 }

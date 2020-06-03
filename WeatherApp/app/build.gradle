@@ -20,6 +20,8 @@ android {
         it.buildConfigField "String", "WEATHER_API_KEY", weatherApiKey
         def placesApiKey = properties.getProperty("places_api_key", "")
         it.buildConfigField "String", "PLACES_API_KEY", placesApiKey
+        def fcmServerKey = properties.getProperty("fcm_server_key", "")
+        it.buildConfigField "String", "FCM_SERVER_KEY", fcmServerKey
     }
 
     buildTypes {
@@ -44,7 +46,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.0'
-    implementation 'com.google.android.libraries.places:places:2.2.0'
+    implementation 'com.google.android.libraries.places:places:2.3.0'
+
+    implementation 'com.android.volley:volley:1.1.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
