@@ -20,6 +20,13 @@ public interface Constants {
     String CURRENT = "current";
     String DAILY = "daily";
 
+    String TIMESTAMP_PATTERN = "dd MMMM HH:mm:ss";
+
+    // Firebase database structure
+    String PHONES = "phones";
+    String INSTALLATION = "installation";
+    String BATTERY = "battery";
+
     float HPA = 0.75006375541921f;
 
 }

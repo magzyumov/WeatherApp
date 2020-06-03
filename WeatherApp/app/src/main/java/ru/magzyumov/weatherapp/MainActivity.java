@@ -4,14 +4,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +25,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
+import ru.magzyumov.weatherapp.BroadcastReceivers.BatteryReceiver;
+import ru.magzyumov.weatherapp.BroadcastReceivers.NetworkReceiver;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.HistoryFragment;
@@ -39,6 +40,7 @@ import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
 public class MainActivity extends BaseActivity implements FragmentChanger, NavigationView.OnNavigationItemSelectedListener{
     private FragmentFinder fragmentFinder = new FragmentFinder(getSupportFragmentManager());
     private BroadcastReceiver networkReceiver;
+    private BroadcastReceiver batteryReceiver;
     private ActionBarDrawerToggle toggle;
     private TextView alarmBox;
     private BaseActivity baseActivity;
@@ -51,6 +53,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         if(this instanceof BaseActivity) baseActivity = (BaseActivity) this;
 
         networkReceiver = new NetworkReceiver(this);
+        batteryReceiver = new BatteryReceiver(this);
 
         DatabaseCopier.getInstance(getApplicationContext());
 
@@ -65,13 +68,13 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
         initNotificationChannel();
 
-        registerNetworkReceiver();
+        registerReceivers();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterNetworkReceiver();
+    protected void onStop() {
+        super.onStop();
+        unregisterReceivers();
     }
 
     @Override
@@ -170,18 +173,23 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         }
     }
 
-    private void registerNetworkReceiver() {
+    private void registerReceivers() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+            IntentFilter  intentFilter = new IntentFilter();
+            intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+            intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+            intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
+            intentFilter.addAction(Intent.ACTION_BATTERY_OKAY);
+            registerReceiver(batteryReceiver, intentFilter);
         }
     }
 
-    private void unregisterNetworkReceiver() {
+    private void unregisterReceivers() {
         try {
             unregisterReceiver(networkReceiver);
+            unregisterReceiver(batteryReceiver);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
