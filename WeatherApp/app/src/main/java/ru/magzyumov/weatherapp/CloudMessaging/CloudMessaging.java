@@ -1,4 +1,4 @@
-package ru.magzyumov.weatherapp.BroadcastReceivers;
+package ru.magzyumov.weatherapp.CloudMessaging;
 
 
 import android.app.NotificationManager;
@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -56,6 +57,7 @@ public class CloudMessaging extends FirebaseMessagingService implements Constant
 
     @Override
     public void onNewToken(String token) {
+        FirebaseMessaging.getInstance().subscribeToTopic(SUBSCRIBE_TO);
         sendRegistrationToServer(token);
     }
 

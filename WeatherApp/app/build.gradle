@@ -20,6 +20,8 @@ android {
         it.buildConfigField "String", "WEATHER_API_KEY", weatherApiKey
         def placesApiKey = properties.getProperty("places_api_key", "")
         it.buildConfigField "String", "PLACES_API_KEY", placesApiKey
+        def fcmServerKey = properties.getProperty("fcm_server_key", "")
+        it.buildConfigField "String", "FCM_SERVER_KEY", fcmServerKey
     }
 
     buildTypes {

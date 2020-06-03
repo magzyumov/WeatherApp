@@ -32,6 +32,7 @@ import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.HistoryFragment;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
+import ru.magzyumov.weatherapp.Fragments.SendPushFragment;
 import ru.magzyumov.weatherapp.Fragments.SettingsFragment;
 import ru.magzyumov.weatherapp.Database.Init.DatabaseCopier;
 import ru.magzyumov.weatherapp.Fragments.PlacesFragment;
@@ -72,8 +73,8 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         unregisterReceivers();
     }
 
@@ -118,23 +119,19 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_home) {
-            // Вынимаем из стека послдний фрагмент
             returnFragment();
         } else if (id == R.id.nav_location) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new LocationFragment(),"locationFragment", true, null);
         } else if (id == R.id.nav_history) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new HistoryFragment(),"historyFragment", true, null);
         } else if (id == R.id.nav_settings) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new SettingsFragment(),"settingsFragment", true, null);
         } else if (id == R.id.nav_google) {
-            // Выполняем транзакцию по замене фрагмента
             changeFragment(new PlacesFragment(),"placesFragment", true, null);
+        } else if (id == R.id.nav_send_push) {
+            changeFragment(new SendPushFragment(),"sendPushFragment", true, null);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
