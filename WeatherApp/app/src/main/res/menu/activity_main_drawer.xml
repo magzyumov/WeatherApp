@@ -25,7 +25,11 @@
             android:id="@+id/nav_google"
             android:icon="@drawable/ic_location_searching_black_24dp"
             android:title="@string/menu_google" />
+    </group>
 
+    <group
+        android:id="@+id/admin_zone"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_send_push"
             android:icon="@drawable/ic_send_black_24dp"
