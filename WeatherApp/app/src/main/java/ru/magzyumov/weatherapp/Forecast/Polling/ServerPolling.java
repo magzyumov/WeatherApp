@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Handler;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +19,9 @@ import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
+import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
@@ -31,6 +34,7 @@ public class ServerPolling implements Constants {
     private Context context;
     private String currentCity;
     private String currentEU;
+    private LatLng currentCoordinate;
     private SharedPreferences sharedPrefForecast;
     private SharedPreferences sharedPrefSettings;
     private Resources resources;
@@ -53,22 +57,6 @@ public class ServerPolling implements Constants {
         this.retrofitClass = new RetrofitClass(this);
     }
 
-    // Метод установки текущего города
-    public void initialize() {
-        currentLocation = locationSource.getCurrentLocation();
-        if(currentLocation != null) currentCity = currentLocation.city;
-        if (currentCity == null) currentCity = "moskwa";
-        currentEU = getDefault().getLanguage();
-    }
-
-    public void build(){
-        final Handler handler = new Handler();
-        currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
-        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
-        retrofitClass.getDailyRequest(currentCity, currentEU, handler);
-        retrofitClass.getOneCallRequest(54.734773, 55.957829,currentEU, handler);
-    }
-
     // Метод добавления подписчиков на события
     public void addListener(ForecastListener listener) {
         this.listeners.add(listener);
@@ -77,6 +65,24 @@ public class ServerPolling implements Constants {
     // Метод удаления подписчиков
     public void removeListener(ForecastListener listener) {
         this.listeners.remove(listener);
+    }
+
+    // Метод инициализации текущего города
+    public void initialize() {
+        currentLocation = locationSource.getCurrentLocation();
+        if(currentLocation != null) currentCity = currentLocation.city;
+        if (currentCity == null) currentCity = "Moskwa";
+        currentEU = getDefault().getLanguage();
+        currentCoordinate = getCoordinateCity(currentCity);
+    }
+
+    // Метод построения запросов
+    public void build(){
+        final Handler handler = new Handler();
+        currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
+        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        retrofitClass.getOneCallRequest(currentCoordinate.latitude,
+                currentCoordinate.longitude,currentEU, handler);
     }
 
     // Метод отправки сообшений подписчикам
@@ -93,29 +99,31 @@ public class ServerPolling implements Constants {
         }
     }
 
-    public void dataReady(DailyForecastSource dwRequest){
+    public void dataReady(ForecastSource hourlyForecast, ForecastSource dailyForecast){
         for (ForecastListener listener:listeners) {
-            listener.setDailyForecast(dwRequest);
+            listener.setForecast(hourlyForecast, dailyForecast);
         }
     }
 
     // Метод записи прогноза в базу
-    public void writeForecastResponseToDB(DailyForecastSource dailyForecast){
-        if(currentLocation != null){
-            currentLocation.dailyForecast = dailyForecast;
-            currentLocation.needUpdate = false;
-            locationSource.updateLocation(currentLocation);
-        }
-        writeForecastResponseToPreference(DAILY, new Gson().toJson(dailyForecast));
-    }
-
     public void writeForecastResponseToDB(CurrentForecast currentForecast){
         if(currentLocation != null){
             currentLocation.currentForecast = currentForecast;
             currentLocation.needUpdate = false;
             locationSource.updateLocation(currentLocation);
         }
-        writeForecastResponseToPreference(DAILY, new Gson().toJson(currentForecast));
+        writeForecastResponseToPreference(CURRENT, new Gson().toJson(currentForecast));
+    }
+
+    public void writeForecastResponseToDB(ForecastSource hourlyForecast, ForecastSource dailyForecast){
+        if(currentLocation != null){
+            currentLocation.hourlyForecast = hourlyForecast;
+            currentLocation.dailyForecast = dailyForecast;
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
+        writeForecastResponseToPreference(HOURLY, new Gson().toJson(hourlyForecast));
+        writeForecastResponseToPreference(DAILY, new Gson().toJson(dailyForecast));
     }
 
     private void writeForecastResponseToPreference(String tag, String data){
@@ -129,17 +137,32 @@ public class ServerPolling implements Constants {
         writeForecastResponseToDB(responseParser.getCurrentForecast(currentForecastModel));
     }
 
-    public void responsePars(DailyForecastModel dailyForecastModel){
-        dataReady(responseParser.getDailyForecast(dailyForecastModel));
-        writeForecastResponseToDB(responseParser.getDailyForecast(dailyForecastModel));
-    }
-
     public void responsePars(OneCallModel oneCallModel){
-        // TODO: По готовности расскоментировать вызов
-        //responseParser.getCurrentForecast(oneCallModel);
+        dataReady(responseParser.getHourlyForecast(oneCallModel),
+                responseParser.getDailyForecast(oneCallModel));
+        writeForecastResponseToDB(responseParser.getHourlyForecast(oneCallModel),
+                responseParser.getDailyForecast(oneCallModel));
     }
 
     public Resources getResources(){
         return this.resources;
+    }
+
+    private LatLng getCoordinateCity(String nameCity) {
+        LatLng ll = null;
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
+                List<Address> addresses = gc.getFromLocationName(nameCity, 1);
+                for (Address a : addresses) {
+                    if (a.hasLatitude() && a.hasLongitude()) {
+                        ll = new LatLng(a.getLatitude(), a.getLongitude());
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ll;
     }
 }

@@ -3,23 +3,23 @@ package ru.magzyumov.weatherapp.Forecast.Display;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DailyForecastSource implements DailyForecastDataSource {
-    private List<DailyForecast> dataSource;
+public class ForecastSource implements ForecastDataSource {
+    private List<Forecast> dataSource;
 
-    public DailyForecastSource(int length){
+    public ForecastSource(int length){
         setDataSource(new ArrayList<>(length));
     }
 
-    public List<DailyForecast> getDataSource() {
+    public List<Forecast> getDataSource() {
         return dataSource;
     }
 
-    public void setDataSource(List<DailyForecast> dataSource) {
+    public void setDataSource(List<Forecast> dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public DailyForecast getDailyForecast(int position) {
+    public Forecast getForecast(int position) {
         return dataSource.get(position);
     }
 

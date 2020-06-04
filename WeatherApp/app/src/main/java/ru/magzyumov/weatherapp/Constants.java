@@ -20,6 +20,7 @@ public interface Constants {
 
     String FORECAST = "forecast";
     String CURRENT = "current";
+    String HOURLY = "hourly";
     String DAILY = "daily";
 
     String TIMESTAMP_PATTERN = "dd MMMM HH:mm:ss";

@@ -1,8 +1,7 @@
 package ru.magzyumov.weatherapp.Forecast.Display;
 
-public class DailyForecast {
+public class Forecast {
     private String date;
-    private String dayName;
     private String image;
     private String temp;
     private String windSpeed;
@@ -12,11 +11,10 @@ public class DailyForecast {
     private String pressEU;
     private String windSpeedEU;
 
-    public DailyForecast (String date, String dayName, String image,
-                          int temp, int windSpeed, int pressure, int humidity,
-                          String tempEU, String pressEU, String windSpeedEU){
+    public Forecast(String date, String image, int temp, int windSpeed,
+                    int pressure, int humidity, String tempEU,
+                    String pressEU, String windSpeedEU){
         this.date = date;
-        this.dayName = dayName;
         this.image = image;
         this.temp = String.valueOf(temp);
         this.windSpeed = String.valueOf(windSpeed);
@@ -29,10 +27,6 @@ public class DailyForecast {
 
     public String getDate() {
         return date;
-    }
-
-    public String getDayName() {
-        return dayName;
     }
 
     public String getImage() {

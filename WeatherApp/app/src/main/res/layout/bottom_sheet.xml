@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@android:color/darker_gray"
     android:orientation="vertical"
     app:behavior_hideable="false"
@@ -22,17 +22,29 @@
             android:id="@+id/imageViewDetailedData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.9"
-            android:contentDescription="@string/detailedData"
+            android:layout_weight="0.25"
             app:srcCompat="@drawable/ic_keyboard_arrow_up_black_36dp"
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
+            android:id="@+id/textViewByHours"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.15"
             android:gravity="center"
-            android:text="@string/detailedData"
+            android:textStyle="bold"
+            android:text="@string/by_hours"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textViewByDays"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:text="@string/by_days"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>
@@ -41,6 +53,16 @@
         android:id="@+id/daily_forecast_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_forecast" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hourly_forecast_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_forecast" />
 
 </LinearLayout>

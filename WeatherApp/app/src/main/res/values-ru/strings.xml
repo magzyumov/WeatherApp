@@ -10,7 +10,8 @@
     <string name="hintSearchCity">Город</string>
     <string name="weatherIcon">Иконка погоды</string>
 
-    <string name="detailedData">Подробные данные</string>
+    <string name="by_days">ПО ДНЯМ</string>
+    <string name="by_hours">ПО ЧАСАМ</string>
 
     <string name = "internetConnection">Интернет соединение</string>
     <string name="noInternet">Нет интернет соединения!</string>

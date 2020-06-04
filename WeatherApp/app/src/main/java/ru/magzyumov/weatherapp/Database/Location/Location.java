@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import ru.magzyumov.weatherapp.Database.Location.Converters.CurrentForecastConverter;
-import ru.magzyumov.weatherapp.Database.Location.Converters.DailyForecastConverter;
+import ru.magzyumov.weatherapp.Database.Location.Converters.ForecastConverter;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
+import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 
 // @Entity - это признак табличного объекта, то есть объект будет сохраняться
 // в базе данных в виде строки
@@ -50,8 +50,13 @@ public class Location {
     @ColumnInfo(name = "currentForecast")
     public CurrentForecast currentForecast;
 
-    // Последний текущий прогноз для этого города
-    @TypeConverters(DailyForecastConverter.class)
+    // Последний часовой прогноз для этого города
+    @TypeConverters(ForecastConverter.class)
+    @ColumnInfo(name = "hourlyForecast")
+    public ForecastSource hourlyForecast;
+
+    // Последний дневной прогноз для этого города
+    @TypeConverters(ForecastConverter.class)
     @ColumnInfo(name = "dailyForecast")
-    public DailyForecastSource dailyForecast;
+    public ForecastSource dailyForecast;
 }

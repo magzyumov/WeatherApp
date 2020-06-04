@@ -13,7 +13,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
 import ru.magzyumov.weatherapp.R;
 
@@ -69,35 +68,6 @@ public class RetrofitClass implements Constants {
                 });
     }
 
-    public void getDailyRequest(String city, String units, Handler handler){
-
-        String lang = getDefault().getLanguage();
-
-        openWeather.loadDailyWeather(city, units, lang, keyApi)
-                .enqueue(new Callback<DailyForecastModel>() {
-                    @Override
-                    public void onResponse(Call<DailyForecastModel> call, Response<DailyForecastModel> response) {
-                        if(response.isSuccessful()){
-                            if(response.body() != null){
-                                handler.post(() -> serverPolling.responsePars(response.body()));
-                            }
-                        } else {
-                            if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
-                                handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.cityNotFound)));
-                            } else if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED){
-                                handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.invalidKey)));
-                            } else {
-                                handler.post(() -> serverPolling.showMsgToListeners(response.message()));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DailyForecastModel> call, Throwable t) {
-                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
-                    }
-                });
-    }
 
     public void getOneCallRequest(double latitude, double longitude, String units, Handler handler){
 

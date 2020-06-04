@@ -19,10 +19,10 @@ import java.util.Locale;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel;
-import ru.magzyumov.weatherapp.Forecast.Model.DailyForecastModel.ForecastList;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel.Current;
+import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel.Daily;
+import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel.Hourly;
 import ru.magzyumov.weatherapp.R;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
@@ -32,7 +32,6 @@ public class ResponseParser implements Constants {
     private Resources resources;
     private SharedPreferences sharedPrefSettings;
     private CurrentForecastModel currentForecastModel;
-    private DailyForecastModel dailyForecastModel;
     private String tempEU;
     private String pressureEU;
     private String windSpeedEU;
@@ -142,57 +141,18 @@ public class ResponseParser implements Constants {
     }
 
     public CurrentForecast getCurrentForecast(String response){
-        CurrentForecast result = null;
-        CurrentForecastModel cfResponse = gson.fromJson(response, CurrentForecastModel.class);
-
         initEU();
 
-        if (cfResponse != null) {
-            int[] imagesFirst = getImageArray(R.array.firstBackLayerPic);
-
-            int backImageFirst = 0;
-            int backImageSecond = 0;
-            boolean isDay = false;
-
-            String city = cfResponse.getName();
-            String district = cfResponse.getName();
-            String temp = String.valueOf((int)cfResponse.getMain().getTemp());
-            String image = String.format(IMAGE_URL,cfResponse.getWeather()[0].getIcon());
-            String weather = capitalize(cfResponse.getWeather()[0].getDescription());
-            String feeling = String.valueOf((int)cfResponse.getMain().getFeels_like());
-            String feelingEu = tempEU;
-            String windSpeed = String.valueOf((int)cfResponse.getWind().getSpeed());
-
-            String pressure = sharedPrefSettings.getBoolean(EU,false) ?
-                    (String.valueOf((cfResponse.getMain().getPressure()))) :
-                    (String.valueOf((int)(cfResponse.getMain().getPressure() * HPA)));
-
-            String humidity = String.valueOf(cfResponse.getMain().getHumidity());
-
-            float tempForDb = cfResponse.getMain().getTemp();
-            long date = cfResponse.getDt();
-
-            if (cfResponse.getDt() > cfResponse.getSys().getSunrise()) isDay = true;
-            if (cfResponse.getDt() > cfResponse.getSys().getSunset()) isDay = false;
-
-            backImageFirst = isDay ? imagesFirst[0] : imagesFirst[1];
-            backImageSecond = getSecondPic(cfResponse.getWeather()[0].getId(), isDay);
-
-            result = new CurrentForecast(city, district, temp, tempEU, image, weather, feeling,
-                    feelingEu, windSpeed, windSpeedEU, pressure, pressureEU, humidity, humidityEu,
-                    tempForDb, date, backImageFirst, backImageSecond);
-        }
-
-        return result;
+        return gson.fromJson(response, CurrentForecast.class);
     }
 
-    public DailyForecastSource getDailyForecast(DailyForecastModel dfResponse){
-        DailyForecastSource result = null;
+    public ForecastSource getDailyForecast(OneCallModel response){
+        Daily[] dfResponse = response.getDaily();
+        ForecastSource result = null;
 
         initEU();
 
         String date;
-        String dayName;
         String image;
         int temp;
         int windSpeed;
@@ -200,84 +160,78 @@ public class ResponseParser implements Constants {
         int humidity;
 
         if(dfResponse != null){
-            result = new DailyForecastSource(dfResponse.getList().length);
+            result = new ForecastSource(dfResponse.length);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
 
             Calendar calendar = Calendar.getInstance();
 
-            // Берем изображения из ресурсов
-            int[] pictures = getImageArray(R.array.weather_images_daily);
-
-            for (ForecastList list : dfResponse.getList()) {
+            for (Daily list : dfResponse) {
                 calendar.setTimeInMillis(list.getDt()*1000L);
                 date = dateFormat.format(calendar.getTime());
-                dayName = dayFormat.format(calendar.getTime());
-                dayName = capitalize(dayName);
 
                 image = String.format(IMAGE_URL, list.getWeather()[0].getIcon());
-                temp = (int)list.getMain().getTemp();
-                windSpeed = (int)list.getWind().getSpeed();
+                temp = (int)list.getTemp().getDay();
+                windSpeed = (int)list.getWindSpeed();
 
                 pressure = sharedPrefSettings.getBoolean(EU,false) ?
-                        (list.getMain().getPressure()) :
-                        (int)(list.getMain().getPressure() * HPA);
+                        (int)(list.getPressure()) :
+                        (int)(list.getPressure() * HPA);
 
-                humidity = list.getMain().getHumidity();
+                humidity = (int)list.getHumidity();
 
-                result.getDataSource().add(new DailyForecast(date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
+                result.getDataSource().add(new Forecast(date, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
             }
         }
-
         return result;
     }
 
-    public DailyForecastSource getDailyForecast(String response){
-        DailyForecastSource result = null;
+    public ForecastSource getDailyForecast(String response){
+        return gson.fromJson(response, ForecastSource.class);
+    }
+
+    public ForecastSource getHourlyForecast(OneCallModel response){
+        Hourly[] dfResponse = response.getHourly();
+        ForecastSource result = null;
+
+        initEU();
 
         String date;
-        String dayName;
         String image;
         int temp;
         int windSpeed;
         int pressure;
         int humidity;
 
-        DailyForecastModel dfResponse = gson.fromJson(response, DailyForecastModel.class);
-
         if(dfResponse != null){
-            result = new DailyForecastSource(dfResponse.getList().length);
+            result = new ForecastSource(dfResponse.length);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
             Calendar calendar = Calendar.getInstance();
 
-            // Берем изображения из ресурсов
-            int[] pictures = getImageArray(R.array.weather_images_daily);
-
-            for (ForecastList list : dfResponse.getList()) {
+            for (Hourly list : dfResponse) {
                 calendar.setTimeInMillis(list.getDt()*1000L);
                 date = dateFormat.format(calendar.getTime());
-                dayName = dayFormat.format(calendar.getTime());
-                dayName = capitalize(dayName);
 
                 image = String.format(IMAGE_URL, list.getWeather()[0].getIcon());
-                temp = (int)list.getMain().getTemp();
-                windSpeed = (int)list.getWind().getSpeed();
+                temp = (int)list.getTemp();
+                windSpeed = (int)list.getWindSpeed();
 
                 pressure = sharedPrefSettings.getBoolean(EU,false) ?
-                        (list.getMain().getPressure()) :
-                        (int)(list.getMain().getPressure() * HPA);
+                        (int)(list.getPressure()) :
+                        (int)(list.getPressure() * HPA);
 
-                humidity = list.getMain().getHumidity();
+                humidity = (int)list.getHumidity();
 
-                result.getDataSource().add(new DailyForecast (date, dayName, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
+                result.getDataSource().add(new Forecast(date, image, temp, windSpeed, pressure, humidity, tempEU, pressureEU, windSpeedEU));
             }
         }
-
         return result;
+    }
+
+    public ForecastSource getHourlyForecast(String response){
+        return gson.fromJson(response, ForecastSource.class);
     }
 
     // Механизм вытаскивания идентификаторов картинок (к сожалению просто массив не работает)

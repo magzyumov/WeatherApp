@@ -5,41 +5,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
 
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
 
-public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdapter.ViewHolder> implements Constants {
-    private DailyForecastDataSource dataSource;
-    private OnItemClickListener itemClickListener;
+public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> implements Constants {
+    private ForecastDataSource dataSource;
 
-    public DailyForecastAdapter(DailyForecastDataSource dataSource){
+    public ForecastAdapter(ForecastDataSource dataSource){
         this.dataSource = dataSource;
     }
 
     @NonNull
     @Override
-    public DailyForecastAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ForecastAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_forecast, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        if (itemClickListener != null) {
-            viewHolder.setOnClickListener(itemClickListener);
-        }
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DailyForecastAdapter.ViewHolder viewHolder, int position) {
-        DailyForecast dailyForecast = dataSource.getDailyForecast(position);
-        viewHolder.setData(dailyForecast.getDate(), dailyForecast.getDayName(), dailyForecast.getImage(),
-                dailyForecast.getTemp(), dailyForecast.getTempEU(),
-                dailyForecast.getWindSpeed(), dailyForecast.getWindSpeedEU(),
-                dailyForecast.getPressure(), dailyForecast.getPressureEU(),
-                dailyForecast.getHumidity());
+    public void onBindViewHolder(@NonNull ForecastAdapter.ViewHolder viewHolder, int position) {
+        Forecast forecast = dataSource.getForecast(position);
+        viewHolder.setData(forecast.getDate(), forecast.getImage(),
+                forecast.getTemp(), forecast.getTempEU(),
+                forecast.getWindSpeed(), forecast.getWindSpeedEU(),
+                forecast.getPressure(), forecast.getPressureEU(),
+                forecast.getHumidity());
     }
 
     @Override
@@ -47,20 +42,9 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
         return dataSource.size();
     }
 
-    //Интерфейс для обработки нажатий как в ListView
-    public interface OnItemClickListener{
-        void onItemClick(View view, int position);
-    }
-
-    //Сеттер слушателя нажатий
-    public void setOnItemClickListener(OnItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private PicassoLoader picassoLoader;
         private TextView textViewDate;
-        private TextView textViewDayName;
         private ImageView imageViewWeather;
         private TextView textViewTemp;
         private TextView textViewTempEU;
@@ -74,7 +58,6 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
             super(itemView);
             picassoLoader = new PicassoLoader();
             textViewDate = itemView.findViewById(R.id.textViewDate);
-            textViewDayName = itemView.findViewById(R.id.textViewDayName);
             imageViewWeather = itemView.findViewById(R.id.imageViewWeather);
             textViewTemp = itemView.findViewById(R.id.textViewTemp);
             textViewTempEU = itemView.findViewById(R.id.textViewTempEU);
@@ -83,36 +66,13 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
             textViewWindSpeed = itemView.findViewById(R.id.textViewWindSpeed);
             textViewWindSpeedEU = itemView.findViewById(R.id.textViewWindSpeedEU);
             textViewHumidity = itemView.findViewById(R.id.textViewHumidity);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(itemClickListener != null){
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
-                }
-            });
         }
 
-        public void setOnClickListener(final OnItemClickListener listener){
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Получаем позицию адаптера
-                    int adapterPosition = getAdapterPosition();
-                    // Проверяем ее на корректность
-                    if (adapterPosition == RecyclerView.NO_POSITION) return;
-                    listener.onItemClick(v, adapterPosition);
-                }
-            });
-        }
-
-        public void setData(String date, String dayName, String picture, String temp,
+        public void setData(String date, String picture, String temp,
                             String tempEU, String windSpeed, String windSpeedEU,
                             String pressure, String pressureEU, String humidity){
 
             getTextViewDate().setText(date);
-            getTextViewDayName().setText(dayName);
             picassoLoader.load(picture, getImageViewWeather());
             getTextViewTemp().setText(temp);
             getTextViewTempEU().setText(tempEU);
@@ -124,8 +84,6 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
         }
 
         public TextView getTextViewDate() { return textViewDate; }
-
-        public TextView getTextViewDayName() { return textViewDayName; }
 
         public ImageView getImageViewWeather() { return imageViewWeather; }
 

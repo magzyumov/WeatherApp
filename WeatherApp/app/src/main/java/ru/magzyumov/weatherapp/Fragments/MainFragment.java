@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,8 @@ import android.widget.ImageView;
 
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.snackbar.Snackbar;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
@@ -34,34 +31,39 @@ import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.Dialog.DialogListener;
 import ru.magzyumov.weatherapp.Dialog.BottomFragmentDialog;
 import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastSource;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Display.ForecastAdapter;
+import ru.magzyumov.weatherapp.Forecast.Display.ForecastDataSource;
+import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.PicassoLoader;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Forecast.Display.DailyForecastAdapter;
 import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
-    private View view;
-    private ImageView bottomSheetArrow;
     private FragmentChanger fragmentChanger;
     private BaseActivity baseActivity;
-    private DailyForecastSource dailyForecast;
+    private View view;
+    private ImageView bottomSheetArrow;
+    private TextView textViewByDays;
+    private TextView textViewByHours;
     private CurrentForecast currentForecast;
+    private ForecastSource dailyForecast;
+    private ForecastSource hourlyForecast;
+    private Location currentLocation;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
-    private Location currentLocation;
     private ServerPolling serverPolling;
-    private AlertDialogWindow alertDialog;
     private ResponseParser responseParser;
     private PicassoLoader picassoLoader;
     private LinearLayout bottomSheet;
     private BottomSheetBehavior bottomSheetBehavior;
+    private RecyclerView hourlyRecyclerView;
+    private RecyclerView dailyRecyclerView;
+    private AlertDialogWindow alertDialog;
 
     public MainFragment() {
         // Required empty public constructor
@@ -96,9 +98,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         fragmentChanger.setDrawerIndicatorEnabled(true);
 
-        initBottomSheet();
-
         checkStatus();
+
+        initBottomSheet();
 
         initBottomLink();
 
@@ -122,8 +124,10 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     @Override
-    public void setDailyForecast(DailyForecastSource dailyForecast) {
+    public void setForecast(ForecastSource hourlyForecast, ForecastSource dailyForecast) {
         this.dailyForecast = dailyForecast;
+        this.hourlyForecast = hourlyForecast;
+        setHourlyForecast();
         setDailyForecast();
     }
 
@@ -134,13 +138,12 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     @Override
     public void initListener() {
-        // Обновляем прогноз
-        setDailyForecast();
-
-        // Обновляем данные в верхнней части
         setCurrentForecast();
 
-        // Обновляем задний фон
+        setHourlyForecast();
+
+        setDailyForecast();
+
         setBackground();
     }
 
@@ -155,19 +158,29 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     @Override
     public void onDetach() {
         super.onDetach();
+        view = null;
         fragmentChanger = null;
         baseActivity = null;
         dailyForecast = null;
+        hourlyForecast = null;
         currentForecast = null;
         serverPolling = null;
         locationDao = null;
         locationSource = null;
         alertDialog = null;
         picassoLoader = null;
+        bottomSheetArrow = null;
+        textViewByDays = null;
+        textViewByHours = null;
+        currentLocation = null;
+        picassoLoader = null;
+        bottomSheet = null;
+        bottomSheetBehavior = null;
+        hourlyRecyclerView = null;
+        dailyRecyclerView = null;
     }
 
     private void setCurrentForecast(){
-
         // Вставляем данные в поля
         TextView currentCity = view.findViewById(R.id.textViewCity);
         currentCity.setText(currentForecast.getCity());
@@ -222,38 +235,47 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         textViewCurrentEU.setText(currentForecast.getTempEu());
     }
 
+    private void setHourlyForecast() {
+
+        ForecastDataSource sourceData = hourlyForecast;
+
+        hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
+        hourlyRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        hourlyRecyclerView.setLayoutManager(layoutManager);
+
+        ForecastAdapter adapter = new ForecastAdapter(sourceData);
+        hourlyRecyclerView.setAdapter(adapter);
+
+        // Добавим разделитель карточек
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                hourlyRecyclerView.getContext(), layoutManager.getOrientation());
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
+        if(hourlyRecyclerView.getItemDecorationCount() == 0) hourlyRecyclerView.addItemDecoration(itemDecoration);
+    }
+
     private void setDailyForecast() {
 
-        DailyForecastDataSource sourceData = dailyForecast;
+        ForecastDataSource sourceData = dailyForecast;
 
-        RecyclerView dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
+        dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         dailyRecyclerView.setLayoutManager(layoutManager);
 
-        DailyForecastAdapter adapter = new DailyForecastAdapter(sourceData);
+        ForecastAdapter adapter = new ForecastAdapter(sourceData);
         dailyRecyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
-        DividerItemDecoration itemDecoration = new DividerItemDecoration( getContext(), LinearLayoutManager.VERTICAL);
+
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                dailyRecyclerView.getContext(), layoutManager.getOrientation());
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
         if(dailyRecyclerView.getItemDecorationCount() == 0) dailyRecyclerView.addItemDecoration(itemDecoration);
-
-        //Установка слушателя
-        adapter.setOnItemClickListener(new DailyForecastAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Snackbar.make(view, String.format("Данные за %s недоступны!", ((TextView)view.findViewById(R.id.textViewDate)).getText()),Snackbar.LENGTH_LONG)
-                        .setAction( "OK" , new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast. makeText (getContext(), "Кнопка в Snackbar нажата" ,
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }).show();
-            }
-        });
     }
 
     private void setBackground(){
@@ -263,6 +285,26 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         FrameLayout secondLayout = view.findViewById(R.id.secondLayer);
         secondLayout.setBackgroundResource(currentForecast.getBackImageSecond());
+    }
+
+    private void initBottomSheet(){
+        bottomSheet = view.findViewById(R.id.bottom_sheet);
+
+        bottomSheetArrow = view.findViewById(R.id.imageViewDetailedData);
+        bottomSheetArrow.setOnClickListener(bottomSheetArrowClickListener);
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
+
+        textViewByHours = view.findViewById(R.id.textViewByHours);
+        textViewByHours.setOnClickListener(textViewByHoursClickListener);
+
+        textViewByDays = view.findViewById(R.id.textViewByDays);
+        textViewByDays.setOnClickListener(textViewByDaysClickListener);
+
+        textViewByDays.setTextColor(getResources().getColor(R.color.colorBlack));
+        hourlyRecyclerView.setVisibility(View.GONE);
     }
 
     private void initBottomLink(){
@@ -278,17 +320,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
     }
 
-    private void initBottomSheet(){
-        bottomSheet = view.findViewById(R.id.bottom_sheet);
-
-        bottomSheetArrow = view.findViewById(R.id.imageViewDetailedData);
-        bottomSheetArrow.setOnClickListener(bottomSheetArrowClickListener);
-
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
-    }
-
     private void checkStatus(){
         currentLocation = locationSource.getCurrentLocation();
 
@@ -301,17 +332,18 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
             // Смотрим есть ли данные в SharedPreference
             String previousForecastCurrent = baseActivity.getStringPreference(FORECAST, CURRENT);
             String previousForecastDaily = baseActivity.getStringPreference(FORECAST, DAILY);
+            String previousForecastHourly = baseActivity.getStringPreference(FORECAST, HOURLY);
 
             // Смотрим, есть ли данные по этому городу в базе
             if ((currentLocation.currentForecast != null) & (currentLocation.dailyForecast != null)){
-                //currentForecast = responseParser.getCurrentForecast(currentLocation.currentForecast);
-                //dailyForecast = responseParser.getDailyForecast(currentLocation.dailyForecast);
                 currentForecast = currentLocation.currentForecast;
+                hourlyForecast = currentLocation.hourlyForecast;
                 dailyForecast = currentLocation.dailyForecast;
                 initListener();
             } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
                 // Если данных нет в базе забираем данные с SharedPreference прошлого города
                 currentForecast = responseParser.getCurrentForecast(previousForecastCurrent);
+                hourlyForecast = responseParser.getHourlyForecast(previousForecastHourly);
                 dailyForecast = responseParser.getDailyForecast(previousForecastDaily);
                 initListener();
             }
@@ -362,6 +394,28 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
             }
         }
     };
+
+    private TextView.OnClickListener textViewByHoursClickListener =
+            new TextView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textViewByHours.setTextColor(getResources().getColor(R.color.colorBlack));
+                    textViewByDays.setTextColor(getResources().getColor(R.color.colorWhite));
+                    hourlyRecyclerView.setVisibility(View.VISIBLE);
+                    dailyRecyclerView.setVisibility(View.GONE);
+                }
+            };
+
+    private TextView.OnClickListener textViewByDaysClickListener =
+            new TextView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textViewByDays.setTextColor(getResources().getColor(R.color.colorBlack));
+                    textViewByHours.setTextColor(getResources().getColor(R.color.colorWhite));
+                    hourlyRecyclerView.setVisibility(View.GONE);
+                    dailyRecyclerView.setVisibility(View.VISIBLE);
+                }
+            };
 }
 
 

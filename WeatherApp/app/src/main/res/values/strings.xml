@@ -9,7 +9,8 @@
     <string name="hintSearchCity">City</string>
     <string name="weatherIcon">Weather icon</string>
 
-    <string name="detailedData">Detailed data</string>
+    <string name="by_days">BY DAYS</string>
+    <string name="by_hours">BY HOURS</string>
 
     <string name= "internetConnection">Internet connection</string>
     <string name="noInternet">Could not connect to internet!</string>
