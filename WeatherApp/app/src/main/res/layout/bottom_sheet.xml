@@ -27,17 +27,6 @@
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
-            android:id="@+id/textViewByHours"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.15"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="@string/by_hours"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
             android:id="@+id/textViewByDays"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -45,6 +34,17 @@
             android:gravity="center"
             android:text="@string/by_days"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textViewByHours"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/by_hours"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>

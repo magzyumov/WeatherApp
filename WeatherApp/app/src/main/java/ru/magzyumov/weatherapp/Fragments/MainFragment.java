@@ -240,6 +240,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         ForecastDataSource sourceData = hourlyForecast;
 
         hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
+        hourlyRecyclerView.setVisibility(View.GONE);
         hourlyRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -304,7 +305,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         textViewByDays.setOnClickListener(textViewByDaysClickListener);
 
         textViewByDays.setTextColor(getResources().getColor(R.color.colorBlack));
-        hourlyRecyclerView.setVisibility(View.GONE);
     }
 
     private void initBottomLink(){
