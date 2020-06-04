@@ -25,6 +25,7 @@ import ru.magzyumov.weatherapp.CloudMessaging.Model.DataModel;
 import ru.magzyumov.weatherapp.CloudMessaging.Model.NotificationModel;
 import ru.magzyumov.weatherapp.CloudMessaging.Model.RootModel;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 
 public class SendPushFragment extends Fragment implements Constants {
@@ -36,6 +37,7 @@ public class SendPushFragment extends Fragment implements Constants {
     private EditText edtTitle;
     private EditText edtMessage;
     private ApiClient apiClient;
+    private AlertDialogWindow alertDialog;
 
     public SendPushFragment() {
         // Required empty public constructor
@@ -53,6 +55,9 @@ public class SendPushFragment extends Fragment implements Constants {
         super.onCreate(bundle);
 
         apiClient = new ApiClient();
+
+        alertDialog = new AlertDialogWindow(requireContext(),
+                getString(R.string.menu_send_push), getString(R.string.ok));
 
         setHasOptionsMenu(true);
     }
@@ -131,12 +136,12 @@ public class SendPushFragment extends Fragment implements Constants {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Log.e(TAG,"Successfully notification send by using retrofit.");
+                alertDialog.show("Success!");
             }
 
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-
+                alertDialog.show(t.getLocalizedMessage());
             }
         });
     }
