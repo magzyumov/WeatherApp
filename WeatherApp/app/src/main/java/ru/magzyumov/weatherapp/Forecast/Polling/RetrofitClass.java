@@ -31,7 +31,7 @@ public class RetrofitClass implements Constants {
         this.keyApi = WEATHER_API_KEY;
         this.serverPolling = serverPolling;
         this.retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(WEATHER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         this.openWeather = retrofit.create(OpenWeather.class);

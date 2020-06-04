@@ -11,28 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import java.util.HashMap;
-import java.util.Map;
-
+import okhttp3.ResponseBody;
+import retrofit2.Callback;
 import ru.magzyumov.weatherapp.BaseActivity;
 
-import ru.magzyumov.weatherapp.CloudMessaging.RequestSingleton;
+import ru.magzyumov.weatherapp.CloudMessaging.ApiClient;
+import ru.magzyumov.weatherapp.CloudMessaging.ApiInterface;
+import ru.magzyumov.weatherapp.CloudMessaging.Model.DataModel;
+import ru.magzyumov.weatherapp.CloudMessaging.Model.NotificationModel;
+import ru.magzyumov.weatherapp.CloudMessaging.Model.RootModel;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.R;
 
@@ -44,6 +35,7 @@ public class SendPushFragment extends Fragment implements Constants {
     private FragmentChanger fragmentChanger;
     private EditText edtTitle;
     private EditText edtMessage;
+    private ApiClient apiClient;
 
     public SendPushFragment() {
         // Required empty public constructor
@@ -59,6 +51,8 @@ public class SendPushFragment extends Fragment implements Constants {
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
+
+        apiClient = new ApiClient();
 
         setHasOptionsMenu(true);
     }
@@ -89,10 +83,12 @@ public class SendPushFragment extends Fragment implements Constants {
         super.onDetach();
 
         // Освободдаем ресурсы
+        view = null;
         fragmentChanger = null;
         baseActivity = null;
         edtTitle = null;
         edtMessage = null;
+        apiClient = null;
     }
 
     private void initView(){
@@ -115,50 +111,33 @@ public class SendPushFragment extends Fragment implements Constants {
         btnSend.setOnClickListener(sendButtonListener);
     }
 
-    private void sendNotification(JSONObject notification) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API_URL, notification,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(TAG, "onResponse: " + response.toString());
-                        edtTitle.setText("");
-                        edtMessage.setText("");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireContext(), "Request error", Toast.LENGTH_LONG).show();
-                        Log.e(TAG, "onErrorResponse: Didn't work");
-                        Log.e(TAG, serverKey);
-                    }
-                }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Authorization", serverKey);
-                params.put("Content-Type", contentType);
-                return params;
-            }
-        };
-        RequestSingleton.getInstance(requireContext()).addToRequestQueue(jsonObjectRequest);
-    }
-
     private View.OnClickListener sendButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            JSONObject notification = new JSONObject();
-            JSONObject notifcationBody = new JSONObject();
-            try {
-                notifcationBody.put("title", edtTitle.getText().toString());
-                notifcationBody.put("body", edtMessage.getText().toString());
-
-                notification.put("to", TOPIC);
-                notification.put("notification", notifcationBody);
-            } catch (JSONException e) {
-                Log.e(TAG, "onCreate: " + e.getMessage() );
-            }
-            sendNotification(notification);
+            sendNotificationToUser(TOPIC);
+            edtTitle.setText("");
+            edtMessage.setText("");
         }
     };
+
+    private void sendNotificationToUser(String token) {
+        RootModel rootModel = new RootModel(token,
+                new NotificationModel(edtTitle.getText().toString(), edtMessage.getText().toString()),
+                new DataModel("Name", "30"));
+
+        ApiInterface apiService =  apiClient.getClient().create(ApiInterface.class);
+        retrofit2.Call<ResponseBody> responseBodyCall = apiService.sendNotification(rootModel);
+
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                Log.e(TAG,"Successfully notification send by using retrofit.");
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
 }

@@ -4,7 +4,8 @@ import static ru.magzyumov.weatherapp.BuildConfig.FCM_SERVER_KEY;
 
 public interface Constants {
     String TAG = "WEATHER";
-    String BASE_URL = "https://api.openweathermap.org/";
+    String WEATHER_BASE_URL = "https://api.openweathermap.org/";
+    String FCM_BASE_URL = "https://fcm.googleapis.com/";
     String IMAGE_URL = "https://openweathermap.org/img/wn/%s@4x.png";
 
     String PROVIDER_URL = "https://openweathermap.org/";
