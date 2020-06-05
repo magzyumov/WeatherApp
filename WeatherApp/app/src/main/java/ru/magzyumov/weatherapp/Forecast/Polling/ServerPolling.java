@@ -26,6 +26,7 @@ import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
+import ru.magzyumov.weatherapp.R;
 
 import static java.util.Locale.getDefault;
 
@@ -70,10 +71,13 @@ public class ServerPolling implements Constants {
     // Метод инициализации текущего города
     public void initialize() {
         currentLocation = locationSource.getCurrentLocation();
-        if(currentLocation != null) currentCity = currentLocation.city;
-        if (currentCity == null) currentCity = "Moskwa";
+        currentCity = (currentLocation != null) ? currentLocation.city : DEFAULT_CITY;
         currentEU = getDefault().getLanguage();
-        currentCoordinate = getCoordinateCity(currentCity);
+        if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
+            showMsgToListeners(currentCity + " " + getResources().getString(R.string.cityNotFound));
+            currentCoordinate = DEFAULT_COORDINATE;
+            currentCity = DEFAULT_CITY;
+        }
     }
 
     // Метод построения запросов
@@ -149,20 +153,20 @@ public class ServerPolling implements Constants {
     }
 
     private LatLng getCoordinateCity(String nameCity) {
-        LatLng ll = null;
+        LatLng result = null;
         if (Geocoder.isPresent()) {
             try {
                 Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
                 List<Address> addresses = gc.getFromLocationName(nameCity, 1);
                 for (Address a : addresses) {
                     if (a.hasLatitude() && a.hasLongitude()) {
-                        ll = new LatLng(a.getLatitude(), a.getLongitude());
+                        result = new LatLng(a.getLatitude(), a.getLongitude());
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return ll;
+        return result;
     }
 }

@@ -18,6 +18,16 @@ import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 
 public class Location {
 
+    public Location(double latitude, double longitude, String city, String region){
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.city = city;
+        this.region = region;
+        this.isCurrent = true;
+        this.isSearched = true;
+        this.needUpdate = true;
+    }
+
     // @PrimaryKey - указывает на ключевую запись,
     // autoGenerate = true - автоматическая генерация ключа
     @PrimaryKey(autoGenerate = true)
@@ -32,6 +42,14 @@ public class Location {
     // Название города
     @ColumnInfo(name = "city")
     public String city;
+
+    // Широта
+    @ColumnInfo(name = "latitude")
+    public double latitude;
+
+    // Долгота
+    @ColumnInfo(name = "longitude")
+    public double longitude;
 
     // Флаг о том, что данная локация текущая
     @ColumnInfo(name = "isCurrent")

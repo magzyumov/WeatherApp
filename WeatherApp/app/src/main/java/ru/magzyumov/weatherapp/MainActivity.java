@@ -29,6 +29,7 @@ import ru.magzyumov.weatherapp.BroadcastReceivers.BatteryReceiver;
 import ru.magzyumov.weatherapp.BroadcastReceivers.NetworkReceiver;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
+import ru.magzyumov.weatherapp.Fragments.GeoMapFragment;
 import ru.magzyumov.weatherapp.Fragments.HistoryFragment;
 import ru.magzyumov.weatherapp.Fragments.LocationFragment;
 import ru.magzyumov.weatherapp.Fragments.MainFragment;
@@ -132,6 +133,8 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
             changeFragment(new PlacesFragment(),"placesFragment", true, null);
         } else if (id == R.id.nav_send_push) {
             changeFragment(new SendPushFragment(),"sendPushFragment", true, null);
+        } else if (id == R.id.nav_geomap) {
+            changeFragment(new GeoMapFragment(),"geoMapFragment", true, null);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

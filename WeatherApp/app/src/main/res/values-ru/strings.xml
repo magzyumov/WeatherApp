@@ -26,6 +26,7 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_google">Поиск Google</string>
     <string name="menu_send_push">Отправить уведомление</string>
+    <string name="menu_geomap">Геолокация</string>
 
     <string name="settings_NightMode">Ночной режим</string>
 
@@ -56,12 +57,17 @@
     <string name="unknownCity">Неизвестный город</string>
     <string name="invalidKey">Неверный ключ приложения!</string>
     <string name="loading">Загрузка...</string>
-    <string name="ok">Понятно</string>
+    <string name="ok">Хорошо</string>
+    <string name="no">Нет</string>
     <string name="citySearch">Поиск города</string>
 
     <!-- Firebase cloud messaging window -->
     <string name="buttonSend">Отправить уведомление</string>
     <string name="labelTitle">Заголовок</string>
     <string name="labelMessage">Сообщение</string>
+
+    <!-- Geomap Fragment Strings -->
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
 
 </resources>

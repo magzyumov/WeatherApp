@@ -11,8 +11,16 @@ public class PhoneClass {
     private String isCharging;
     private String usbCharge;
     private String acCharge;
+    private String latitude;
+    private String longitude;
 
     public PhoneClass() {
+    }
+
+    public PhoneClass(String latitude, String longitude, String timeStamp) {
+        this.setLatitude(latitude);
+        this.setLongitude(longitude);
+        this.setTimeStamp(timeStamp);
     }
 
     public PhoneClass(String id, String timeStamp, String osVersion,
@@ -93,4 +101,12 @@ public class PhoneClass {
     public void setAcCharge(boolean acCharge) {
         this.acCharge = String.valueOf(acCharge);
     }
+
+    public String getLatitude() { return latitude; }
+
+    public void setLatitude(String latitude) { this.latitude = latitude; }
+
+    public String getLongitude() { return longitude; }
+
+    public void setLongitude(String longitude) { this.longitude = longitude; }
 }

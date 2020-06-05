@@ -103,7 +103,6 @@ public class PlacesFragment extends Fragment implements Constants,
                 FirebasePlace location = new FirebasePlace(place.getId(), place.getName(), place.getAddress(),
                         String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
 
-                //mDatabase.child("locations").child(key).setValue(location);
                 mDatabase.child("locations").child(place.getId()).setValue(location);
                 fragmentChanger.returnFragment();
             }

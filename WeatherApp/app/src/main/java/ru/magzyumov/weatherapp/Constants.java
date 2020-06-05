@@ -1,5 +1,7 @@
 package ru.magzyumov.weatherapp;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import static ru.magzyumov.weatherapp.BuildConfig.FCM_SERVER_KEY;
 
 public interface Constants {
@@ -18,6 +20,8 @@ public interface Constants {
     String LOCATION = "location";
     String CURRENT_CITY = "current_city";
     String SEARCH_HISTORY = "search_history";
+    String DEFAULT_CITY = "Moskwa";
+    LatLng DEFAULT_COORDINATE = new LatLng(55.753960,37.620393);
 
     String FORECAST = "forecast";
     String CURRENT = "current";
@@ -30,6 +34,7 @@ public interface Constants {
     String PHONES = "phones";
     String INSTALLATION = "installation";
     String BATTERY = "battery";
+    String POSITION = "position";
 
     // Firebase cloud messaging
     String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
@@ -40,6 +45,8 @@ public interface Constants {
 
     float HPA = 0.75006375541921f;
 
+    // Geolocation
+    int GEO_PERMISSION_REQUEST_CODE = 10;
 
 
 
