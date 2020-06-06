@@ -40,6 +40,7 @@
     <string name="menu_google">Google search</string>
     <string name="menu_send_push">Send push message</string>
     <string name="menu_geomap">Geolocation</string>
+    <string name="menu_members">Members</string>
 
     <string name="settings_NightMode">Night Mode</string>
     <string name="settings_Notice">Notifications</string>

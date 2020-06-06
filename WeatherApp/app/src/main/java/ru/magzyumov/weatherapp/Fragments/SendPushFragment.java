@@ -97,14 +97,10 @@ public class SendPushFragment extends Fragment implements Constants {
     }
 
     private void initView(){
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_send_push));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_send_push));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
     }
 

@@ -35,14 +35,10 @@ public class SettingsFragment extends Fragment implements Constants {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_settings));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_settings));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
 
         //Инициализируем переключатели
@@ -70,7 +66,6 @@ public class SettingsFragment extends Fragment implements Constants {
     public void onDestroy() {
         super.onDestroy();
 
-        // Скрываем кнопку назад
         fragmentChanger.showBackButton(false);
     }
 
@@ -78,7 +73,6 @@ public class SettingsFragment extends Fragment implements Constants {
     public void onDetach() {
         super.onDetach();
 
-        // Освобождаем ресурсы
         view = null;
         fragmentChanger = null;
         baseActivity = null;

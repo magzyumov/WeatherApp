@@ -16,9 +16,9 @@ import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 // indices указывает на индексы в таблице
 @Entity(indices = {@Index(value = {"region", "city"})})
 
-public class Location {
+public class Locations {
 
-    public Location(double latitude, double longitude, String city, String region){
+    public Locations(double latitude, double longitude, String city, String region){
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;

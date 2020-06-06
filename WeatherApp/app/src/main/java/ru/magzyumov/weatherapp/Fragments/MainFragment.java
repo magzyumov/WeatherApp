@@ -39,7 +39,7 @@ import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 
@@ -53,7 +53,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private CurrentForecast currentForecast;
     private ForecastSource dailyForecast;
     private ForecastSource hourlyForecast;
-    private Location currentLocation;
+    private Locations currentLocation;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
     private ServerPolling serverPolling;
@@ -111,9 +111,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
     }
 
     @Override

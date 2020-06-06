@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +29,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Firebase.PhoneClass;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 
@@ -89,7 +97,6 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
 
         // Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_geomap));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_geomap));
 
         // Показываем кнопку назад
         fragmentChanger.showBackButton(true);
@@ -158,13 +165,10 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == GEO_PERMISSION_REQUEST_CODE) {   // Запрошенный нами
-            // Permission
+        if (requestCode == GEO_PERMISSION_REQUEST_CODE) {
             if (grantResults.length == 2 &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
                             grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-                // Все препоны пройдены и пермиссия дана
-                // Запросим координаты
                 requestLocation();
             }
         }
@@ -176,6 +180,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         textLongitude = view.findViewById(R.id.editLng);
         textAddress = view.findViewById(R.id.textAddress);
         initSearchByAddress();
+        view.findViewById(R.id.buttonDetect).setOnClickListener(v -> requestLocation());
     }
 
     // Добавляем метки на карту
@@ -222,6 +227,21 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
                 }).start();
             }
         });
+    }
+
+    private String getNameCity(LatLng location) {
+        String result = null;
+
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
+                List<Address> addresses = gc.getFromLocation (location.latitude, location.longitude, 1);
+                result = addresses.get(0).getAddressLine(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     // Получаем адрес по координатам
@@ -288,10 +308,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         }
     }
 
-    // Запрашиваем Permission’ы для геолокации
     private void requestLocationPermissions() {
         if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE)) {
-            // Запрашиваем эти два Permission’а у пользователя
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -317,6 +335,14 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
             LatLng currentPosition = new LatLng(lat, lng);
             currentMarker.setPosition(currentPosition);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, (float)12));
+
+            Locations currentLocation = locationSource.getLocationById(0);
+            currentLocation.city = "";
+            locationSource.updateLocation(currentLocation);
+
+            getAddress(latLng);
+
+            writePositionToFirebase(latitude, longitude);
         }
 
         @Override
@@ -351,8 +377,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         @Override
         public void onClick(DialogInterface dialog, int which) {
             Locations location = new Locations(coordinateFound.latitude,
-                    coordinateFound.longitude, cityFound, null);
-            Locations currentLocation = (Locations) locationSource.getCurrentLocation();
+                    coordinateFound.longitude, null, cityFound);
+            Locations currentLocation = locationSource.getCurrentLocation();
             if (currentLocation != null){
                 currentLocation.isCurrent = false;
                 locationSource.updateLocation(currentLocation);
@@ -361,4 +387,16 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
             fragmentChanger.returnFragment();
         }
     };
+
+    private void writePositionToFirebase(String latitude, String longitude){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_PATTERN, Locale.getDefault());
+        Date date = new Date();
+
+        String id = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String timeStamp = dateFormat.format(date);
+
+        DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
+        PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
+        firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition);
+    }
 }

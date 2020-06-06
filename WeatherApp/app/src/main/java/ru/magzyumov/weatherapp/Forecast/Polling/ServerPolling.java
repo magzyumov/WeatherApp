@@ -22,7 +22,7 @@ import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
@@ -41,7 +41,7 @@ public class ServerPolling implements Constants {
     private Resources resources;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
-    private Location currentLocation;
+    private Locations currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
     private ResponseParser responseParser;
     private RetrofitClass retrofitClass;

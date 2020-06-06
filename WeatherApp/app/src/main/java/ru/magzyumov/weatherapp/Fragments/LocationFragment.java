@@ -187,14 +187,10 @@ public class LocationFragment extends Fragment implements Constants,
 
     // Небольшие приготовления View
     private void initView(){
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
     }
 }

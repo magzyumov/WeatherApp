@@ -13,6 +13,13 @@ public interface OpenWeather {
                                            @Query("lang") String lang,
                                            @Query("appId") String keyApi);
 
+    @GET("data/2.5/weather")
+    Call<CurrentForecastModel> loadCurrentWeather(@Query("lat") double latitude,
+                                                  @Query("lon") double longitude,
+                                                  @Query("units") String units,
+                                                  @Query("lang") String lang,
+                                                  @Query("appId") String keyApi);
+
     @GET("data/2.5/onecall")
     Call<OneCallModel> loadOneCallWeather(@Query("lat") double latitude,
                                           @Query("lon") double longitude,

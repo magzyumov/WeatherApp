@@ -17,7 +17,7 @@ public class PhoneClass {
     public PhoneClass() {
     }
 
-    public PhoneClass(String latitude, String longitude, String timeStamp) {
+    public PhoneClass(String timeStamp, String latitude, String longitude) {
         this.setLatitude(latitude);
         this.setLongitude(longitude);
         this.setTimeStamp(timeStamp);
