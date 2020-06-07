@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -62,11 +60,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     private Marker currentMarker;
     private GoogleMap mMap;
     private View view;
-    private String cityFound;
-    private LatLng coordinateFound;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
-    private List<Marker> markers;
     private AlertDialogWindow alertDialog;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
@@ -110,9 +105,6 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         // Показываем кнопку назад
         fragmentChanger.showBackButton(true);
 
-        // Инициализация маркеров
-        markers = new ArrayList<Marker>();
-
         // Инициализируем Alert
         alertDialog = new AlertDialogWindow(requireContext(), getString(R.string.menu_geomap),
                 getString(R.string.no), getString(R.string.ok), positiveButtonListener);
@@ -145,7 +137,6 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         view = null;
         fragmentChanger = null;
         baseActivity = null;
-        markers =  null;
         alertDialog = null;
         textAddress = null;
         positiveButtonListener = null;
@@ -153,16 +144,15 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         mapLongClickListener = null;
         locationDao = null;
         locationSource = null;
-        coordinateFound = null;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng sydney = new LatLng(-34, 151);
-        currentMarker = mMap.addMarker(new MarkerOptions().position(sydney).title("Текущая позиция"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng moscow = new LatLng(55.753960, 37.620393);
+        currentMarker = mMap.addMarker(new MarkerOptions().position(moscow));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(moscow));
 
         mMap.setOnMapLongClickListener(mapLongClickListener);
     }
@@ -184,54 +174,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         textLatitude = view.findViewById(R.id.editLat);
         textLongitude = view.findViewById(R.id.editLng);
         textAddress = view.findViewById(R.id.textAddress);
-        initSearchByAddress();
         view.findViewById(R.id.buttonDetect).setOnClickListener(v -> requestLocation());
-    }
-
-    // Добавляем метки на карту
-    private void addMarker(LatLng location){
-        String title = Integer.toString(markers.size());
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title));
-        markers.add(marker);
-    }
-
-    private void initSearchByAddress() {
-        final EditText textSearch = view.findViewById(R.id.searchAddress);
-        view.findViewById(R.id.buttonSearch).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Geocoder geocoder = new Geocoder(requireContext());
-                final String searchText = textSearch.getText().toString();
-                // Операция получения занимает некоторое время и работает по
-                // интернету. Поэтому её необходимо запускать в отдельном потоке
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // Получаем координаты по адресу
-                            List<Address> addresses = geocoder.getFromLocationName(searchText, 1);
-                            if (addresses.size() > 0){
-                                final LatLng location = new LatLng(addresses.get(0).getLatitude(),
-                                        addresses.get(0).getLongitude());
-                                baseActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(location)
-                                                .title(searchText));
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float)15));
-                                    }
-                                });
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-        });
     }
 
     private void getNameCity(LatLng location) {
@@ -242,7 +185,14 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
                         location.longitude, 1);
                 handler.post(() -> writePositionToDB(location.latitude,
                         location.longitude, addresses.get(0).getAddressLine(0)));
-                handler.post(() -> cityFound = addresses.get(0).getAddressLine(0));
+
+                handler.post(() -> alertDialog.show(String.format(getString(R.string.geoSearch),
+                        addresses.get(0).getAddressLine(0), String.valueOf(location.latitude),
+                        String.valueOf(location.longitude))));
+
+                handler.post(() -> textLatitude.setText(Double.toString(location.latitude)));
+                handler.post(() -> textLongitude.setText(Double.toString(location.longitude)));
+                handler.post(() -> textAddress.setText(addresses.get(0).getAddressLine(0)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -265,8 +215,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
 
     // Запрашиваем координаты
     private void requestLocation() {
-        // Если Permission’а всё- таки нет, просто выходим: приложение не имеет
-        // смысла
+        // Если Permission’а всё- таки нет, просто выходим: приложение не имеет смысла
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;
@@ -275,22 +224,15 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 
-        // Получаем наиболее подходящий провайдер геолокации по критериям.
-        // Но определить, какой провайдер использовать, можно и самостоятельно.
-        // В основном используются LocationManager.GPS_PROVIDER или
-        // LocationManager.NETWORK_PROVIDER, но можно использовать и
-        // LocationManager.PASSIVE_PROVIDER - для получения координат в
-        // пассивном режиме
         String provider = locationManager.getBestProvider(criteria, true);
         if (provider != null) {
-            // Будем получать геоположение через каждые 10 секунд или каждые
-            // 10 метров
-            locationManager.requestLocationUpdates(provider, 5000, 10, locationListener);
+            locationManager.requestLocationUpdates(provider, 10000, 10, locationListener);
         }
     }
 
     private void requestLocationPermissions() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) ||
+                !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -303,15 +245,13 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            double lat = location.getLatitude(); // Широта
+            double lat = location.getLatitude();
             String latitude = Double.toString(lat);
             textLatitude.setText(latitude);
 
-            double lng = location.getLongitude(); // Долгота
+            double lng = location.getLongitude();
             String longitude = Double.toString(lng);
             textLongitude.setText(longitude);
-
-            String accuracy = Float.toString(location.getAccuracy());   // Точность
 
             LatLng currentPosition = new LatLng(lat, lng);
             currentMarker.setPosition(currentPosition);
@@ -342,9 +282,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
             new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
-            coordinateFound = latLng;
             geoMapThreads.postTask(GEOMAP, () -> getNameCity(latLng));
-            alertDialog.show("Определить погоду в " + cityFound + " ?");
         }
     };
 

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,15 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +28,6 @@ import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Firebase.Installation;
 import ru.magzyumov.weatherapp.Database.Firebase.Position;
-import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 
 
@@ -145,7 +139,7 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
                             name = installation.getName();
                         }
                     }
-                    if(location!= null && name != null) addMarker(location, name);
+                    if(location != null && name != null) addMarker(location, name);
                 }
                 if(members != null){
                     if(members.size()>0) mMap.moveCamera(CameraUpdateFactory.newLatLng(members.get(0)));

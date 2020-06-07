@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.database.DatabaseReference;
@@ -397,7 +395,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         String provider = locationManager.getBestProvider(criteria, true);
         if (provider != null) {
-            locationManager.requestLocationUpdates(provider, 5000, 10, locationListener);
+            locationManager.requestLocationUpdates(provider, 10000, 10, locationListener);
         }
     }
 
@@ -411,7 +409,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void requestLocationPermissions() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) ||
+                !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,

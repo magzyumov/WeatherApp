@@ -147,7 +147,7 @@ public class LocationFragment extends Fragment implements Constants,
         String region = textViewRegion.getText().toString();
 
         if(region.equals("")){
-            alertDialog.show("Текущее местоположение не определено");
+            alertDialog.show(getString(R.string.locationNotFound));
             return;
         }
 
