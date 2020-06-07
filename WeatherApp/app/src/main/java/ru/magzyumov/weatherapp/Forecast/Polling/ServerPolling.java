@@ -83,7 +83,7 @@ public class ServerPolling implements Constants {
     public void build(){
         final Handler handler = new Handler();
         currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
-        if(currentLocation.id == 0){
+        if((currentLocation != null) ? (currentLocation.id == 0) : false){
             currentCoordinate = new LatLng(currentLocation.latitude, currentLocation.longitude);
             retrofitClass.getCurrentRequest(currentLocation.latitude, currentLocation.longitude,
                     currentEU, handler);
