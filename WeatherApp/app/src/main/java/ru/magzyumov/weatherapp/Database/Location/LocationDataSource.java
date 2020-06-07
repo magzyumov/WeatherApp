@@ -15,13 +15,13 @@ public interface LocationDataSource {
     // для отображения истории
     long getCountHistoryLocations();
 
-    List<Location> getHistoryLocations();
+    List<Locations> getHistoryLocations();
 
     // Добавляем местоположение
-    void addLocation(Location location);
+    void addLocation(Locations location);
 
     // Заменяем местоположение
-    void updateLocation(Location location);
+    void updateLocation(Locations location);
 
     // Удаляем местоположение из базы
     public void removeLocation(long id);
@@ -34,12 +34,15 @@ public interface LocationDataSource {
 
     // Устанвливаем местоположение текущим
     void setLocationCurrent(String region, String city, boolean needUpdate);
-    void setLocationCurrent(Location futureLocation, boolean needUpdate);
+    void setLocationCurrent(Locations futureLocation, boolean needUpdate);
 
     // Устанвливаем местоположение участвующим в истории поиска
     void setLocationSearched(String region, String city, boolean isSearched);
-    void setLocationSearched(Location futureLocation, boolean isSearched);
+    void setLocationSearched(Locations futureLocation, boolean isSearched);
 
     //Получаем текущее местоположение из базы
-    Location getCurrentLocation();
+    Locations getCurrentLocation();
+
+    //Получаем локацию по id
+    Locations getLocationById(long id);
 }

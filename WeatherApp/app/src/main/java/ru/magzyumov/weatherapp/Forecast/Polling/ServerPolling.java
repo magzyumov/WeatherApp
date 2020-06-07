@@ -22,10 +22,11 @@ import ru.magzyumov.weatherapp.Forecast.Display.CurrentForecast;
 import ru.magzyumov.weatherapp.Forecast.Display.ForecastSource;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
-import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
+import ru.magzyumov.weatherapp.R;
 
 import static java.util.Locale.getDefault;
 
@@ -40,7 +41,7 @@ public class ServerPolling implements Constants {
     private Resources resources;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
-    private Location currentLocation;
+    private Locations currentLocation;
     private List<ForecastListener> listeners = new ArrayList<>();
     private ResponseParser responseParser;
     private RetrofitClass retrofitClass;
@@ -70,17 +71,25 @@ public class ServerPolling implements Constants {
     // Метод инициализации текущего города
     public void initialize() {
         currentLocation = locationSource.getCurrentLocation();
-        if(currentLocation != null) currentCity = currentLocation.city;
-        if (currentCity == null) currentCity = "Moskwa";
+        currentCity = (currentLocation != null) ? currentLocation.city : DEFAULT_CITY;
         currentEU = getDefault().getLanguage();
-        currentCoordinate = getCoordinateCity(currentCity);
+        if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
+            currentCoordinate = DEFAULT_COORDINATE;
+            currentCity = DEFAULT_CITY;
+        }
     }
 
     // Метод построения запросов
     public void build(){
         final Handler handler = new Handler();
         currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
-        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        if((currentLocation != null) ? (currentLocation.id == 0) : false){
+            currentCoordinate = new LatLng(currentLocation.latitude, currentLocation.longitude);
+            retrofitClass.getCurrentRequest(currentLocation.latitude, currentLocation.longitude,
+                    currentEU, handler);
+        } else {
+            retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        }
         retrofitClass.getOneCallRequest(currentCoordinate.latitude,
                 currentCoordinate.longitude,currentEU, handler);
     }
@@ -149,20 +158,20 @@ public class ServerPolling implements Constants {
     }
 
     private LatLng getCoordinateCity(String nameCity) {
-        LatLng ll = null;
+        LatLng result = null;
         if (Geocoder.isPresent()) {
             try {
                 Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
                 List<Address> addresses = gc.getFromLocationName(nameCity, 1);
                 for (Address a : addresses) {
                     if (a.hasLatitude() && a.hasLongitude()) {
-                        ll = new LatLng(a.getLatitude(), a.getLongitude());
+                        result = new LatLng(a.getLatitude(), a.getLongitude());
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return ll;
+        return result;
     }
 }

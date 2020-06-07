@@ -26,7 +26,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private LocationDataSource dataSource;
     // Позиция в списке, на которой было нажато меню
     private long menuPosition;
-    private Location pressedLocation;       // Локация на которой было нажато меню
+    private Locations pressedLocation;       // Локация на которой было нажато меню
     private SimpleDateFormat dateFormat;
     private Calendar calendar;
     private OnItemClickListener itemClickListener;
@@ -61,8 +61,8 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Заполняем данными записи на экране
-        List<Location> locations = dataSource.getHistoryLocations();
-        Location location = locations.get(position);
+        List<Locations> locations = dataSource.getHistoryLocations();
+        Locations location = locations.get(position);
         calendar.setTimeInMillis(location.currentForecast.getDate()*1000L);
         holder.textViewDate.setText(dateFormat.format(calendar.getTime()));
         holder.textViewCity.setText(location.city);
@@ -92,7 +92,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
     public long getMenuPosition() { return menuPosition; }
 
-    public Location getPressedLocation() {return pressedLocation; }
+    public Locations getPressedLocation() {return pressedLocation; }
 
     //Интерфейс для обработки нажатий как в ListView
     public interface OnItemClickListener{

@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_location_on_black_24dp"
             android:title="@string/menu_location" />
         <item
+            android:id="@+id/nav_geomap"
+            android:icon="@drawable/ic_map_black_24dp"
+            android:title="@string/menu_geomap" />
+        <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/menu_history" />
@@ -20,7 +24,6 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/menu_settings" />
-
         <item
             android:id="@+id/nav_google"
             android:icon="@drawable/ic_location_searching_black_24dp"
@@ -34,6 +37,12 @@
             android:id="@+id/nav_send_push"
             android:icon="@drawable/ic_send_black_24dp"
             android:title="@string/menu_send_push" />
+
+        <item
+            android:id="@+id/nav_members"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/menu_members" />
+
     </group>
 </menu>
 

@@ -11,7 +11,7 @@ public class LocationSource implements LocationDataSource {
     private final LocationDao locationDao;
 
     // Буфер с данными: сюда будем подкачивать данные из БД
-    private List<Location> locations;
+    private List<Locations> locations;
 
     public LocationSource(LocationDao locationDao){
         this.locationDao = locationDao;
@@ -19,7 +19,7 @@ public class LocationSource implements LocationDataSource {
     }
 
     // Получить все местоположения
-    public List<Location> getLocations(){
+    public List<Locations> getLocations(){
         // Если объекты еще не загружены, загружаем их.
         // Это сделано для того, чтобы не делать запросы к БД каждый раз
         if (locations == null){
@@ -44,19 +44,19 @@ public class LocationSource implements LocationDataSource {
         return locationDao.getCountHistoryLocations(true);
     }
 
-    public List<Location> getHistoryLocations(){
+    public List<Locations> getHistoryLocations(){
         return locationDao.getSearchedLocations(true);
     }
 
     // Добавляем местоположение
-    public void addLocation(Location location){
+    public void addLocation(Locations location){
         locationDao.insertLocation(location);
         // После изменения БД надо повторно прочесть данные из буфера
         loadLocations();
     }
 
     // Заменяем местоположение
-    public void updateLocation(Location location){
+    public void updateLocation(Locations location){
         locationDao.updateLocation(location);
         loadLocations();
     }
@@ -72,7 +72,7 @@ public class LocationSource implements LocationDataSource {
         List<Map<String, String>> result = new ArrayList<>();
         Map<String, String> city;
 
-        for (Location location : locations) {
+        for (Locations location : locations) {
             city = new HashMap<>();
             city.put("Region", location.region);
             city.put("City", location.city);
@@ -86,7 +86,7 @@ public class LocationSource implements LocationDataSource {
         List<Map<String, String>> result = new ArrayList<>();
         Map<String, String> city;
 
-        for (Location location : locations) {
+        for (Locations location : locations) {
             if(location.isSearched){
                 city = new HashMap<>();
                 city.put("Region", location.region);
@@ -102,7 +102,7 @@ public class LocationSource implements LocationDataSource {
         // Сначала снимаем флаг текущего города
         // и удаляем прогноз
         // у старого местоположения
-        Location currentLocation = locationDao.getCurrentLocation(true);
+        Locations currentLocation = locationDao.getCurrentLocation(true);
         if (currentLocation != null){
             //currentLocation.currentForecast = null;
             //currentLocation.dailyForecast = null;
@@ -111,20 +111,20 @@ public class LocationSource implements LocationDataSource {
         }
 
         // Теперь выставляем флаг у нового
-        Location futureLocation = locationDao.getLocationByCityName(region, city);
+        Locations futureLocation = locationDao.getLocationByCityName(region, city);
         futureLocation.isCurrent = true;
         futureLocation.needUpdate = needUpdate;
         updateLocation(futureLocation);
     }
 
-    public void setLocationCurrent(Location futureLocation, boolean needUpdate){
+    public void setLocationCurrent(Locations futureLocation, boolean needUpdate){
         // Сначала снимаем флаг текущего города
         // и удаляем прогноз
         // у старого местоположения
-        Location currentLocation = locationDao.getCurrentLocation(true);
+        Locations currentLocation = locationDao.getCurrentLocation(true);
         if (currentLocation != null){
-            currentLocation.currentForecast = null;
-            currentLocation.dailyForecast = null;
+            //currentLocation.currentForecast = null;
+            //currentLocation.dailyForecast = null;
             currentLocation.isCurrent = false;
             updateLocation(currentLocation);
         }
@@ -138,18 +138,23 @@ public class LocationSource implements LocationDataSource {
     // Устанвливаем местоположение
     // участвующим в истории поиска
     public void setLocationSearched(String region, String city, boolean isSearched){
-        Location searchedLocation = locationDao.getLocationByCityName(region, city);
+        Locations searchedLocation = locationDao.getLocationByCityName(region, city);
         searchedLocation.isSearched = isSearched;
         updateLocation(searchedLocation);
     }
 
-    public void setLocationSearched(Location futureLocation, boolean isSearched){
+    public void setLocationSearched(Locations futureLocation, boolean isSearched){
         futureLocation.isSearched = isSearched;
         updateLocation(futureLocation);
     }
 
     //Получаем текущее местоположение из базы
-    public Location getCurrentLocation(){
+    public Locations getCurrentLocation(){
         return locationDao.getCurrentLocation(true);
+    }
+
+    //Получаем локацию по id
+    public Locations getLocationById(long id){
+        return locationDao.getLocationById(id);
     }
 }

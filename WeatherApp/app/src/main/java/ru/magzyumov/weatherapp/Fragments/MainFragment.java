@@ -1,16 +1,27 @@
 package ru.magzyumov.weatherapp.Fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.provider.Settings;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +32,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Firebase.PhoneClass;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.Dialog.DialogListener;
@@ -38,10 +59,13 @@ import ru.magzyumov.weatherapp.Forecast.Display.PicassoLoader;
 import ru.magzyumov.weatherapp.Forecast.Polling.ForecastListener;
 import ru.magzyumov.weatherapp.Forecast.Polling.ServerPolling;
 import ru.magzyumov.weatherapp.Forecast.Display.ResponseParser;
+import ru.magzyumov.weatherapp.GeoMapThreads;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Database.Location.Location;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 public class MainFragment extends Fragment implements Constants, ForecastListener {
     private FragmentChanger fragmentChanger;
@@ -53,7 +77,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private CurrentForecast currentForecast;
     private ForecastSource dailyForecast;
     private ForecastSource hourlyForecast;
-    private Location currentLocation;
+    private Locations currentLocation;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
     private ServerPolling serverPolling;
@@ -64,6 +88,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private RecyclerView hourlyRecyclerView;
     private RecyclerView dailyRecyclerView;
     private AlertDialogWindow alertDialog;
+    private Handler handler;
+    private GeoMapThreads geoMapThreads;
 
     public MainFragment() {
         // Required empty public constructor
@@ -85,6 +111,10 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         serverPolling = new ServerPolling(getContext());
         picassoLoader = new PicassoLoader();
 
+        // Инициализируем поток для определения координат
+        geoMapThreads = new GeoMapThreads(GEOMAP);
+        handler = new Handler();
+
         // Подписываеся на опросчика погодного сервера
         serverPolling.addListener(this);
 
@@ -97,6 +127,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
 
         fragmentChanger.setDrawerIndicatorEnabled(true);
+
+        requestPermissions();
 
         checkStatus();
 
@@ -111,9 +143,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.app_name));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.app_name));
     }
 
     @Override
@@ -196,7 +226,8 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
-        currentDistrict.setText(currentForecast.getCity());
+        //currentDistrict.setText(currentForecast.getCity());
+        if (currentLocation!= null) currentDistrict.setText(currentLocation.region);
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
         textViewCurrent.setText(currentForecast.getTemp());
@@ -354,6 +385,75 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     }
 
+    private void requestLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            return;
+        LocationManager locationManager = (LocationManager) requireContext().getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+
+        String provider = locationManager.getBestProvider(criteria, true);
+        if (provider != null) {
+            locationManager.requestLocationUpdates(provider, 10000, 10, locationListener);
+        }
+    }
+
+    private void requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            requestLocation();
+        } else {
+            requestLocationPermissions();
+        }
+    }
+
+    private void requestLocationPermissions() {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) ||
+                !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    },
+                    GEO_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void writePositionToFirebase(String latitude, String longitude){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_PATTERN, Locale.getDefault());
+        Date date = new Date();
+
+        String id = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String timeStamp = dateFormat.format(date);
+
+        DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
+        PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
+        firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition.getPosition());
+    }
+
+    private void writePositionToDB(double latitude, double longitude, String location){
+        Locations currentLocation = locationSource.getLocationById(0);
+        currentLocation.region = location;
+        currentLocation.latitude = latitude;
+        currentLocation.longitude = longitude;
+        locationSource.updateLocation(currentLocation);
+    }
+
+    private void getNameCity(LatLng location) {
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder geocoder = new Geocoder(requireContext());
+                List<Address> addresses = geocoder.getFromLocation (location.latitude,
+                        location.longitude, 1);
+                if(addresses.size()>0) handler.post(() -> writePositionToDB(location.latitude,
+                        location.longitude, addresses.get(0).getAddressLine(0)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private DialogListener dialogListener =
             new DialogListener() {
         @Override
@@ -416,6 +516,40 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
                     dailyRecyclerView.setVisibility(View.VISIBLE);
                 }
             };
+
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            double lat = location.getLatitude();
+            String latitude = Double.toString(lat);
+
+            double lng = location.getLongitude();
+            String longitude = Double.toString(lng);
+
+            LatLng currentPosition = new LatLng(lat, lng);
+
+            geoMapThreads.postTask(GEOMAP, () -> getNameCity(currentPosition));
+
+            writePositionToFirebase(latitude, longitude);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+
+
 }
 
 

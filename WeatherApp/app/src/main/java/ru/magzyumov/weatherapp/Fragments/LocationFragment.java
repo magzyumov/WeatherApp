@@ -146,6 +146,11 @@ public class LocationFragment extends Fragment implements Constants,
         String city = textViewCity.getText().toString();
         String region = textViewRegion.getText().toString();
 
+        if(region.equals("")){
+            alertDialog.show(getString(R.string.locationNotFound));
+            return;
+        }
+
         searchView.setQuery(city,true);
         locationSource.setLocationSearched(region, city, true);
         locationSource.setLocationCurrent(region, city, true);
@@ -187,14 +192,10 @@ public class LocationFragment extends Fragment implements Constants,
 
     // Небольшие приготовления View
     private void initView(){
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
     }
 }

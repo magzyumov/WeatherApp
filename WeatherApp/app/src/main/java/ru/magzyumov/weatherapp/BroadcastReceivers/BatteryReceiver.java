@@ -54,7 +54,7 @@ public class BatteryReceiver extends BroadcastReceiver implements Constants {
 
         firebaseDB = FirebaseDatabase.getInstance().getReference();
         PhoneClass phoneState = new PhoneClass(timeStamp, isCharging, usbCharge, acCharge, batteryLevel);
-        firebaseDB.child(PHONES).child(id).child(BATTERY).setValue(phoneState);
+        firebaseDB.child(PHONES).child(id).child(BATTERY).setValue(phoneState.getBattery());
     }
 
     private String batteryLevel(Intent battery){

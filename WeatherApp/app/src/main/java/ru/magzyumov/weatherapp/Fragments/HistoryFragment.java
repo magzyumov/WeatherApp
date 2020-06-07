@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.R;
-import ru.magzyumov.weatherapp.Database.Location.Location;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
 import ru.magzyumov.weatherapp.Database.Location.LocationRecyclerAdapter;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
@@ -115,7 +115,7 @@ public class HistoryFragment extends Fragment implements Constants {
                                 locationRecyclerAdapter.notifyDataSetChanged();
                                 return true;
                             case R.id.clear_context:
-                                for (Location locationForUnSearch : locationSource.getHistoryLocations()) {
+                                for (Locations locationForUnSearch : locationSource.getHistoryLocations()) {
                                     locationSource.setLocationSearched(locationForUnSearch, false);
                                 }
                                 locationRecyclerAdapter.notifyDataSetChanged();
@@ -142,12 +142,12 @@ public class HistoryFragment extends Fragment implements Constants {
         int id = item.getItemId();
         switch (id) {
             case R.id.remove_context:
-                Location location = locationRecyclerAdapter.getPressedLocation();
+                Locations location = locationRecyclerAdapter.getPressedLocation();
                 locationSource.setLocationSearched(location.region, location.city, false);
                 locationRecyclerAdapter.notifyDataSetChanged();
                 return true;
             case R.id.clear_context:
-                for (Location locationForUnSearch : locationSource.getHistoryLocations()) {
+                for (Locations locationForUnSearch : locationSource.getHistoryLocations()) {
                     locationSource.setLocationSearched(locationForUnSearch, false);
                 }
                 locationRecyclerAdapter.notifyDataSetChanged();
@@ -179,14 +179,10 @@ public class HistoryFragment extends Fragment implements Constants {
 
     // Небольшие приготовления View
     private void initView(){
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_history));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_history));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
     }
 

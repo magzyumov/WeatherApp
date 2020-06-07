@@ -68,6 +68,35 @@ public class RetrofitClass implements Constants {
                 });
     }
 
+    public void getCurrentRequest(double latitude, double longitude, String units, Handler handler){
+
+        String lang = getDefault().getLanguage();
+
+        openWeather.loadCurrentWeather(latitude, longitude, units, lang, keyApi)
+                .enqueue(new Callback<CurrentForecastModel>() {
+                    @Override
+                    public void onResponse(Call<CurrentForecastModel> call, Response<CurrentForecastModel> response) {
+                        if(response.isSuccessful()){
+                            if(response.body() != null){
+                                handler.post(() -> serverPolling.responsePars(response.body()));
+                            }
+                        } else {
+                            if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
+                                handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.cityNotFound)));
+                            } else if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED){
+                                handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.invalidKey)));
+                            } else {
+                                handler.post(() -> serverPolling.showMsgToListeners(response.message()));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
+                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
+                    }
+                });
+    }
 
     public void getOneCallRequest(double latitude, double longitude, String units, Handler handler){
 

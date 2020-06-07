@@ -19,7 +19,6 @@ import android.widget.SearchView;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -33,6 +32,7 @@ import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Firebase.FirebasePlace;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
@@ -103,7 +103,15 @@ public class PlacesFragment extends Fragment implements Constants,
                 FirebasePlace location = new FirebasePlace(place.getId(), place.getName(), place.getAddress(),
                         String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
 
-                //mDatabase.child("locations").child(key).setValue(location);
+                Locations currentLocation = locationSource.getCurrentLocation();
+                if(currentLocation != null){
+                    currentLocation.isCurrent = false;
+                    locationSource.updateLocation(currentLocation);
+                }
+                Locations futureLocation = new Locations(place.getLatLng().latitude,
+                        place.getLatLng().longitude, place.getName(), place.getAddress());
+                locationSource.addLocation(futureLocation);
+
                 mDatabase.child("locations").child(place.getId()).setValue(location);
                 fragmentChanger.returnFragment();
             }
@@ -179,14 +187,10 @@ public class PlacesFragment extends Fragment implements Constants,
 
     // Небольшие приготовления View
     private void initView(){
-        // Деактивируем Drawer
         fragmentChanger.setDrawerIndicatorEnabled(false);
 
-        //Меняем текст в шапке
         fragmentChanger.changeHeader(getResources().getString(R.string.menu_location));
-        fragmentChanger.changeSubHeader(getResources().getString(R.string.menu_location));
 
-        //Показываем кнопку назад
         fragmentChanger.showBackButton(true);
     }
 }

@@ -39,6 +39,8 @@
     <string name="menu_search">Search</string>
     <string name="menu_google">Google search</string>
     <string name="menu_send_push">Send push message</string>
+    <string name="menu_geomap">Geolocation</string>
+    <string name="menu_members">Members</string>
 
     <string name="settings_NightMode">Night Mode</string>
     <string name="settings_Notice">Notifications</string>
@@ -64,12 +66,20 @@
     <string name="unknownCity">Unknown city</string>
     <string name="invalidKey">Invalid API key!</string>
     <string name="loading">Loading...</string>
-    <string name="ok">Ок</string>
+    <string name="ok">ОK</string>
+    <string name="no">NO</string>
     <string name="citySearch">City search</string>
+    <string name="geoSearch">%s \n\nLatitude: %s \nLongitude: %s\n\nDetermine the weather?</string>
+    <string name="locationNotFound">Current location not determined</string>
+    <string name="unknownLocation">Unknown location</string>
 
     <!-- Firebase cloud messaging window -->
     <string name="buttonSend">Send notification</string>
     <string name="labelTitle">Title</string>
     <string name="labelMessage">Message</string>
+
+    <!-- Geomap Fragment Strings -->
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
 
 </resources>

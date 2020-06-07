@@ -47,11 +47,13 @@ public class AlertDialogWindow  {
     }
 
     // Конструктор для Alert c двумя кнопками
-    public AlertDialogWindow (Context context, String title, String message,
-                              String negativeButtonText, String positiveButtonText){
+    public AlertDialogWindow (Context context, String title,String negativeButtonText,
+                              String positiveButtonText,
+                              DialogInterface.OnClickListener positiveButtonListener){
+        negativeButtonListener = (dialog, which) -> dialog.dismiss();
+
         builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
-                .setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton(negativeButtonText, negativeButtonListener)
                 .setPositiveButton(positiveButtonText, positiveButtonListener);
