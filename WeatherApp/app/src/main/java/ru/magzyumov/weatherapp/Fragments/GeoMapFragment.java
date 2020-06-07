@@ -312,7 +312,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
 
         DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
         PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
-        firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition);
+        firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition.getPosition());
     }
 
     private void writePositionToDB(double latitude, double longitude, String location){

@@ -11,8 +11,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [googleMapsKey:getLocalProperty("places_api_key")]
-
     }
 
     buildTypes.each {
@@ -67,14 +65,3 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 apply plugin: 'com.google.gms.google-services'
-
-def getLocalProperty(String propertyName) {
-    def propsFile = project.rootProject.file('apikey.properties')
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        return props[propertyName]
-    } else {
-        return ""
-    }
-}

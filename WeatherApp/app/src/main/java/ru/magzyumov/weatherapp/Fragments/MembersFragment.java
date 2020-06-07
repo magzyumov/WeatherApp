@@ -2,6 +2,7 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,7 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
     }
 
     private void addMarker(LatLng location, String name){
+        if(name == null) name = String.valueOf(members.size());
         mMap.addMarker(new MarkerOptions()
                 .position(location)
                 .title(name));
@@ -126,6 +128,7 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
                     LatLng location = null;
                     String name = null;
 
+
                     if(singleSnapshot.child(POSITION).getKey().equals(POSITION)){
                         position = singleSnapshot.child(POSITION).getValue(Position.class);
                         if(position!= null) {
@@ -140,6 +143,7 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
                         }
                     }
                     if(location != null && name != null) addMarker(location, name);
+                    if(location != null && name == null) addMarker(location, null);
                 }
                 if(members != null){
                     if(members.size()>0) mMap.moveCamera(CameraUpdateFactory
