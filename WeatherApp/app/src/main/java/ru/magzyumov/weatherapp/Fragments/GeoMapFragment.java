@@ -152,7 +152,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
 
         LatLng moscow = new LatLng(55.753960, 37.620393);
         currentMarker = mMap.addMarker(new MarkerOptions().position(moscow));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(moscow));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moscow,(float)5));
 
         mMap.setOnMapLongClickListener(mapLongClickListener);
     }

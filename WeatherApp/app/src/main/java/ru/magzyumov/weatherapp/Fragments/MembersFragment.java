@@ -142,8 +142,9 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
                     if(location != null && name != null) addMarker(location, name);
                 }
                 if(members != null){
-                    if(members.size()>0) mMap.moveCamera(CameraUpdateFactory.newLatLng(members.get(0)));
-                }
+                    if(members.size()>0) mMap.moveCamera(CameraUpdateFactory
+                            .newLatLngZoom(members.get(0),(float)4));
+                    }
             }
 
             @Override
