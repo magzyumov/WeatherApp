@@ -1,6 +1,7 @@
 package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Firebase.FirebasePlace;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 import ru.magzyumov.weatherapp.Database.Location.LocationDao;
@@ -102,6 +104,15 @@ public class PlacesFragment extends Fragment implements Constants,
                 String key = mDatabase.child("locations").push().getKey();
                 FirebasePlace location = new FirebasePlace(place.getId(), place.getName(), place.getAddress(),
                         String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude));
+
+                Locations currentLocation = locationSource.getCurrentLocation();
+                if(currentLocation != null){
+                    currentLocation.isCurrent = false;
+                    locationSource.updateLocation(currentLocation);
+                }
+                Locations futureLocation = new Locations(place.getLatLng().latitude,
+                        place.getLatLng().longitude, place.getName(), place.getAddress());
+                locationSource.addLocation(futureLocation);
 
                 mDatabase.child("locations").child(place.getId()).setValue(location);
                 fragmentChanger.returnFragment();

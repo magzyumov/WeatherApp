@@ -71,6 +71,7 @@
     <string name="citySearch">City search</string>
     <string name="geoSearch">%s \n\nLatitude: %s \nLongitude: %s\n\nDetermine the weather?</string>
     <string name="locationNotFound">Current location not determined</string>
+    <string name="unknownLocation">Unknown location</string>
 
     <!-- Firebase cloud messaging window -->
     <string name="buttonSend">Send notification</string>

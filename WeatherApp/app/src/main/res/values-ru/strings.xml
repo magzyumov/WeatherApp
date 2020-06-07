@@ -63,6 +63,7 @@
     <string name="citySearch">Поиск города</string>
     <string name="geoSearch">%s \n\nШирота: %s \nДолгота: %s\n\nОпределить погоду?</string>
     <string name="locationNotFound">Текущее местоположение не определено</string>
+    <string name="unknownLocation">Неизвестное местоположение</string>
 
     <!-- Firebase cloud messaging window -->
     <string name="buttonSend">Отправить уведомление</string>

@@ -63,6 +63,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
     private AlertDialogWindow alertDialog;
+    private AlertDialogWindow alertDialogSmall;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
     private Handler handler;
@@ -108,6 +109,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         // Инициализируем Alert
         alertDialog = new AlertDialogWindow(requireContext(), getString(R.string.menu_geomap),
                 getString(R.string.no), getString(R.string.ok), positiveButtonListener);
+        alertDialogSmall = new AlertDialogWindow(requireContext(),
+                getString(R.string.menu_geomap), getString(R.string.ok));
 
         // Инициализируем карту
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -183,16 +186,19 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
                 Geocoder geocoder = new Geocoder(requireContext());
                 List<Address> addresses = geocoder.getFromLocation (location.latitude,
                         location.longitude, 1);
-                handler.post(() -> writePositionToDB(location.latitude,
-                        location.longitude, addresses.get(0).getAddressLine(0)));
+                if(addresses.size()>0){
+                    handler.post(() -> writePositionToDB(location.latitude,
+                            location.longitude, addresses.get(0).getAddressLine(0)));
 
-                handler.post(() -> alertDialog.show(String.format(getString(R.string.geoSearch),
-                        addresses.get(0).getAddressLine(0), String.valueOf(location.latitude),
-                        String.valueOf(location.longitude))));
-
-                handler.post(() -> textLatitude.setText(Double.toString(location.latitude)));
-                handler.post(() -> textLongitude.setText(Double.toString(location.longitude)));
-                handler.post(() -> textAddress.setText(addresses.get(0).getAddressLine(0)));
+                    handler.post(() -> alertDialog.show(String.format(getString(R.string.geoSearch),
+                            addresses.get(0).getAddressLine(0), String.valueOf(location.latitude),
+                            String.valueOf(location.longitude))));
+                    handler.post(() -> textLatitude.setText(Double.toString(location.latitude)));
+                    handler.post(() -> textLongitude.setText(Double.toString(location.longitude)));
+                    handler.post(() -> textAddress.setText(addresses.get(0).getAddressLine(0)));
+                } else {
+                    handler.post(() -> alertDialogSmall.show(getString(R.string.unknownLocation)));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
