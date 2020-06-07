@@ -7,9 +7,9 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
 /build
 /captures
 /apikey.properties
+/app/google-services.json
 .externalNativeBuild
 .cxx

@@ -2,8 +2,6 @@ package ru.magzyumov.weatherapp.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,27 +31,19 @@ import java.util.List;
 
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Firebase.Installation;
+import ru.magzyumov.weatherapp.Database.Firebase.Position;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
 import ru.magzyumov.weatherapp.R;
 
 
 public class MembersFragment extends Fragment implements Constants, OnMapReadyCallback {
     private DatabaseReference firebaseDB;
-    private String id;
-    private int size;
-    private EditText textLatitude;
-    private EditText textLongitude;
-    private TextView textAddress;
-    private Marker currentMarker;
     private GoogleMap mMap;
     private View view;
-    private String cityFound;
-    private LatLng coordinateFound;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
-    private List<Marker> markers;
     private List<LatLng> members;
-    private AlertDialogWindow alertDialog;
 
     public MembersFragment() {
         // Required empty public constructor
@@ -71,12 +60,7 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
 
-        // Инициализируем Alert
-        alertDialog = new AlertDialogWindow(requireContext(), getString(R.string.menu_geomap),
-                getString(R.string.ok));
-
         firebaseDB = FirebaseDatabase.getInstance().getReference();
-        id = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -93,14 +77,14 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
         fragmentChanger.showBackButton(true);
 
         // Инициализация маркеров
-        markers = new ArrayList<Marker>();
+         members = new ArrayList<LatLng>();
 
         // Инициализируем карту
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.geomap);
         mapFragment.getMapAsync(this);
 
-        initViews();
+        getMembers();
 
         return view;
     }
@@ -122,86 +106,49 @@ public class MembersFragment extends Fragment implements Constants, OnMapReadyCa
         view = null;
         fragmentChanger = null;
         baseActivity = null;
-        textLatitude = null;
-        textLongitude = null;
-        currentMarker = null;
-        markers =  null;
-        alertDialog = null;
-        textAddress = null;
-        coordinateFound = null;
         firebaseDB = null;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        try{
-            for(LatLng member : members){
-                addMarker(member);
-            }
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(members.get(0)));
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
     }
 
-    // Инициализация Views
-    private void initViews() {
-        textLatitude = view.findViewById(R.id.editLat);
-        textLongitude = view.findViewById(R.id.editLng);
-        getMembers();
-    }
-
-    // Добавляем метки на карту
-    private void addMarker(LatLng location){
-        String title = Integer.toString(markers.size());
-        Marker marker = mMap.addMarker(new MarkerOptions()
+    private void addMarker(LatLng location, String name){
+        mMap.addMarker(new MarkerOptions()
                 .position(location)
-                .title(title));
-        markers.add(marker);
+                .title(name));
+        members.add(location);
     }
 
     private void getMembers(){
-        firebaseDB.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                size = (int) dataSnapshot.getChildrenCount();
-                Log.e(TAG, dataSnapshot.getKey());
-
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-
-                }
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         firebaseDB.child(PHONES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                size = (int) dataSnapshot.getChildrenCount();
 
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    Position position = null;
+                    Installation installation = null;
+                    LatLng location = null;
+                    String name = null;
 
+                    if(singleSnapshot.child(POSITION).getKey().equals(POSITION)){
+                        position = singleSnapshot.child(POSITION).getValue(Position.class);
+                        if(position!= null) {
+                            location = new LatLng(Double.valueOf(position.getLatitude()),
+                                    Double.valueOf(position.getLongitude()));
+                        }
+                    }
+                    if(singleSnapshot.child(INSTALLATION).getKey().equals(INSTALLATION)){
+                        installation = singleSnapshot.child(INSTALLATION).getValue(Installation.class);
+                        if(installation!= null) {
+                            name = installation.getName();
+                        }
+                    }
+                    if(location!= null && name != null) addMarker(location, name);
+                }
+                if(members != null){
+                    if(members.size()>0) mMap.moveCamera(CameraUpdateFactory.newLatLng(members.get(0)));
                 }
             }
 

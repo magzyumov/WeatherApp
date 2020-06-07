@@ -73,7 +73,7 @@ public class CloudMessaging extends FirebaseMessagingService implements Constant
 
         firebaseDB = FirebaseDatabase.getInstance().getReference();
         PhoneClass newPhone = new PhoneClass(id, timeStamp, osVersion, apiLevel, name, token);
-        firebaseDB.child(PHONES).child(id).child(INSTALLATION).setValue(newPhone);
+        firebaseDB.child(PHONES).child(id).child(INSTALLATION).setValue(newPhone.getInstallation());
     }
 
     private String getDeviceName() {

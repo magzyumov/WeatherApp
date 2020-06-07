@@ -11,7 +11,6 @@ public class FirebasePlace {
     private String longitude;
 
     public FirebasePlace() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public FirebasePlace(String id, String name, String address, String latitude, String longitude) {

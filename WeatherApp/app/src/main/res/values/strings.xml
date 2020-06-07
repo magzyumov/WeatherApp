@@ -66,8 +66,8 @@
     <string name="unknownCity">Unknown city</string>
     <string name="invalidKey">Invalid API key!</string>
     <string name="loading">Loading...</string>
-    <string name="ok">Ок</string>
-    <string name="no">No</string>
+    <string name="ok">ОK</string>
+    <string name="no">NO</string>
     <string name="citySearch">City search</string>
 
     <!-- Firebase cloud messaging window -->

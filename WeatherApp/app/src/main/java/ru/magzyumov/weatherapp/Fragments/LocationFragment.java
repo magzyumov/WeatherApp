@@ -146,6 +146,11 @@ public class LocationFragment extends Fragment implements Constants,
         String city = textViewCity.getText().toString();
         String region = textViewRegion.getText().toString();
 
+        if(region.equals("")){
+            alertDialog.show("Текущее местоположение не определено");
+            return;
+        }
+
         searchView.setQuery(city,true);
         locationSource.setLocationSearched(region, city, true);
         locationSource.setLocationCurrent(region, city, true);

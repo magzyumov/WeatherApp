@@ -11,7 +11,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,7 @@ import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
 import ru.magzyumov.weatherapp.Database.Location.LocationSource;
 import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Dialog.AlertDialogWindow;
+import ru.magzyumov.weatherapp.GeoMapThreads;
 import ru.magzyumov.weatherapp.R;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -67,6 +70,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     private AlertDialogWindow alertDialog;
     private LocationDao locationDao;
     private LocationDataSource locationSource;
+    private Handler handler;
+    private GeoMapThreads geoMapThreads;
 
     public GeoMapFragment() {
         // Required empty public constructor
@@ -86,6 +91,10 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         // Инициализируем объект для обращения к базе
         locationDao = App.getInstance().getLocationDao();
         locationSource = new LocationSource(locationDao);
+
+        // Инициализируем поток для определения координат
+        geoMapThreads = new GeoMapThreads(GEOMAP);
+        handler = new Handler();
     }
 
     @Override
@@ -133,13 +142,9 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         super.onDetach();
 
         // Освобождаем ресурсы
-        mMap = null;
         view = null;
         fragmentChanger = null;
         baseActivity = null;
-        textLatitude = null;
-        textLongitude = null;
-        currentMarker = null;
         markers =  null;
         alertDialog = null;
         textAddress = null;
@@ -229,43 +234,19 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         });
     }
 
-    private String getNameCity(LatLng location) {
-        String result = null;
-
+    private void getNameCity(LatLng location) {
         if (Geocoder.isPresent()) {
             try {
-                Geocoder gc = new Geocoder(App.getInstance().getApplicationContext());
-                List<Address> addresses = gc.getFromLocation (location.latitude, location.longitude, 1);
-                result = addresses.get(0).getAddressLine(0);
+                Geocoder geocoder = new Geocoder(requireContext());
+                List<Address> addresses = geocoder.getFromLocation (location.latitude,
+                        location.longitude, 1);
+                handler.post(() -> writePositionToDB(location.latitude,
+                        location.longitude, addresses.get(0).getAddressLine(0)));
+                handler.post(() -> cityFound = addresses.get(0).getAddressLine(0));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return result;
-    }
-
-    // Получаем адрес по координатам
-    private void getAddress(final LatLng location){
-        final Geocoder geocoder = new Geocoder(requireContext());
-        // Поскольку Geocoder работает по интернету, создаём отдельный поток
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-                    textAddress.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            cityFound = addresses.get(0).getAddressLine(0);
-                            textAddress.setText(addresses.get(0).getAddressLine(0));
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     // Запрашиваем Permission’ы
@@ -304,7 +285,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         if (provider != null) {
             // Будем получать геоположение через каждые 10 секунд или каждые
             // 10 метров
-            locationManager.requestLocationUpdates(provider, 10000, 10, locationListener);
+            locationManager.requestLocationUpdates(provider, 5000, 10, locationListener);
         }
     }
 
@@ -336,11 +317,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
             currentMarker.setPosition(currentPosition);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, (float)12));
 
-            Locations currentLocation = locationSource.getLocationById(0);
-            currentLocation.city = "";
-            locationSource.updateLocation(currentLocation);
-
-            getAddress(latLng);
+            geoMapThreads.postTask(GEOMAP, () -> getNameCity(currentPosition));
 
             writePositionToFirebase(latitude, longitude);
         }
@@ -366,9 +343,8 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         @Override
         public void onMapLongClick(LatLng latLng) {
             coordinateFound = latLng;
-            getAddress(latLng);
-            alertDialog.show("Определить погоду в городе " + cityFound + " ?");
-            addMarker(latLng);
+            geoMapThreads.postTask(GEOMAP, () -> getNameCity(latLng));
+            alertDialog.show("Определить погоду в " + cityFound + " ?");
         }
     };
 
@@ -376,14 +352,9 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
             new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            Locations location = new Locations(coordinateFound.latitude,
-                    coordinateFound.longitude, null, cityFound);
-            Locations currentLocation = locationSource.getCurrentLocation();
-            if (currentLocation != null){
-                currentLocation.isCurrent = false;
-                locationSource.updateLocation(currentLocation);
-            }
-            locationSource.addLocation(location);
+            Locations currentLocation = locationSource.getLocationById(0);
+            locationSource.setLocationSearched(currentLocation, true);
+            locationSource.setLocationCurrent(currentLocation, true);
             fragmentChanger.returnFragment();
         }
     };
@@ -398,5 +369,13 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
         DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
         PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
         firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition);
+    }
+
+    private void writePositionToDB(double latitude, double longitude, String location){
+        Locations currentLocation = locationSource.getLocationById(0);
+        currentLocation.region = location;
+        currentLocation.latitude = latitude;
+        currentLocation.longitude = longitude;
+        locationSource.updateLocation(currentLocation);
     }
 }

@@ -30,6 +30,9 @@ public interface Constants {
 
     String TIMESTAMP_PATTERN = "dd MMMM HH:mm:ss";
 
+    // Threads
+    String GEOMAP = "geomap";
+
     // Firebase database structure
     String PHONES = "phones";
     String INSTALLATION = "installation";

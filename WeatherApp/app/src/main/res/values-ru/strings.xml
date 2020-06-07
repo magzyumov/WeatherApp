@@ -58,8 +58,8 @@
     <string name="unknownCity">Неизвестный город</string>
     <string name="invalidKey">Неверный ключ приложения!</string>
     <string name="loading">Загрузка...</string>
-    <string name="ok">Хорошо</string>
-    <string name="no">Нет</string>
+    <string name="ok">OK</string>
+    <string name="no">НЕТ</string>
     <string name="citySearch">Поиск города</string>
 
     <!-- Firebase cloud messaging window -->

@@ -74,7 +74,6 @@ public class ServerPolling implements Constants {
         currentCity = (currentLocation != null) ? currentLocation.city : DEFAULT_CITY;
         currentEU = getDefault().getLanguage();
         if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
-            showMsgToListeners(currentCity + " " + getResources().getString(R.string.cityNotFound));
             currentCoordinate = DEFAULT_COORDINATE;
             currentCity = DEFAULT_CITY;
         }
@@ -84,7 +83,13 @@ public class ServerPolling implements Constants {
     public void build(){
         final Handler handler = new Handler();
         currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
-        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        if(currentLocation.id == 0){
+            currentCoordinate = new LatLng(currentLocation.latitude, currentLocation.longitude);
+            retrofitClass.getCurrentRequest(currentLocation.latitude, currentLocation.longitude,
+                    currentEU, handler);
+        } else {
+            retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        }
         retrofitClass.getOneCallRequest(currentCoordinate.latitude,
                 currentCoordinate.longitude,currentEU, handler);
     }
