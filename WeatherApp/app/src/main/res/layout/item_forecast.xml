@@ -9,7 +9,7 @@
     android:layout_marginTop="0dp"
     app:cardBackgroundColor="@android:color/background_light"
     app:cardCornerRadius="1dp"
-    app:contentPadding="10dp"
+    app:contentPadding="5dp"
     app:cardElevation="90dp">
 
     <LinearLayout
@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:background="@drawable/ic_cell"
             android:orientation="vertical">
 
             <TextView
