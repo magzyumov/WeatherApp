@@ -68,6 +68,8 @@
     <string name="loading">Loading...</string>
     <string name="ok">ОK</string>
     <string name="no">NO</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
     <string name="citySearch">City search</string>
     <string name="geoSearch">%s \n\nLatitude: %s \nLongitude: %s\n\nDetermine the weather?</string>
     <string name="locationNotFound">Current location not determined</string>

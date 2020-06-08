@@ -60,6 +60,8 @@
     <string name="loading">Загрузка...</string>
     <string name="ok">OK</string>
     <string name="no">НЕТ</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ВЫКЛ</string>
     <string name="citySearch">Поиск города</string>
     <string name="geoSearch">%s \n\nШирота: %s \nДолгота: %s\n\nОпределить погоду?</string>
     <string name="locationNotFound">Текущее местоположение не определено</string>

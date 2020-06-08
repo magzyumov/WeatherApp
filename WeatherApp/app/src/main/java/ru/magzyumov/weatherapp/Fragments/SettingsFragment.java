@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import android.widget.RadioButton;
 
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
@@ -42,22 +42,28 @@ public class SettingsFragment extends Fragment implements Constants {
         fragmentChanger.showBackButton(true);
 
         //Инициализируем переключатели
-        initSwitch(view.findViewById(R.id.switchNightMode), SETTING, NIGHT_MODE);
-        initSwitch(view.findViewById(R.id.switchEU), SETTING, EU);
-        initSwitch(view.findViewById(R.id.switchNotice), SETTING, NOTICE);
+        initRadio(view.findViewById(R.id.onNightMode), SETTING, NIGHT_MODE, false, true);
+        initRadio(view.findViewById(R.id.offNightMode), SETTING, NIGHT_MODE, true, true);
+        initRadio(view.findViewById(R.id.metricEU), SETTING, EU, true, true);
+        initRadio(view.findViewById(R.id.imperialEU), SETTING, EU, false, true);
+        initRadio(view.findViewById(R.id.onNotice), SETTING, NOTICE, false, true);
+        initRadio(view.findViewById(R.id.offNotice), SETTING, NOTICE, true, false);
 
         return view;
     }
 
-
-    private void initSwitch(SwitchMaterial view, String preference, String parameter)  {
-        SwitchMaterial switchButton = view;
-        switchButton.setChecked(baseActivity.getBooleanPreference(preference, parameter));
-        switchButton.setOnCheckedChangeListener(new SwitchMaterial.OnCheckedChangeListener() {
+    private void initRadio(RadioButton view, String preference, String parameter, boolean inverted, boolean active)  {
+        RadioButton radioButton = view;
+        radioButton.setChecked((inverted) ? !baseActivity.getBooleanPreference(preference, parameter)
+                : baseActivity.getBooleanPreference(preference, parameter));
+        radioButton.setOnCheckedChangeListener(new RadioButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                baseActivity.setBooleanPreference(preference, parameter, isChecked);
-                if(preference == SETTING & parameter == NIGHT_MODE) baseActivity.recreate();
+                if (active) {
+                    baseActivity.setBooleanPreference(preference, parameter,
+                            (inverted) ? !isChecked : isChecked);
+                    if(preference == SETTING & parameter == NIGHT_MODE) baseActivity.recreate();
+                }
             }
         });
     }
