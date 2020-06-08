@@ -70,26 +70,42 @@ public class ServerPolling implements Constants {
 
     // Метод инициализации текущего города
     public void initialize() {
+        currentEU = getDefault().getLanguage();
         currentLocation = locationSource.getCurrentLocation();
         currentCity = (currentLocation != null) ? currentLocation.city : DEFAULT_CITY;
-        currentEU = getDefault().getLanguage();
-        if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
-            currentCoordinate = DEFAULT_COORDINATE;
-            currentCity = DEFAULT_CITY;
+        currentCoordinate = (currentLocation != null) ?
+                ((currentLocation.latitude != 0) & (currentLocation.longitude != 0)) ?
+                new LatLng(currentLocation.latitude, currentLocation.longitude) : null : null;
+        if(currentCoordinate != null) {
+            buildByPosition();
+        } else {
+            if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
+                showMsgToListeners(getResources().getString(R.string.cityNotFound));
+                currentCoordinate = DEFAULT_COORDINATE;
+                currentCity = DEFAULT_CITY;
+                badResponseHandler();
+                return;
+            } else {
+                buildByCityName();
+            }
         }
     }
 
     // Метод построения запросов
-    public void build(){
+    public void buildByCityName(){
         final Handler handler = new Handler();
         currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
-        if((currentLocation != null) ? (currentLocation.id == 0) : false){
-            currentCoordinate = new LatLng(currentLocation.latitude, currentLocation.longitude);
-            retrofitClass.getCurrentRequest(currentLocation.latitude, currentLocation.longitude,
-                    currentEU, handler);
-        } else {
-            retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
-        }
+        retrofitClass.getCurrentRequest(currentCity, currentEU, handler);
+        retrofitClass.getOneCallRequest(currentCoordinate.latitude,
+                currentCoordinate.longitude,currentEU, handler);
+    }
+
+    // Метод построения запросов
+    public void buildByPosition(){
+        final Handler handler = new Handler();
+        currentEU = sharedPrefSettings.getBoolean(EU,false) ? "imperial"  : "metric";
+        retrofitClass.getCurrentRequest(currentLocation.latitude, currentLocation.longitude,
+                currentEU, handler);
         retrofitClass.getOneCallRequest(currentCoordinate.latitude,
                 currentCoordinate.longitude,currentEU, handler);
     }
@@ -151,6 +167,15 @@ public class ServerPolling implements Constants {
                 responseParser.getDailyForecast(oneCallModel));
         writeForecastResponseToDB(responseParser.getHourlyForecast(oneCallModel),
                 responseParser.getDailyForecast(oneCallModel));
+    }
+
+    public void badResponseHandler(){
+        if(currentLocation != null){
+            currentLocation.isCurrent = false;
+            currentLocation.isSearched = false;
+            currentLocation.needUpdate = false;
+            locationSource.updateLocation(currentLocation);
+        }
     }
 
     public Resources getResources(){

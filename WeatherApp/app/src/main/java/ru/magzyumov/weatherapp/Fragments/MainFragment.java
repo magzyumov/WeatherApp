@@ -226,8 +226,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         });
 
         TextView currentDistrict = view.findViewById(R.id.textViewDistrict);
-        //currentDistrict.setText(currentForecast.getCity());
-        if (currentLocation!= null) currentDistrict.setText(currentLocation.region);
+        currentDistrict.setText(currentForecast.getDistrict());
 
         TextView textViewCurrent = view.findViewById(R.id.textViewCurrentTemp);
         textViewCurrent.setText(currentForecast.getTemp());
@@ -357,7 +356,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         if (currentLocation != null){
             if(currentLocation.needUpdate){
                 serverPolling.initialize();
-                serverPolling.build();
             }
 
             // Смотрим есть ли данные в SharedPreference
@@ -380,7 +378,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
             }
         } else {
             serverPolling.initialize();
-            serverPolling.build();
         }
 
     }
@@ -548,7 +545,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         }
     };
-
 
 }
 

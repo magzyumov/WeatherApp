@@ -18,6 +18,10 @@ import java.util.Locale;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.Forecast.Model.CurrentForecastModel;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel;
 import ru.magzyumov.weatherapp.Forecast.Model.OneCallModel.Current;
@@ -37,12 +41,18 @@ public class ResponseParser implements Constants {
     private String windSpeedEU;
     private String humidityEu;
 
+    private Locations currentLocation;
+    private LocationDao locationDao;
+    private LocationDataSource locationSource;
+
     // Конструктор для парсинга модели
     public ResponseParser (Resources resources){
         this.gson = new Gson();
         this.resources = resources;
         this.sharedPrefSettings = App.getInstance()
                 .getSharedPreferences(SETTING, Context.MODE_PRIVATE);
+        this.locationDao = App.getInstance().getLocationDao();
+        this.locationSource = new LocationSource(locationDao);
     }
 
     private void initEU(){
@@ -54,6 +64,7 @@ public class ResponseParser implements Constants {
 
     public CurrentForecast getCurrentForecast(CurrentForecastModel cfResponse){
         CurrentForecast result = null;
+        Locations currentLocation = locationSource.getCurrentLocation();
 
         initEU();
 
@@ -65,7 +76,7 @@ public class ResponseParser implements Constants {
             boolean isDay = false;
 
             String city = cfResponse.getName();
-            String district = cfResponse.getName();
+            String district = (currentLocation != null) ? currentLocation.region : city;
             String temp = String.valueOf((int)cfResponse.getMain().getTemp());
             String image = String.format(IMAGE_URL,cfResponse.getWeather()[0].getIcon());
             String weather = capitalize(cfResponse.getWeather()[0].getDescription());

@@ -53,10 +53,13 @@ public class RetrofitClass implements Constants {
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.cityNotFound)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.invalidKey)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else {
                                 handler.post(() -> serverPolling.showMsgToListeners(response.message()));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             }
                         }
                     }
@@ -83,10 +86,13 @@ public class RetrofitClass implements Constants {
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.cityNotFound)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.invalidKey)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else {
                                 handler.post(() -> serverPolling.showMsgToListeners(response.message()));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             }
                         }
                     }
@@ -113,10 +119,13 @@ public class RetrofitClass implements Constants {
                         } else {
                             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.cityNotFound)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED){
                                 handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.invalidKey)));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             } else {
                                 handler.post(() -> serverPolling.showMsgToListeners(response.message()));
+                                handler.post(() -> serverPolling.badResponseHandler());
                             }
                         }
                     }
