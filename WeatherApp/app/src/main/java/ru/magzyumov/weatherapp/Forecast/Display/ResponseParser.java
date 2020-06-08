@@ -12,9 +12,11 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.Constants;
@@ -202,7 +204,8 @@ public class ResponseParser implements Constants {
     }
 
     public ForecastSource getHourlyForecast(OneCallModel response){
-        Hourly[] dfResponse = response.getHourly();
+        int limit = 24; // 24 часа
+        Hourly[] dfResponse = Arrays.copyOf(response.getHourly(), limit);
         ForecastSource result = null;
 
         initEU();
