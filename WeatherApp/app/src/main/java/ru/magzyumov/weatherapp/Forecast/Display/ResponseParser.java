@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import ru.magzyumov.weatherapp.App;
@@ -176,6 +177,7 @@ public class ResponseParser implements Constants {
             result = new ForecastSource(dfResponse.length);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+            dateFormat.setTimeZone(TimeZone.getTimeZone(response.getTimezone()));
 
             Calendar calendar = Calendar.getInstance();
 
@@ -221,6 +223,7 @@ public class ResponseParser implements Constants {
             result = new ForecastSource(dfResponse.length);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            dateFormat.setTimeZone(TimeZone.getTimeZone(response.getTimezone()));
 
             Calendar calendar = Calendar.getInstance();
 
