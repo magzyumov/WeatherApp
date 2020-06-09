@@ -29,12 +29,30 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        WeatherApp {
+        debug {
         }
     }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+    }
+    flavorDimensions 'version'
+    productFlavors {
+        adminVersion {
+            dimension = 'version'
+            versionNameSuffix = '.admin'
+            applicationIdSuffix = '.admin'
+        }
+        freeVersion {
+            dimension = 'version'
+            versionNameSuffix = '.free'
+            applicationIdSuffix = '.free'
+        }
+        paidVersion {
+            dimension = 'version'
+            versionNameSuffix = '.paid'
+            applicationIdSuffix = '.paid'
+        }
     }
 }
 

@@ -302,6 +302,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         dailyRecyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
+
         DividerItemDecoration itemDecoration = new DividerItemDecoration(
                 dailyRecyclerView.getContext(), layoutManager.getOrientation());
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));

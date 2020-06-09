@@ -13,6 +13,8 @@
     <color name="backgroundNightColor">#B3AFAF</color>
     <color name="colorAlarm">#FF0000</color>
 
+    <color name="backgroundMainColor">#ECE4F6</color>
+
     <color name="blue">#FF005a9c</color>
     <color name="lightBlue">#ff6691c4</color>
     <color name="lighterBlue">#ffcdd8ec</color>

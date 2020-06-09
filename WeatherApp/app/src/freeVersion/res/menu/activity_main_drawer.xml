@@ -24,15 +24,16 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/menu_settings" />
+    </group>
+
+    <group
+        android:id="@+id/paid_zone"
+        android:visible="false"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_google"
             android:icon="@drawable/ic_location_searching_black_24dp"
             android:title="@string/menu_google" />
-    </group>
-
-    <group
-        android:id="@+id/admin_zone"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_send_push"
             android:icon="@drawable/ic_send_black_24dp"
@@ -45,5 +46,3 @@
 
     </group>
 </menu>
-
-

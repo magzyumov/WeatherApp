@@ -11,9 +11,11 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,10 +25,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import ru.magzyumov.weatherapp.BroadcastReceivers.BatteryReceiver;
 import ru.magzyumov.weatherapp.BroadcastReceivers.NetworkReceiver;
+import ru.magzyumov.weatherapp.CloudMessaging.TokenSender;
 import ru.magzyumov.weatherapp.Fragments.FragmentChanger;
 import ru.magzyumov.weatherapp.Fragments.FragmentFinder;
 import ru.magzyumov.weatherapp.Fragments.GeoMapFragment;
@@ -47,6 +56,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     private ActionBarDrawerToggle toggle;
     private TextView alarmBox;
     private BaseActivity baseActivity;
+    private TokenSender tokenSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,11 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         setContentView(R.layout.activity_main);
 
         if(this instanceof BaseActivity) baseActivity = (BaseActivity) this;
+
+        if(tokenSender == null) tokenSender = new TokenSender(getApplicationContext());
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnSuccessListener(this, fcmListener);
 
         networkReceiver = new NetworkReceiver(this);
         batteryReceiver = new BatteryReceiver(this);
@@ -243,5 +258,13 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    OnSuccessListener<InstanceIdResult> fcmListener = new OnSuccessListener<InstanceIdResult>(){
+        @Override
+        public void onSuccess(InstanceIdResult instanceIdResult) {
+            String token = instanceIdResult.getToken();
+            tokenSender.sendRegistrationToServer(token);
+        }
+    };
 
 }
