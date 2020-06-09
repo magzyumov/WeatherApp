@@ -83,7 +83,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private ServerPolling serverPolling;
     private ResponseParser responseParser;
     private PicassoLoader picassoLoader;
-    private LinearLayout bottomSheet;
+    private FrameLayout bottomSheet;
     private BottomSheetBehavior bottomSheetBehavior;
     private RecyclerView hourlyRecyclerView;
     private RecyclerView dailyRecyclerView;
@@ -302,7 +302,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         dailyRecyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
-
         DividerItemDecoration itemDecoration = new DividerItemDecoration(
                 dailyRecyclerView.getContext(), layoutManager.getOrientation());
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));

@@ -1,68 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
-    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/darker_gray"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     app:behavior_hideable="false"
     app:behavior_peekHeight="300dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageViewDetailedData"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            app:srcCompat="@drawable/ic_keyboard_arrow_up_black_36dp"
-            tools:ignore="VectorDrawableCompat" />
-
-        <TextView
-            android:id="@+id/textViewByDays"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.15"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
             android:gravity="center"
-            android:text="@string/by_days"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textViewByHours"
+            <ImageView
+                android:id="@+id/imageViewDetailedData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                app:srcCompat="@drawable/ic_keyboard_arrow_up_black_36dp"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textViewByDays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:text="@string/by_days"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewByHours"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/by_hours"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/daily_forecast_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.15"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="@string/by_hours"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_forecast" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hourly_forecast_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_forecast" />
+
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/daily_forecast_recycler_view"
+    <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_forecast" />
+        android:gravity="center_vertical"
+        android:layout_marginTop="160dp">
+        <TextView
+            android:id="@+id/windSpeedSeparator"
+            android:text="Скорость ветра, "
+            style="@style/ParameterSeparatorTextStyle"/>
+        <TextView
+            android:id="@+id/textViewWindSpeedEU"
+            android:text="@string/windEUOne"
+            style="@style/ParameterSeparatorTextStyle" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/separator_horizontal"/>
+    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hourly_forecast_recycler_view"
+    <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_forecast" />
+        android:gravity="center_vertical"
+        android:layout_marginTop="220dp">
+        <TextView
+            android:id="@+id/humiditySeparator"
+            android:text="Влажность, %"
+            style="@style/ParameterSeparatorTextStyle"/>
+        <TextView
+            android:id="@+id/textViewHumidityEU"
+            android:text="@string/humidityEU"
+            style="@style/ParameterSeparatorTextStyle" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/separator_horizontal"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="280dp">
+        <TextView
+            android:id="@+id/pressureSeparator"
+            android:text="Давление, "
+            style="@style/ParameterSeparatorTextStyle"/>
+        <TextView
+            android:id="@+id/textViewPressureEU"
+            android:text="@string/pressEUOne"
+            style="@style/ParameterSeparatorTextStyle"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/separator_horizontal"/>
+    </LinearLayout>
+
+</FrameLayout>
