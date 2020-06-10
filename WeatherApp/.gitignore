@@ -10,6 +10,6 @@
 /build
 /captures
 /apikey.properties
-/app/google-services.json
+*google-services.json
 .externalNativeBuild
 .cxx
