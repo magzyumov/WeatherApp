@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,6 +164,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == GEO_PERMISSION_REQUEST_CODE) {
             if (grantResults.length == 2 &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
@@ -237,8 +239,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     }
 
     private void requestLocationPermissions() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) ||
-                !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE)) {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -80,7 +81,7 @@ public class ServerPolling implements Constants {
             buildByPosition();
         } else {
             if (((currentCoordinate = getCoordinateCity(currentCity)) == null)){
-                showMsgToListeners(getResources().getString(R.string.cityNotFound));
+                showMsgToListeners(getResources().getString(R.string.badResponse));
                 currentCoordinate = DEFAULT_COORDINATE;
                 currentCity = DEFAULT_CITY;
                 badResponseHandler();

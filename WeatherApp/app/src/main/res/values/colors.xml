@@ -2,16 +2,18 @@
 
 <resources>
     <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryLight">#0091EA</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorRed">#FFFF0000</color>
 
     <color name="colorGray">#D8D8D8</color>
     <color name="colorDarkGray">#959595</color>
     <color name="backgroundDefaultColor">#FAFAFA</color>
     <color name="backgroundNightColor">#B3AFAF</color>
-    <color name="colorAlarm">#FF0000</color>
+
 
     <color name="backgroundMainColor">#ECE4F6</color>
 

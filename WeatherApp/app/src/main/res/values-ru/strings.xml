@@ -39,6 +39,11 @@
     <string name="feeling">Ошущается как:</string>
     <string name="provider">Данные предоставлены OpenWeather</string>
 
+    <!-- Parameters Name -->
+    <string name="humidityName">Влажность, </string>
+    <string name="pressureName">Давление, </string>
+    <string name="windSpeedName">Скорость ветра, </string>
+
     <!-- EU Strings -->
     <string name="windEUOne">м/с</string>
     <string name="windEUTwo">м/ч</string>
@@ -53,7 +58,7 @@
 
     <!-- Alert strings -->
     <string name="messageFromServer">Ответ от сервера</string>
-    <string name="connectionTimeout">Нет интернета нет погоды</string>
+    <string name="badResponse">Ошибка выполнения запроса</string>
     <string name="cityNotFound">Город не найден</string>
     <string name="unknownCity">Неизвестный город</string>
     <string name="invalidKey">Неверный ключ приложения!</string>
