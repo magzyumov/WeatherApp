@@ -10,114 +10,16 @@
     app:behavior_peekHeight="300dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/daily_forecast_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_forecast" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hourly_forecast_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_forecast" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingTop="120dp">
-        <LinearLayout
-            android:id="@+id/windSpeedSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/windSpeedName" />
-
-            <TextView
-                android:id="@+id/textViewWindSpeedEUBottom"
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/windEUOne" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/separator_horizontal" />
-        </LinearLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingTop="200dp">
-        <LinearLayout
-            android:id="@+id/humiditySeparator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/humidityName" />
-
-            <TextView
-                android:id="@+id/textViewHumidityEUBottom"
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/humidityEU" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/separator_horizontal" />
-        </LinearLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingTop="280dp">
-        <LinearLayout
-            android:id="@+id/pressureSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/pressureName" />
-
-            <TextView
-                android:id="@+id/textViewPressureEUBottom"
-                style="@style/ParameterSeparatorTextStyle"
-                android:text="@string/pressEUOne" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/separator_horizontal" />
-        </LinearLayout>
-    </FrameLayout>
-
     <LinearLayout
+        android:id="@+id/headerBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageViewDetailedData"
@@ -134,9 +36,9 @@
             android:layout_weight="0.15"
             android:gravity="center"
             android:text="@string/by_days"
-            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewByHours"
@@ -144,10 +46,129 @@
             android:layout_height="50dp"
             android:layout_weight="0.15"
             android:gravity="center"
-            android:textStyle="bold"
             android:text="@string/by_hours"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hourly_forecast_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_forecast" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/daily_forecast_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_forecast" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="bottom"
+                android:layout_weight="0.37">
+                <LinearLayout
+                    android:id="@+id/windSpeedSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/windSpeedName" />
+
+                    <TextView
+                        android:id="@+id/textViewWindSpeedEUBottom"
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/windEUOne" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/separator_horizontal" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.23"
+                android:gravity="bottom">
+
+                <LinearLayout
+                    android:id="@+id/humiditySeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/humidityName" />
+
+                    <TextView
+                        android:id="@+id/textViewHumidityEUBottom"
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/humidityEU" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/separator_horizontal" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.4"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/pressureSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/pressureName" />
+
+                    <TextView
+                        android:id="@+id/textViewPressureEUBottom"
+                        style="@style/ParameterSeparatorTextStyle"
+                        android:text="@string/pressEUOne" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/separator_horizontal" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </FrameLayout>

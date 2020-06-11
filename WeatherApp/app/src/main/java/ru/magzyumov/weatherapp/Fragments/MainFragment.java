@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
