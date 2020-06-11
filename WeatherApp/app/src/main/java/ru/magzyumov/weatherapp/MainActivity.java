@@ -225,7 +225,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
 
                 Handler handler = new Handler();
                 Runnable delay = () -> alarmBox.setVisibility(View.GONE);
-                handler.postDelayed(delay, 3000);
+                handler.postDelayed(delay, 1500);
             }else {
                 alarmBox.setVisibility(View.VISIBLE);
                 alarmBox.setText(getString(R.string.noInternet));
