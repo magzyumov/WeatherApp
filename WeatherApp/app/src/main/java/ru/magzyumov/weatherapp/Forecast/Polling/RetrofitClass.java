@@ -1,6 +1,7 @@
 package ru.magzyumov.weatherapp.Forecast.Polling;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -37,7 +38,6 @@ public class RetrofitClass implements Constants {
         this.openWeather = retrofit.create(OpenWeather.class);
     }
 
-
     public void getCurrentRequest(String city, String units, Handler handler){
 
         String lang = getDefault().getLanguage();
@@ -66,7 +66,8 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
-                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
+                        handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
+                        handler.post(() -> serverPolling.badResponseHandler());
                     }
                 });
     }
@@ -99,7 +100,8 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
-                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
+                        handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
+                        handler.post(() -> serverPolling.badResponseHandler());
                     }
                 });
     }
@@ -132,7 +134,8 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<OneCallModel> call, Throwable t) {
-                        handler.post(() -> serverPolling.showMsgToListeners(t.getLocalizedMessage()));
+                        handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
+                        handler.post(() -> serverPolling.badResponseHandler());
                     }
                 });
     }

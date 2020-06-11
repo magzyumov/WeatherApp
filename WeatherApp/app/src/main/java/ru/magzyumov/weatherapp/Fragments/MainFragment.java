@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
+import ru.magzyumov.weatherapp.BuildConfig;
 import ru.magzyumov.weatherapp.Constants;
 import ru.magzyumov.weatherapp.Database.Firebase.PhoneClass;
 import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
@@ -83,13 +84,14 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private ServerPolling serverPolling;
     private ResponseParser responseParser;
     private PicassoLoader picassoLoader;
-    private LinearLayout bottomSheet;
+    private FrameLayout bottomSheet;
     private BottomSheetBehavior bottomSheetBehavior;
     private RecyclerView hourlyRecyclerView;
     private RecyclerView dailyRecyclerView;
     private AlertDialogWindow alertDialog;
     private Handler handler;
     private GeoMapThreads geoMapThreads;
+    private LinearLayout linearLayoutHeaderText;
 
     public MainFragment() {
         // Required empty public constructor
@@ -128,6 +130,11 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         fragmentChanger.setDrawerIndicatorEnabled(true);
 
+        linearLayoutHeaderText = view.findViewById(R.id.linearLayoutHeaderText);
+        hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
+        dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
+        bottomSheet = view.findViewById(R.id.bottom_sheet);
+
         requestPermissions();
 
         checkStatus();
@@ -149,6 +156,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     @Override
     public void setCurrentForecast(CurrentForecast currentForecast) {
         this.currentForecast = currentForecast;
+        linearLayoutHeaderText.setVisibility(View.VISIBLE);
         setCurrentForecast();
         setBackground();
     }
@@ -157,6 +165,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     public void setForecast(ForecastSource hourlyForecast, ForecastSource dailyForecast) {
         this.dailyForecast = dailyForecast;
         this.hourlyForecast = hourlyForecast;
+        bottomSheet.setVisibility(View.VISIBLE);
         setHourlyForecast();
         setDailyForecast();
     }
@@ -168,6 +177,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     @Override
     public void initListener() {
+        linearLayoutHeaderText.setVisibility(View.VISIBLE);
+        bottomSheet.setVisibility(View.VISIBLE);
+
         setCurrentForecast();
 
         setHourlyForecast();
@@ -208,6 +220,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         bottomSheetBehavior = null;
         hourlyRecyclerView = null;
         dailyRecyclerView = null;
+        linearLayoutHeaderText = null;
     }
 
     private void setCurrentForecast(){
@@ -269,7 +282,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
         ForecastDataSource sourceData = hourlyForecast;
 
-        hourlyRecyclerView = view.findViewById(R.id.hourly_forecast_recycler_view);
         hourlyRecyclerView.setVisibility(View.GONE);
         hourlyRecyclerView.setHasFixedSize(true);
 
@@ -281,17 +293,18 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         hourlyRecyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(
-                hourlyRecyclerView.getContext(), layoutManager.getOrientation());
-        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
-        if(hourlyRecyclerView.getItemDecorationCount() == 0) hourlyRecyclerView.addItemDecoration(itemDecoration);
+        if (BuildConfig.FLAVOR.equals("adminVersion")){
+            DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                    hourlyRecyclerView.getContext(), layoutManager.getOrientation());
+            itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
+            if(hourlyRecyclerView.getItemDecorationCount() == 0) hourlyRecyclerView.addItemDecoration(itemDecoration);
+        }
     }
 
     private void setDailyForecast() {
 
         ForecastDataSource sourceData = dailyForecast;
 
-        dailyRecyclerView = view.findViewById(R.id.daily_forecast_recycler_view);
         dailyRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -302,11 +315,12 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         dailyRecyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
-
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(
-                dailyRecyclerView.getContext(), layoutManager.getOrientation());
-        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
-        if(dailyRecyclerView.getItemDecorationCount() == 0) dailyRecyclerView.addItemDecoration(itemDecoration);
+        if (BuildConfig.FLAVOR.equals("adminVersion")){
+            DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                    dailyRecyclerView.getContext(), layoutManager.getOrientation());
+            itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator));
+            if(dailyRecyclerView.getItemDecorationCount() == 0) dailyRecyclerView.addItemDecoration(itemDecoration);
+        }
     }
 
     private void setBackground(){
@@ -319,8 +333,6 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void initBottomSheet(){
-        bottomSheet = view.findViewById(R.id.bottom_sheet);
-
         bottomSheetArrow = view.findViewById(R.id.imageViewDetailedData);
         bottomSheetArrow.setOnClickListener(bottomSheetArrowClickListener);
 
@@ -335,6 +347,15 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         textViewByDays.setOnClickListener(textViewByDaysClickListener);
 
         textViewByDays.setTextColor(getResources().getColor(R.color.colorBlack));
+
+        String windSpeedEU = baseActivity.getBooleanPreference(SETTING, EU) ? (getString(R.string.windEUTwo)) : (getString(R.string.windEUOne));
+        TextView textViewWindSpeedEU = view.findViewById(R.id.textViewWindSpeedEUBottom);
+        textViewWindSpeedEU.setText(windSpeedEU);
+
+        String pressureEU = baseActivity.getBooleanPreference(SETTING, EU) ? (getString(R.string.pressEUTwo)) : (getString(R.string.pressEUOne));
+        TextView textViewPressureEU = view.findViewById(R.id.textViewPressureEUBottom);
+        textViewPressureEU.setText(pressureEU);
+
     }
 
     private void initBottomLink(){
@@ -353,6 +374,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     private void checkStatus(){
         currentLocation = locationSource.getCurrentLocation();
 
+        linearLayoutHeaderText.setVisibility(View.GONE);
+        bottomSheet.setVisibility(View.GONE);
+
         if (currentLocation != null){
             if(currentLocation.needUpdate){
                 serverPolling.initialize();
@@ -369,7 +393,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
                 hourlyForecast = currentLocation.hourlyForecast;
                 dailyForecast = currentLocation.dailyForecast;
                 initListener();
-            } else if (!previousForecastCurrent.equals("") & !previousForecastDaily.equals("")){
+            } else if (previousForecastCurrent != null & previousForecastDaily != null){
                 // Если данных нет в базе забираем данные с SharedPreference прошлого города
                 currentForecast = responseParser.getCurrentForecast(previousForecastCurrent);
                 hourlyForecast = responseParser.getHourlyForecast(previousForecastHourly);
@@ -406,14 +430,26 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
     }
 
     private void requestLocationPermissions() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) ||
-                !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE)) {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION
                     },
                     GEO_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == GEO_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length == 2 &&
+                    (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                            grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                requestLocation();
+            }
         }
     }
 

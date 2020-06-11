@@ -9,14 +9,12 @@
     tools:context=".Fragments.SettingsFragment">
 
     <LinearLayout
-        android:background="@color/backgroundMainColor"
         style="@style/SettingsMainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -39,7 +37,7 @@
                 android:id="@+id/radioGroupNightMode"
                 android:checkedButton="@+id/checkedButtonNightMode"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
@@ -53,8 +51,8 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:background="@drawable/control_switch_background_selector_middle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:button="@null"
                     android:gravity="center"
@@ -65,8 +63,9 @@
                     android:id="@+id/offNightMode"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:background="@drawable/control_switch_background_selector"
                     android:button="@null"
@@ -100,7 +99,7 @@
                 android:id="@+id/radioGroupEU"
                 android:checkedButton="@+id/checkedButtonEU"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
@@ -114,8 +113,8 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:background="@drawable/control_switch_background_selector_middle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:button="@null"
                     android:gravity="center"
@@ -126,8 +125,9 @@
                     android:id="@+id/imperialEU"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:background="@drawable/control_switch_background_selector"
                     android:button="@null"
@@ -165,7 +165,7 @@
                         android:id="@+id/radioGroupNotice"
                         android:checkedButton="@+id/checkedButtonNotice"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="10dp"
@@ -179,8 +179,8 @@
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
                         android:background="@drawable/control_switch_background_selector_middle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:button="@null"
                         android:gravity="center"
@@ -191,8 +191,9 @@
                         android:id="@+id/offNotice"
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_marginRight="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:background="@drawable/control_switch_background_selector"
                         android:button="@null"
@@ -204,9 +205,8 @@
                 </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
@@ -215,5 +215,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
 </FrameLayout>

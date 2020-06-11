@@ -16,6 +16,11 @@
     <string name="noInternet">Could not connect to internet!</string>
     <string name="okInternet">Connection established!</string>
 
+    <!-- Parameters Name -->
+    <string name="humidityName">Humidity, </string>
+    <string name="pressureName">Pressure, </string>
+    <string name="windSpeedName">Wind speed, </string>
+
     <!-- EU Strings -->
     <string name="celsius" translatable="false">\u2103</string>
     <string name="fahrenheit" translatable="false">\u2109</string>
@@ -61,7 +66,7 @@
 
     <!-- Alert strings -->
     <string name="messageFromServer">Server response</string>
-    <string name="connectionTimeout">No internet no weather!!!</string>
+    <string name="badResponse">Request Execution Error</string>
     <string name="cityNotFound">City not found</string>
     <string name="unknownCity">Unknown city</string>
     <string name="invalidKey">Invalid API key!</string>

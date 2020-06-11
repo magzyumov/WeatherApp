@@ -14,16 +14,17 @@
     android:id="@+id/mainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_night"
+    android:background="@drawable/bg_day"
     tools:context=".Fragments.MainFragment">
 
     <FrameLayout
         android:id="@+id/secondLayer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rain_3">
+        android:background="@drawable/cloud_day_2">
 
         <LinearLayout
+            android:id="@+id/linearLayoutHeaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

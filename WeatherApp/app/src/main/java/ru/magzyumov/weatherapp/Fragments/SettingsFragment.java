@@ -3,6 +3,7 @@ package ru.magzyumov.weatherapp.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,14 +12,22 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
+import ru.magzyumov.weatherapp.App;
 import ru.magzyumov.weatherapp.BaseActivity;
 import ru.magzyumov.weatherapp.Constants;
+import ru.magzyumov.weatherapp.Database.Location.LocationDao;
+import ru.magzyumov.weatherapp.Database.Location.LocationDataSource;
+import ru.magzyumov.weatherapp.Database.Location.LocationSource;
+import ru.magzyumov.weatherapp.Database.Location.Locations;
 import ru.magzyumov.weatherapp.R;
 
 public class SettingsFragment extends Fragment implements Constants {
     private View view;
     private BaseActivity baseActivity;
     private FragmentChanger fragmentChanger;
+    private Locations currentLocation;
+    private LocationDao locationDao;
+    private LocationDataSource locationSource;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -29,6 +38,13 @@ public class SettingsFragment extends Fragment implements Constants {
         super.onAttach(context);
         if(context instanceof FragmentChanger) fragmentChanger = (FragmentChanger) context;
         if(context instanceof BaseActivity) baseActivity = (BaseActivity) context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        locationDao = App.getInstance().getLocationDao();
+        locationSource = new LocationSource(locationDao);
     }
 
     @Override
@@ -49,6 +65,8 @@ public class SettingsFragment extends Fragment implements Constants {
         initRadio(view.findViewById(R.id.onNotice), SETTING, NOTICE, false, true);
         initRadio(view.findViewById(R.id.offNotice), SETTING, NOTICE, true, false);
 
+        currentLocation = locationSource.getCurrentLocation();
+
         return view;
     }
 
@@ -63,6 +81,7 @@ public class SettingsFragment extends Fragment implements Constants {
                     baseActivity.setBooleanPreference(preference, parameter,
                             (inverted) ? !isChecked : isChecked);
                     if(preference == SETTING & parameter == NIGHT_MODE) baseActivity.recreate();
+                    if(preference == SETTING & parameter == EU) updateLocation();
                 }
             }
         });
@@ -82,5 +101,15 @@ public class SettingsFragment extends Fragment implements Constants {
         view = null;
         fragmentChanger = null;
         baseActivity = null;
+        locationDao = null;
+        locationSource = null;
+        currentLocation = null;
+    }
+
+    private void updateLocation(){
+        if(currentLocation != null) {
+            currentLocation.needUpdate = true;
+            locationSource.updateLocation(currentLocation);
+        }
     }
 }

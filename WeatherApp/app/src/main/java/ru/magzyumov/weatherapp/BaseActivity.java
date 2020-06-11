@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     // Чтение String настроек
     public String getStringPreference(String preference, String parameter) {
         SharedPreferences sharedPref = getSharedPreferences(preference, MODE_PRIVATE);
-        return sharedPref.getString(parameter, "");
+        return sharedPref.getString(parameter, null);
     }
 
     // Чтение String настроек
