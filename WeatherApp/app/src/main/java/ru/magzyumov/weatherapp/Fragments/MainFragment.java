@@ -360,7 +360,7 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
 
     private void initBottomLink(){
         TextView textView = view.findViewById(R.id.textViewProvider);
-        textView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
         textView.setText(Html.fromHtml("<a href=" + PROVIDER_URL + "><font color=#AAA>" + getString(R.string.provider) + "</font></a>"));
         textView.setOnClickListener(new View.OnClickListener() {
             @Override

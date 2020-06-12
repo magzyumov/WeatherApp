@@ -185,6 +185,10 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     private void getNameCity(LatLng location) {
         if (Geocoder.isPresent()) {
             try {
+                Context context = getContext();
+                if (context == null) {
+                    return;
+                }
                 Geocoder geocoder = new Geocoder(requireContext());
                 List<Address> addresses = geocoder.getFromLocation (location.latitude,
                         location.longitude, 1);
@@ -201,7 +205,7 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
                 } else {
                     handler.post(() -> alertDialogSmall.show(getString(R.string.unknownLocation)));
                 }
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 e.printStackTrace();
             }
         }
@@ -305,15 +309,24 @@ public class GeoMapFragment extends Fragment implements Constants, OnMapReadyCal
     };
 
     private void writePositionToFirebase(String latitude, String longitude){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_PATTERN, Locale.getDefault());
-        Date date = new Date();
+        try {
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_PATTERN, Locale.getDefault());
+            Date date = new Date();
 
-        String id = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        String timeStamp = dateFormat.format(date);
+            String id = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            String timeStamp = dateFormat.format(date);
 
-        DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
-        PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
-        firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition.getPosition());
+            DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
+            PhoneClass phonePosition = new PhoneClass(timeStamp, latitude, longitude);
+            firebaseDB.child(PHONES).child(id).child(POSITION).setValue(phonePosition.getPosition());
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
+
     }
 
     private void writePositionToDB(double latitude, double longitude, String location){

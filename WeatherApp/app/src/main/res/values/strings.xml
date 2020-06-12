@@ -57,7 +57,7 @@
     <string name="provider">Data provided by OpenWeather</string>
 
     <string name="nav_header_title" translatable="false">Weather App</string>
-    <string name="nav_header_subtitle" translatable="false">magzyumov.rr@gmail.com</string>
+    <string name="nav_header_subtitle" translatable="false">magzyumov@gmail.com</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
     <!-- Context menu -->
