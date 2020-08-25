@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <array name="weather_images_daily">
-        <item>@drawable/w_01d</item>
-        <item>@drawable/w_01n</item>
-        <item>@drawable/w_02d</item>
-        <item>@drawable/w_02n</item>
-        <item>@drawable/w_03d</item>
-        <item>@drawable/w_03n</item>
-        <item>@drawable/w_04d</item>
-        <item>@drawable/w_04n</item>
-        <item>@drawable/w_09d</item>
-        <item>@drawable/w_09n</item>
-        <item>@drawable/w_10d</item>
-        <item>@drawable/w_10n</item>
-        <item>@drawable/w_11d</item>
-        <item>@drawable/w_11n</item>
-        <item>@drawable/w_13d</item>
-        <item>@drawable/w_13n</item>
-        <item>@drawable/w_50d</item>
-        <item>@drawable/w_50n</item>
-    </array>
-
     <!-- Background picture array -->
     <array name="firstBackLayerPic">
         <item>@drawable/bg_day</item>
