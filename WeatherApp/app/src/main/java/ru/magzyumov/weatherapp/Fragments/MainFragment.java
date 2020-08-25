@@ -362,12 +362,9 @@ public class MainFragment extends Fragment implements Constants, ForecastListene
         TextView textView = view.findViewById(R.id.textViewProvider);
         textView.setVisibility(View.GONE);
         textView.setText(Html.fromHtml("<a href=" + PROVIDER_URL + "><font color=#AAA>" + getString(R.string.provider) + "</font></a>"));
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(PROVIDER_URL));
-                startActivity(browser);
-            }
+        textView.setOnClickListener(v -> {
+            Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(PROVIDER_URL));
+            startActivity(browser);
         });
     }
 
