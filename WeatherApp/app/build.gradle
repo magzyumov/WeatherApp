@@ -4,7 +4,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     signingConfigs {
         release {
-            storeFile file('D:\\GeekBrains\\WeatherApp\\keystore\\keystore.jks')
+            storeFile file('D:\\Development\\WeatherApp\\keystore\\keystore.jks')
             storePassword '1qaz2wsx##'
             keyAlias = 'weatherapp-key0'
             keyPassword 'weatherApp2020!'
@@ -12,7 +12,7 @@ android {
     }
 
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "ru.magzyumov.weatherapp"
