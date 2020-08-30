@@ -584,7 +584,6 @@ public class OneCallModel {
         public void setRain(Rain rain) {
             this.rain = rain;
         }
-
     }
 
     public class Minutely {
@@ -594,7 +593,7 @@ public class OneCallModel {
         private long dt;
         @SerializedName("precipitation")
         @Expose
-        private long precipitation;
+        private float precipitation;
 
         public long getDt() {
             return dt;
@@ -604,14 +603,13 @@ public class OneCallModel {
             this.dt = dt;
         }
 
-        public long getPrecipitation() {
+        public float getPrecipitation() {
             return precipitation;
         }
 
-        public void setPrecipitation(long precipitation) {
+        public void setPrecipitation(float precipitation) {
             this.precipitation = precipitation;
         }
-
     }
 
     public class Rain {

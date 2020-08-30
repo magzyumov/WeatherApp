@@ -3,8 +3,6 @@ package ru.magzyumov.weatherapp.Forecast.Polling;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.net.HttpURLConnection;
 
 import retrofit2.Call;
@@ -25,10 +23,8 @@ public class RetrofitClass implements Constants {
     private String keyApi;
     private OpenWeather openWeather;
     private Retrofit retrofit;
-    private Gson gson;
 
     public RetrofitClass(ServerPolling serverPolling){
-        this.gson = new Gson();
         this.keyApi = WEATHER_API_KEY;
         this.serverPolling = serverPolling;
         this.retrofit = new Retrofit.Builder()
@@ -66,6 +62,7 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
+                        Log.e(this.getClass().getSimpleName(),t.getLocalizedMessage());
                         handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
                         handler.post(() -> serverPolling.badResponseHandler());
                     }
@@ -100,6 +97,7 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<CurrentForecastModel> call, Throwable t) {
+                        Log.e(this.getClass().getSimpleName(),t.getLocalizedMessage());
                         handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
                         handler.post(() -> serverPolling.badResponseHandler());
                     }
@@ -134,6 +132,7 @@ public class RetrofitClass implements Constants {
 
                     @Override
                     public void onFailure(Call<OneCallModel> call, Throwable t) {
+                        Log.e(this.getClass().getSimpleName(),t.getLocalizedMessage());
                         handler.post(() -> serverPolling.showMsgToListeners(serverPolling.getResources().getString(R.string.badResponse)));
                         handler.post(() -> serverPolling.badResponseHandler());
                     }
