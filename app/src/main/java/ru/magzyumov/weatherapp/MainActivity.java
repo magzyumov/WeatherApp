@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity implements FragmentChanger, Navig
     }
 
     private void registerReceivers() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
             IntentFilter  intentFilter = new IntentFilter();
